@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 
 const Hero = () => {
   return (
-    <div className="min-h-screen bg-gray-900 relative overflow-hidden">
+    <div className="h-[calc(100vh-4rem)] bg-gray-900 relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 to-orange-500"></div>
@@ -14,7 +14,7 @@ const Hero = () => {
         </svg>
       </div>
 
-      <div className="container mx-auto px-8 py-20 flex items-center min-h-screen">
+      <div className="container mx-auto px-8 h-full flex items-center">
         <div className="flex items-center w-full">
           {/* Left Section - Photo */}
           <motion.div 
@@ -62,7 +62,7 @@ const Hero = () => {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.6, delay: 0.7 }}
                 >
-                  <span className="text-yellow-500">I'M STEVE MILNER.</span>
+                  <span className="text-yellow-500"></span>
                 </motion.h1>
               </div>
               
@@ -72,7 +72,7 @@ const Hero = () => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
               >
-                WEB DESIGNER
+                Mithlesh Vishwakarma
               </motion.h2>
             </motion.div>
 
@@ -89,23 +89,49 @@ const Hero = () => {
             </motion.p>
 
             {/* CTA Button */}
-            <motion.button
-              className="bg-transparent border-2 border-yellow-500 text-yellow-500 px-8 py-3 rounded-full font-semibold hover:bg-yellow-500 hover:text-gray-900 transition-all duration-300 flex items-center group"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <motion.a
+              href="/education"
+              className="relative inline-flex items-center overflow-hidden px-8 py-3 rounded-full font-semibold group"
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 1 }}
+              whileTap={{ scale: 0.95 }}
             >
-              MORE ABOUT ME
-              <motion.div 
-                className="ml-3 w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center group-hover:bg-gray-900"
-                whileHover={{ rotate: 90 }}
+              {/* Background fill animation */}
+              <span className="absolute inset-0 w-0 bg-yellow-500 transition-all duration-500 ease-out group-hover:w-full border-2 border-yellow-500 rounded-full"></span>
+              
+              {/* Button text */}
+              <span className="relative text-yellow-500 group-hover:text-gray-900 transition-colors duration-300">
+                MORE ABOUT ME
+              </span>
+              
+              {/* Arrow icon */}
+              <motion.span
+                className="relative ml-2 flex items-center"
+                animate={{ x: 0 }}
+                whileHover={{ x: 5 }}
                 transition={{ duration: 0.3 }}
               >
-                <span className="text-gray-900 group-hover:text-yellow-500 text-lg">→</span>
-              </motion.div>
-            </motion.button>
+                <motion.svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  animate={{ x: 0 }}
+                  whileHover={{ x: 3 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                    className="text-yellow-500 group-hover:text-gray-900 transition-colors duration-300"
+                  />
+                </motion.svg>
+              </motion.span>
+            </motion.a>
           </motion.div>
         </div>
       </div>

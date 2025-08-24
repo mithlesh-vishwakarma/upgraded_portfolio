@@ -18,6 +18,10 @@ interface MenuItem {
 }
 
 const Header: React.FC = () => {
+  const [hoveredMenuItem, setHoveredMenuItem] = useState<number | null>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
   const menuItems: MenuItem[] = [
     { icon: Home, label: 'Home', href: '/' },
     { icon: Briefcase, label: 'Projects', href: '/projects' },
@@ -26,10 +30,6 @@ const Header: React.FC = () => {
     { icon: Mail, label: 'About', href: '/about' },
     { icon: User, label: 'Contact', href: '/contact' },
   ];
-
-  const [hoveredMenuItem, setHoveredMenuItem] = useState<number | null>(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {

@@ -3,21 +3,41 @@ import { FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white py-6">
+    <footer className="bg-gray-800 text-white py-6 font-merienda">
       <div className="container mx-auto px-6 text-center">
-        <div className="mb-4">
-          <a href="#home" className="px-3 hover:text-yellow-500 transition-colors">Home</a>
-          <a href="#about" className="px-3 hover:text-yellow-500 transition-colors">About</a>
-          <a href="#portfolio" className="px-3 hover:text-yellow-500 transition-colors">Portfolio</a>
-          <a href="#blog" className="px-3 hover:text-yellow-500 transition-colors">Blog</a>
-          <a href="#contact" className="px-3 hover:text-yellow-500 transition-colors">Contact</a>
+        <div className="mb-4 space-x-4">
+          <a href="/" className="px-3 hover:text-yellow-500 transition-colors">Home</a>
+          <a href="/projects" className="px-3 hover:text-yellow-500 transition-colors">Projects</a>
+          <a href="/articles" className="px-3 hover:text-yellow-500 transition-colors">Articles</a>
+          <a href="/ordinary-things" className="px-3 hover:text-yellow-500 transition-colors">Ordinary Things</a>
+          <a href="/about" className="px-3 hover:text-yellow-500 transition-colors">About</a>
+          <a href="/contact" className="px-3 hover:text-yellow-500 transition-colors">Contact</a>
         </div>
         <div className="mb-4 flex justify-center space-x-4">
-          <motion.a href="#" whileHover={{ scale: 1.2 }} className="text-white text-2xl"><FaLinkedin /></motion.a>
-          <motion.a href="#" whileHover={{ scale: 1.2 }} className="text-white text-2xl"><FaGithub /></motion.a>
-          <motion.a href="#" whileHover={{ scale: 1.2 }} className="text-white text-2xl"><FaTwitter /></motion.a>
+          <motion.a 
+            href="https://www.linkedin.com/in/mithlesh-vishwakarma-9a7b54235/" 
+            whileHover={{ scale: 1.2 }} 
+            className="text-white text-2xl hover:text-yellow-500 transition-colors"
+          >
+            <FaLinkedin />
+          </motion.a>
+          <motion.a 
+            href="https://github.com/mithlesh-vishwakarma" 
+            whileHover={{ scale: 1.2 }} 
+            className="text-white text-2xl hover:text-yellow-500 transition-colors"
+          >
+            <FaGithub />
+          </motion.a>
+          <motion.a 
+            href="https://x.com/Mithles08742315" 
+            whileHover={{ scale: 1.2 }} 
+            className="text-white text-2xl hover:text-yellow-500 transition-colors"
+          >
+            <FaTwitter />
+          </motion.a>
         </div>
-        <p>&copy; 2024 John Doe. All rights reserved.</p>
+        <p className="text-gray-400 text-xs"> &copy; 2024 Mithlesh Vishwakarma. All rights reserved.</p>
+        <p className="text-gray-400 text-xs"> Made with ❤️ in Bharat</p>
       </div>
     </footer>
   );

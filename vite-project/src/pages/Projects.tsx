@@ -1,0 +1,106 @@
+import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+
+const Projects = () => {
+  const projects = [
+    {
+      title: 'E-Commerce Platform',
+      description: 'A full-stack e-commerce solution with React and Node.js',
+      image: 'https://source.unsplash.com/600x400?ecommerce',
+      tags: ['React', 'Node.js', 'MongoDB', 'Express']
+    },
+    {
+      title: 'Social Media Dashboard',
+      description: 'Analytics dashboard for social media management',
+      image: 'https://source.unsplash.com/600x400?dashboard',
+      tags: ['Vue.js', 'Firebase', 'Tailwind CSS']
+    },
+    {
+      title: 'Mobile Fitness App',
+      description: 'Cross-platform fitness tracking application',
+      image: 'https://source.unsplash.com/600x400?fitness',
+      tags: ['React Native', 'TypeScript', 'Redux']
+    }
+  ];
+
+  const headerRef = useRef(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  useEffect(() => {
+    if (headerRef.current) {
+      setHeaderHeight(headerRef.current.offsetHeight);
+    }
+  }, []);
+
+  return (
+    <div className="relative bg-gray-900 text-white">
+      {/* Header Simulation */}
+      <div ref={headerRef} className="w-full bg-gray-800 py-4 text-center text-xl font-bold">
+        Header Section
+      </div>
+
+      {/* Page Title positioned below header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        style={{ top: `${headerHeight + 24}px` }} // Add 24px gap
+        className="absolute left-1/2 transform -translate-x-1/2 text-center z-10"
+      >
+        <h1 className="text-5xl font-bold mb-2">
+          My <span className="text-yellow-500">Projects</span>
+        </h1>
+        <div className="w-32 h-1 bg-yellow-500 mx-auto"></div>
+      </motion.div>
+
+      {/* Projects Grid */}
+      <div className="container mx-auto h-[calc(100vh-4rem)] overflow-y-auto px-8 scrollbar-hide pt-48">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((project, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="bg-gray-800 rounded-lg overflow-hidden group"
+            >
+              <div className="relative overflow-hidden">
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2 text-yellow-500">
+                  {project.title}
+                </h3>
+                <p className="text-gray-400 mb-4">{project.description}</p>
+                <div className="flex flex-wrap gap-2">
+                  {project.tags.map((tag, tagIndex) => (
+                    <span
+                      key={tagIndex}
+                      className="px-3 py-1 bg-gray-700 rounded-full text-sm text-yellow-500"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="mt-4 px-6 py-2 bg-yellow-500 text-gray-900 rounded-full font-medium hover:bg-yellow-400 transition-colors"
+                >
+                  View Project
+                </motion.button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Projects;
