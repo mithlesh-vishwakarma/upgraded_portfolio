@@ -10,12 +10,12 @@ const Contact = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-8"
+          className="pt-16 pl-8 mb-12"
         >
-          <h1 className="text-4xl font-bold mb-4">
+          <h1 className="text-5xl font-bold mb-4">
             Get in <span className="text-yellow-500">Touch</span>
           </h1>
-          <div className="w-24 h-1 bg-yellow-500 mx-auto"></div>
+          <div className="w-32 h-1 bg-yellow-500"></div>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">

@@ -33,12 +33,12 @@ const Articles = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-16"
+          className="pt-16 pl-8 mb-12"
         >
-          <h1 className="text-4xl font-bold mb-4">
+          <h1 className="text-5xl font-bold mb-4">
             Latest <span className="text-yellow-500">Articles</span>
           </h1>
-          <div className="w-24 h-1 bg-yellow-500 mx-auto"></div>
+          <div className="w-32 h-1 bg-yellow-500"></div>
         </motion.div>
 
         {/* Articles Grid */}

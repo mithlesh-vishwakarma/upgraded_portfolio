@@ -2,6 +2,15 @@ import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 
 const Projects = () => {
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  useEffect(() => {
+    if (headerRef.current) {
+      setHeaderHeight(headerRef.current.offsetHeight);
+    }
+  }, []);
+
   const projects = [
     {
       title: 'E-Commerce Platform',
@@ -23,39 +32,24 @@ const Projects = () => {
     }
   ];
 
-  const headerRef = useRef(null);
-  const [headerHeight, setHeaderHeight] = useState(0);
-
-  useEffect(() => {
-    if (headerRef.current) {
-      setHeaderHeight(headerRef.current.offsetHeight);
-    }
-  }, []);
-
   return (
-    <div className="relative bg-gray-900 text-white">
-      {/* Header Simulation */}
-      <div ref={headerRef} className="w-full bg-gray-800 py-4 text-center text-xl font-bold">
-        Header Section
-      </div>
+    <div className="h-[calc(100vh-4rem)] bg-gray-900 text-white overflow-hidden">
+      <div className="container mx-auto h-full overflow-y-auto px-8 scrollbar-hide">
+        {/* Page Title */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="pt-16 pl-8"
+        >
+          <h1 className="text-5xl font-bold mb-4">
+            My <span className="text-yellow-500">Projects</span>
+          </h1>
+          <div className="w-32 h-1 bg-yellow-500 mx-auto"></div>
+        </motion.div>
 
-      {/* Page Title positioned below header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        style={{ top: `${headerHeight + 24}px` }} // Add 24px gap
-        className="absolute left-1/2 transform -translate-x-1/2 text-center z-10"
-      >
-        <h1 className="text-5xl font-bold mb-2">
-          My <span className="text-yellow-500">Projects</span>
-        </h1>
-        <div className="w-32 h-1 bg-yellow-500 mx-auto"></div>
-      </motion.div>
-
-      {/* Projects Grid */}
-      <div className="container mx-auto h-[calc(100vh-4rem)] overflow-y-auto px-8 scrollbar-hide pt-48">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Projects Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
           {projects.map((project, index) => (
             <motion.div
               key={index}
