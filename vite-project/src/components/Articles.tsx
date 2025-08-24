@@ -76,7 +76,7 @@ const Articles = () => {
             </motion.button>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
