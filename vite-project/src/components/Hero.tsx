@@ -3,7 +3,7 @@ import alluArjun from "../assets/allu-arjun.jpg";
 
 const Hero = () => {
   return (
-    <div className="h-[calc(100vh-4rem)] max-h-[900px] bg-gray-900 relative overflow-hidden">
+    <div className="h-screen bg-gray-900 relative overflow-hidden flex items-center justify-center p-4 md:p-8">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 to-orange-500"></div>
@@ -29,20 +29,20 @@ const Hero = () => {
         </svg>
       </div>
 
-      <div className="container mx-auto px-8 h-full flex items-center max-w-7xl">
-        <div className="flex items-center w-full justify-center">
-          {/* Left Section - Photo */}
+      <div className="container mx-auto px-4 md:px-8 h-full flex items-center justify-center max-w-7xl relative z-10">
+        <div className="flex flex-col md:flex-row items-center justify-center w-full gap-8 md:gap-12">
+          {/* Image Section - Positioned to overlap with content on mobile */}
           <motion.div
-            className="relative"
+            className="relative order-2 md:order-1"
             initial={{ x: -200, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
           >
             {/* Yellow Background Shape */}
-            <div className="absolute -left-8 -top-8 w-80 h-96 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-tr-3xl"></div>
+            <div className="absolute -left-4 -top-4 md:-left-8 md:-top-8 w-48 h-56 md:w-72 md:h-80 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-tr-3xl"></div>
 
             {/* Profile Image */}
-            <div className="relative z-10 w-72 h-80 bg-gray-800 rounded-tr-3xl overflow-hidden">
+            <div className="relative z-20 w-40 h-48 md:w-64 md:h-72 bg-gray-800 rounded-tr-3xl overflow-hidden shadow-2xl">
               <img
                 src={alluArjun}
                 alt="mithlesh-vishwakarma"
@@ -51,9 +51,9 @@ const Hero = () => {
             </div>
           </motion.div>
 
-          {/* Right Section - Content */}
+          {/* Content Section - Positioned to overlap with image on mobile */}
           <motion.div
-            className="flex-1 ml-20"
+            className="flex-1 order-1 md:order-2 text-center md:text-left md:ml-8 lg:ml-12"
             initial={{ x: 200, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -82,7 +82,7 @@ const Hero = () => {
               </motion.h2>
             </motion.div>
              <motion.p
-              className="text-white-300 text-lg leading-relaxed mb-10 mx-auto max-w-2xl text-center"
+              className="text-white-300 text-base md:text-lg leading-relaxed mb-4 mx-auto max-w-2xl text-center"
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.9 }}
@@ -93,7 +93,7 @@ const Hero = () => {
 
             {/* Description */}
             <motion.p
-              className="text-gray-300 text-lg leading-relaxed mb-10 mx-auto max-w-2xl text-center"
+              className="text-gray-300 text-base md:text-lg leading-relaxed mb-4 mx-auto max-w-2xl text-center"
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.9 }}
@@ -110,7 +110,7 @@ const Hero = () => {
             {/* CTA Button */}
             <div className="flex justify-center">
               <motion.a
-                href="/education"
+                href="/coming-soon"
                 className="relative inline-flex items-center overflow-hidden px-8 py-3 rounded-full font-semibold group"
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
