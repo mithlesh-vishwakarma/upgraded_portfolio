@@ -60,11 +60,11 @@ const Header: React.FC = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <img
-              src="/src/assets/OrdinaryCoder-logo-for darkBg.png"
+            {/* <img
+              src="/src/assets/"
               alt="OrdinaryCoder Logo"
               className="w-12 h-12 object-contain"
-            />
+            /> */}
             <span className="text-white font-merienda text-xl lg:text-2xl">OrdinaryCoder</span>
           </motion.a>
         </motion.div>
