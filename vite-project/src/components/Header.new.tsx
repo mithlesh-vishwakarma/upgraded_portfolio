@@ -24,11 +24,11 @@ const Header: React.FC = () => {
 
   const menuItems: MenuItem[] = [
     { icon: Home, label: 'Home', href: '/' },
-    { icon: Briefcase, label: 'Projects', href: '/coming-soon' },
-    { icon: MessageCircle, label: 'Articles', href: '/coming-soon' },
-    { icon: Pencil, label: 'Ordinary Things', href: '/coming-soon' },
-    { icon: Mail, label: 'About', href: '/coming-soon' },
-    { icon: User, label: 'Contact', href: '/coming-soon' },
+    { icon: Briefcase, label: 'Projects', href: '/project' },
+    { icon: MessageCircle, label: 'Articles', href: '/articles' },
+    { icon: Pencil, label: 'Ordinary Things', href: '/ordinary-things' },
+    { icon: Mail, label: 'About', href: '/about' },
+    { icon: User, label: 'Contact', href: '/contact' },
   ];
 
   useEffect(() => {
