@@ -3,6 +3,7 @@
 import ComingSoon from "../components/ComingSoon";
 const About = () => {
   return (
+    
     // <motion.section
     //   id="about"
     //   className="py-20 bg-gray-800 text-white min-h-screen"
@@ -56,8 +57,10 @@ const About = () => {
     //     </div>
     //   </div>
     // </motion.section>
-    <><ComingSoon/></>
-  );
+    
+      <ComingSoon />
+
+      );
 };
 
 export default About;

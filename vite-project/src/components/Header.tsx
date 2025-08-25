@@ -106,7 +106,7 @@ const Header: React.FC = () => {
 
                 {hoveredMenuItem === index && (
                   <motion.div
-                    className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-yellow-500 text-gray-900 px-3 py-1 rounded-lg shadow-lg font-medium whitespace-nowrap"
+                    className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-yellow-500 text-gray-900 px-3 py-1 rounded-lg shadow-lg font-medium whitespace-nowrap left-23%"
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2 }}
