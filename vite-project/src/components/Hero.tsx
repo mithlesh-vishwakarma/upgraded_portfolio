@@ -164,7 +164,7 @@ const Hero = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 1.2 }}
       >
-        www.ordinaryCoder.com
+        www.OrdinaryCoder.com
       </motion.div>
     </div>
   );

@@ -1,16 +1,7 @@
 import { motion } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import BackgroundPattern from '../components/BackgroundPattern';
 
 const Projects = () => {
-  const headerRef = useRef<HTMLDivElement | null>(null);
-  const [headerHeight, setHeaderHeight] = useState(0);
-
-  useEffect(() => {
-    if (headerRef.current) {
-      setHeaderHeight(headerRef.current.offsetHeight);
-    }
-  }, []);
-
   const projects = [
     {
       title: 'E-Commerce Platform',
@@ -33,8 +24,11 @@ const Projects = () => {
   ];
 
   return (
-    <div className="h-[calc(100vh-4rem)] bg-gray-900 text-white overflow-hidden">
-      <div className="container mx-auto h-full overflow-y-auto px-8 scrollbar-hide">
+    <div className="h-[calc(100vh)] bg-gray-900 text-white overflow-hidden relative">
+      {/* Background Pattern */}
+      <BackgroundPattern />
+      
+      <div className="container mx-auto h-full overflow-y-auto px-8 scrollbar-hide relative z-10">
         {/* Page Title */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa";
+import { FaLinkedin, FaGithub, FaTwitter, FaInstagram } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -14,6 +14,13 @@ const Footer = () => {
           <a href="/contact" className="px-3 hover:text-yellow-500 transition-colors">Contact</a>
         </div> */}
         <div className="mb-4 flex justify-center space-x-4">
+           <motion.a 
+            href="https://www.instagram.com/_ordinary_coder_/" 
+            whileHover={{ scale: 1.2 }} 
+            className="text-white text-2xl hover:text-yellow-500 transition-colors"
+          >
+            <FaInstagram />
+          </motion.a>
           <motion.a 
             href="https://www.linkedin.com/in/mithlesh-vishwakarma-9a7b54235/" 
             whileHover={{ scale: 1.2 }} 

@@ -1,10 +1,14 @@
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import BackgroundPattern from '../components/BackgroundPattern';
 
 const Contact = () => {
   return (
-    <div className="h-[calc(100vh-4rem)] bg-gray-900 text-white overflow-hidden pt-8">
-      <div className="container mx-auto h-full overflow-y-auto px-8 scrollbar-hide">
+    <div className="h-[calc(100vh)] bg-gray-900 text-white overflow-hidden relative">
+      {/* Background Pattern */}
+      <BackgroundPattern />
+      
+      <div className="container mx-auto h-full overflow-y-auto px-8 scrollbar-hide relative z-10">
         {/* Page Title */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
