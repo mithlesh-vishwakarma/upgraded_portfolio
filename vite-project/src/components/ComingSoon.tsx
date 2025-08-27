@@ -8,7 +8,7 @@ const ComingSoon = () => {
 
       <BackgroundPattern />
       
-      <h1 className="text-5xl font-bold text-yellow-500 relative z-10">Coming Soon!</h1>
+      <h1 className="text-5xl font-bold text-yellow-500 relative z-10 font-merienda">Coming Soon!</h1>
     </div>
   );
 };

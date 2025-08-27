@@ -6,11 +6,8 @@ const HomePage = () => {
     <div className="h-100vh bg-gray-900 text-white overflow-hidden relative">
       {/* Background Pattern */}
       <BackgroundPattern />
-
-      {/* Hero Section */}
-
       <Hero />
-    </div>
+     </div>
   );
 };
 

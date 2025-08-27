@@ -1,33 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  User, 
-  Briefcase, 
-  Mail, 
-  MessageCircle,
-  Home,
-  Pencil,
-  Menu,
-  X,
-} from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 interface MenuItem {
-  icon: React.ElementType;
   label: string;
   href: string;
 }
 
 const Header: React.FC = () => {
   const menuItems: MenuItem[] = [
-    { icon: Home, label: 'Home', href: '/' },
-    { icon: Briefcase, label: 'Projects', href: '/projects' },
-    { icon: MessageCircle, label: 'Articles', href: '/articles' },
-    { icon: Pencil, label: 'Ordinary Things', href: '/ordinary-things' },
-    { icon: Mail, label: 'About', href: '/about' },
-    { icon: User, label: 'Contact', href: '/contact' },
+    { label: 'Home', href: '/' },
+    { label: 'About', href: '/about' },
+    { label: 'Contact', href: '/contact' },
+    { label: 'Projects', href: '/projects' },
+    { label: 'Ordinary Things', href: '/ordinary-things' },
+    { label: 'Articles', href: '/articles' },
   ];
 
-  const [hoveredMenuItem, setHoveredMenuItem] = useState<number | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -45,7 +34,8 @@ const Header: React.FC = () => {
   }, []);
 
   return (
-    <header className="fixed w-full top-0 left-0 z-50 bg-gray-900 shadow-lg">
+    <header className="fixed w-full top-0 left-0 z-50 bg-gray-900 shadow-[0_4px_15px_#6b5815]">
+
       <div className="container mx-auto px-4 lg:px-16 py-4 flex flex-row items-center justify-between">
         {/* Logo Section */}
         <motion.div 
@@ -83,39 +73,19 @@ const Header: React.FC = () => {
         {/* Desktop Navigation Menu */}
         {!isMobile && (
           <motion.nav 
-            className="hidden lg:flex items-center space-x-12 ml-auto mr-20"
+            className="hidden lg:flex items-center space-x-6 ml-auto mr-20"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
             {menuItems.map((item, index) => (
-              <motion.div
+              <a
                 key={index}
-                className="relative"
-                onMouseEnter={() => setHoveredMenuItem(index)}
-                onMouseLeave={() => setHoveredMenuItem(null)}
+                href={item.href}
+                className="px-4 py-2 rounded-full text-white hover:bg-yellow-500 hover:text-gray-900 transition-colors duration-300"
               >
-                <motion.a
-                  href={item.href}
-                  className="w-12 h-12 rounded-full bg-gray-800 hover:bg-yellow-500 text-white hover:text-gray-900 transition-all duration-300 flex items-center justify-center shadow-lg"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <item.icon size={20} />
-                </motion.a>
-
-                {hoveredMenuItem === index && (
-                  <motion.div
-                    className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-yellow-500 text-gray-900 px-3 py-1 rounded-lg shadow-lg font-medium whitespace-nowrap left-23%"
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {item.label}
-                    <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-yellow-500 rotate-45"></div>
-                  </motion.div>
-                )}
-              </motion.div>
+                {item.label}
+              </a>
             ))}
           </motion.nav>
         )}
@@ -135,13 +105,12 @@ const Header: React.FC = () => {
                   <motion.a
                     key={index}
                     href={item.href}
-                    className="flex items-center gap-4 py-3 px-4 text-white hover:bg-gray-800 rounded-lg transition-colors"
+                    className="flex items-center justify-center py-3 px-4 text-white hover:bg-yellow-500 hover:text-gray-900 rounded-full transition-colors"
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    <item.icon size={20} />
                     <span className="font-medium">{item.label}</span>
                   </motion.a>
                 ))}

@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         merienda: ['Merienda', 'cursive'],
+        roboto: ['Roboto', 'sans-serif'],
       },
     },
   },

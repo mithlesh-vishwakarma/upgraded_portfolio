@@ -1,35 +1,14 @@
 import { motion } from "framer-motion";
 import AlluArjun from "../assets/allu-arjun.jpg";
+import ChangingText from "./ChangingText";
+import type BackgroundPattern from "./BackgroundPattern";
+
 
 const Hero = () => {
   return (
-    <div className="bg-gray-900 relative flex items-center justify-center p-4 md:p-8 py-24 md:py-32">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 to-orange-500"></div>
-        <svg
-          className="absolute inset-0 w-full h-full"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-        >
-          <pattern
-            id="grid"
-            width="10"
-            height="10"
-            patternUnits="userSpaceOnUse"
-          >
-            <path
-              d="M 10 0 L 0 0 0 10"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="0.5"
-            />
-          </pattern>
-          <rect width="100" height="100" fill="url(#grid)" />
-        </svg>
-      </div>
 
-      <div className="container mx-auto px-4 md:px-8 py-8 md:py-16 flex items-center justify-center max-w-7xl relative z-10">
+    <div className="bg-gray-900 relative flex items-center justify-center p-4 md:p-8 py-24 md:py-32">
+      <div className="container mx-auto px-4 md:px-8 py-8 md:py-16 flex items-center justify-center max-w-6xl relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-center w-full gap-8 md:gap-12">
           {/* ✅ Fixed Image Section */}
           <motion.div
@@ -99,8 +78,8 @@ const Hero = () => {
               animate={{ scale: 1, opacity: 1 }}
               transition={{
                 duration: 0.8,
-                delay: 0.5,
-                type: "spring",
+                delay: 0.01,
+                type: "tween",
                 stiffness: 100,
                 damping: 20
               }}
@@ -127,9 +106,9 @@ const Hero = () => {
             </motion.div>
           </motion.div>
 
-          {/* ✅ Content Section (unchanged) */}
+          {/* ✅ Content Section */}
           <motion.div
-            className="flex-1 order-2 md:order-2 text-center md:text-left md:ml-8 lg:ml-12 w-full"
+            className="flex-1 order-2 md:order-2 text-center md:text-center md:ml-8 lg:ml-12 w-full"
             initial={{ x: 200, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -149,7 +128,7 @@ const Hero = () => {
               ></motion.div>
 
               <motion.h2
-                className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 text-center md:text-left"
+                className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-200 mb-2 text-center md:text-left font-merienda "
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
@@ -160,12 +139,12 @@ const Hero = () => {
 
             {/* Role/Title */}
             <motion.p
-              className="text-gray-300 text-base md:text-lg leading-relaxed mb-4 text-center md:text-left"
+              className="text-gray-400 text-base md:text-lg leading-relaxed mb-4 text-center md:text-left "
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.9 }}
             >
-              Software Developer | Ordinary Artist | Fitness Enthusiast
+              Web Developer&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Ordinary Artist&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Fitness Enthusiast
             </motion.p>
 
             {/* Description */}
@@ -175,15 +154,15 @@ const Hero = () => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 1 }}
             >
-              Ex-Account Executive to managing a garment manufacturing company
-              turned Software Developer in the AI era. An Ordinary Coder with a
-              passion for coding, especially frontend, while exploring & working
-              on backend and databases. I combine expertise in accounting,
-              management, and full-stack development. My business experience
-              honed leadership, problem-solving, and efficiency, which now fuel
-              my coding projects. With Ordinary Developer Skills done
-              ExtraOrdinary Projects.
+              FullStack Web Developer | An Ordinary Coder with a passion for coding,
+              especially frontend, while exploring & working on backend and
+              databases. I combine expertise in accounting, management, and
+              full-stack development. My business experience honed leadership,
+              problem-solving, and efficiency, which now fuel my coding
+              projects.
             </motion.p>
+
+         <ChangingText/>
 
             {/* CTA Button */}
             <div className="flex justify-center md:justify-start">
@@ -200,7 +179,7 @@ const Hero = () => {
 
                 {/* Button text */}
                 <span className="relative text-yellow-500 group-hover:text-gray-900 transition-colors duration-300 text-sm md:text-base">
-                  MORE ABOUT ME
+                More About Me
                 </span>
 
                 {/* Arrow icon */}
@@ -235,16 +214,8 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Bottom Right Website Credit */}
-      <motion.div
-        className="absolute bottom-4 right-4 md:bottom-8 md:right-8 text-gray-400 text-xs md:text-sm"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 1.2 }}
-      >
-        www.OrdinaryCoder.com
-      </motion.div>
     </div>
+    
   );
 };
 

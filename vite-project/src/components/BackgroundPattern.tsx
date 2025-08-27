@@ -2,6 +2,8 @@ import React from 'react';
 
 const BackgroundPattern = () => {
   return (
+
+
     <div className="absolute inset-0 opacity-5">
       <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 to-orange-500"></div>
       <svg
@@ -11,20 +13,23 @@ const BackgroundPattern = () => {
       >
         <pattern
           id="grid"
-          width="10"
-          height="10"
+          width="5"
+          height="5"
           patternUnits="userSpaceOnUse"
         >
           <path
-            d="M 10 0 L 0 0 0 10"
+            d="M 5 0 L 0 0 0 5"
             fill="none"
             stroke="currentColor"
-            strokeWidth="0.5"
+            strokeWidth=".3"
           />
         </pattern>
         <rect width="100" height="100" fill="url(#grid)" />
       </svg>
     </div>
+
+
+   
   );
 };
 
