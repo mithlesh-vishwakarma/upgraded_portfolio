@@ -30,20 +30,21 @@
   }
 }
 @media (min-width: 923px) {
-  .custom-923\:flex-row {
+  .custom-971\:flex-row {
     flex-direction: row;
   }
-  .custom-923\:items-center {
+  .custom-971\:items-center {
     align-items: center;
   }
-  .custom-923\:justify-between {
+  .custom-971\:justify-between {
     justify-content: space-between;
   }
-  .custom-923\:text-left {
+  .custom-971\:text-left {
     text-align: left;
   }
-  .custom-923\:mt-0 {
+  .custom-971\:mt-0 {
     margin-top: 0;
+    padding-right: 30px;
   }
 }
 

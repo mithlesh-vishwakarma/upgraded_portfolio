@@ -37,13 +37,13 @@ const ChangingText = () => {
 
   return (
     <motion.div
-      className="flex flex-col custom-923:flex-row items-center custom-923:items-center custom-923:justify-between text-gray-400 text-sm md:text-base mb-6 md:mb-14 p-3 md:p-4 shadow-[0_0_15px_#6b5815,0_0_30px_#6b5815] rounded-full bg-gray-900 w-full"
+      className="flex flex-col custom-971:flex-row items-center custom-971:items-center custom-971:justify-between text-gray-400 text-sm md:text-base mb-6 md:mb-14 p-3 md:p-4 shadow-[0_0_15px_#6b5815,0_0_30px_#6b5815] rounded-full bg-gray-900 w-full"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6, delay: 1.6 }}
     >
       {/* Static + Typing Effect */}
-      <div className="text-center custom-923:text-left">
+      <div className="text-center custom-971:text-left pr-[30px]">
         <span className="text-white">Want to Build &nbsp;</span>
         <span className="text-yellow-500">{displayText}</span>
         <span className="animate-pulse text-yellow-500">|</span>
@@ -52,7 +52,7 @@ const ChangingText = () => {
       {/* Just text link */}
       <Link
         to="/contact"
-        className="text-yellow-500 font-semibold mt-3 custom-923:mt-0"
+        className="text-yellow-500 font-semibold mt-3 custom-971:mt-0"
       >
         Let's Connect
       </Link>

@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import AlluArjun from "../assets/allu-arjun.jpg";
 import ChangingText from "./ChangingText";
-import type BackgroundPattern from "./BackgroundPattern";
+// import type BackgroundPattern from "./BackgroundPattern";
 
 
 const Hero = () => {
@@ -72,39 +72,47 @@ const Hero = () => {
             </motion.div>
 
             {/* ✅ Profile Image (mobile-friendly) */}
-            <motion.div
-              className="relative z-20 w-40 h-52 sm:w-44 sm:h-56 md:w-64 md:h-72 bg-gray-800 rounded-tr-3xl overflow-hidden shadow-2xl mx-auto"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{
-                duration: 0.8,
-                delay: 0.01,
-                type: "tween",
-                stiffness: 100,
-                damping: 20
-              }}
-              whileHover={{
-                scale: 1.02,
-                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
-              }}
-            >
-              <div className="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center">
-                <img
-                  src={AlluArjun}
-                  alt="Profile Picture"
-                  className="w-full h-full object-cover"
-                />
-              </div>
+         <motion.div
+  className="relative z-20 w-40 h-52 sm:w-44 sm:h-56 md:w-64 md:h-72 bg-gray-800 rounded-tr-3xl overflow-hidden shadow-[0_0_15px_#6b5815,0_0_30px_#6b5815] mx-auto"
+  initial={{ scale: 0, opacity: 0 }}
+  animate={{ scale: 1, opacity: 1 }}
+  transition={{
+    duration: 0.8,
+    delay: 0.01,
+    type: "tween",
+    stiffness: 100,
+    damping: 20
+  }}
+  whileHover={{
+    scale: 1.08,
+    rotate: 3,
+    boxShadow: "0 0 25px #facc15, 0 0 50px #facc15",
+    transition: {
+      duration: 0.4,
+      ease: "easeInOut"
+    }
+  }}
+  whileTap={{ scale: 0.95 }}
+>
+  <div className="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center">
+    <img
+      src={AlluArjun}
+      alt="Profile Picture"
+      className="w-full h-full object-cover"
+    />
+  </div>
 
-              {/* Image border animation */}
               <motion.div
-                className="absolute inset-0 border-2 border-yellow-400/30 rounded-tr-3xl"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 1 }}
-              />
-            </motion.div>
+    className="absolute inset-0 border-2 border-yellow-400/30 rounded-tr-3xl"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.5, delay: 1 }}
+  />
+</motion.div>
           </motion.div>
+
+
+          
 
           {/* ✅ Content Section */}
           <motion.div
