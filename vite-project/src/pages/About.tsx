@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { GraduationCap, Briefcase, Code2,Database, Globe, Palette, Terminal, Server, GitBranch} from 'lucide-react';
+import { GraduationCap, Briefcase, Code2,Database, Globe, Palette, Terminal, Server, GitBranch, Earth} from 'lucide-react';
 
 const AboutPage = () => {
   const [activeTab, setActiveTab] = useState('education');
@@ -75,7 +75,7 @@ technologies: ["MS Excel", "Tally ERP", "Google Sheets", "Email Communication", 
       { name: "Git/GitHub", percentage: 70, icon: GitBranch },
       { name: "VS Code", percentage: 95, icon: Terminal },
       { name: "MS Office", percentage: 80, icon: Globe },
-      // { name: "Postman", percentage: 85, icon: Globe },
+      { name: "SEO Optimization", percentage: 95, icon: Earth },
       // { name: "AWS", percentage: 65, icon: Server }
     ]
   };
@@ -254,7 +254,7 @@ technologies: ["MS Excel", "Tally ERP", "Google Sheets", "Email Communication", 
                       <div className="p-2 bg-yellow-400/20 rounded-lg">
                         <Terminal className="w-6 h-6 text-yellow-400" />
                       </div>
-                      <h3 className="text-xl font-semibold text-yellow-400">Tools</h3>
+                      <h3 className="text-xl font-semibold text-yellow-400">Tools & Other Expertise</h3>
                     </div>
                     {skillsData.tools.map((skill, index) => (
                       <SkillBar key={skill.name} skill={skill} delay={index * 100} />

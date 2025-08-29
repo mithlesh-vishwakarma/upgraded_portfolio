@@ -212,7 +212,7 @@ const Hero = () => {
             {/* CTA Button */}
             <div className="flex justify-center md:justify-start">
               <motion.a
-                href="/coming-soon"
+                href="/about"
                 className="relative inline-flex items-center overflow-hidden px-6 md:px-8 py-3 rounded-full font-semibold group cursor-pointer"
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
