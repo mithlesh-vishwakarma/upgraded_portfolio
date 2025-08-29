@@ -255,7 +255,7 @@ export default function ContactPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 font-semibold rounded-full hover:from-yellow-500 hover:to-yellow-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-yellow-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transition-all duration-100"
+                    className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 font-semibold rounded-full hover:from-yellow-500 hover:to-yellow-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-yellow-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transition-all duration-100 "
                   >
                     {isSubmitting ? (
                       <>
@@ -277,7 +277,7 @@ export default function ContactPage() {
                     ) : (
                       <>
                         <svg
-                          className="w-5 h-5"
+                          className="w-5 h-5 xs:px-6 xs:py-2"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
