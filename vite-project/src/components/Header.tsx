@@ -13,7 +13,7 @@ const Header: React.FC = () => {
     { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
     { label: 'Projects', href: '/projects' },
-    { label: 'Ordinary Things', href: '/ordinary-things' },
+    { label: 'Arts of OrdinaryCoder', href: '/ordinary-things' },
     { label: 'Articles', href: '/articles' },
   ];
 
