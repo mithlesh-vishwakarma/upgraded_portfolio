@@ -28,7 +28,7 @@ export default function ContactPage() {
     setIsSubmitting(true);
 
     const formPayload = {
-      access_key: "b185b92a-a8c3-4cca-a96d-5377b2578d7a", // Web3Forms Key
+      access_key: "4108bd75-dcae-46cf-9ae5-39c1e9ae2c65", // Web3Forms Key
       subject: "New Contact Message from Portfolio",
       from_name: formData.fullName,
       email: formData.email,
@@ -121,7 +121,7 @@ export default function ContactPage() {
                 Email
               </h3>
               <p className="text-slate-300 text-sm group-hover:text-white transition-colors duration-100">
-                ordinarycoder25@gmail.com
+                mithlesh.workplace@gmail.com
               </p>
             </div>
 
