@@ -9,8 +9,11 @@ export default {
       fontFamily: {
         merienda: ['Merienda', 'cursive'],
         roboto: ['Roboto', 'sans-serif'],
+        plugins: [require('@tailwindcss/line-clamp')],
       },
     },
   },
   plugins: [],
 }
+
+
