@@ -38,26 +38,29 @@ const Header: React.FC = () => {
 
       <div className="container mx-auto px-4 lg:px-16 py-4 flex flex-row items-center justify-between">
         {/* Logo Section */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
           className="flex-shrink-0 lg:ml-20"
         >
-          <motion.a 
+          <motion.a
             href="/"
-            className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+            className="flex flex-col items-center hover:opacity-80 transition-opacity"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            {/* <img
-              src="/src/assets/"
-              alt="OrdinaryCoder Logo"
-              className="w-12 h-12 object-contain"
-            /> */}
-            <span className="text-white font-merienda text-xl lg:text-2xl">{'<' } OrdinaryCoder {'/' } {'>' }</span>
+            <span className="text-white font-merienda text-xl lg:text-2xl leading-none text-center">
+              {"<"} OrdinaryCoder {"/>"}
+            </span>
+            <div className="flex justify-center text-[10px] text-gray-400 mt-1 lg:-mt-1 leading-none">
+              <span className="mr-[30px]">Vishwakarma</span>
+              <span>Mithlesh</span>
+            </div>
           </motion.a>
         </motion.div>
+
+
 
         {/* Hamburger Menu Button (Mobile) */}
         {isMobile && (
@@ -72,7 +75,7 @@ const Header: React.FC = () => {
 
         {/* Desktop Navigation Menu */}
         {!isMobile && (
-          <motion.nav 
+          <motion.nav
             className="hidden lg:flex items-center space-x-6 ml-auto mr-20"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
