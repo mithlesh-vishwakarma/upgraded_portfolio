@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ExternalLink, Code, Calendar, User, Briefcase, Globe, Github, Star } from 'lucide-react';
+import { ExternalLink, Code, User, Briefcase, Globe, Github, Star } from 'lucide-react';
 import PersonalProject1 from "../assets/PersonalProject1.jpg";
 import ClientProject1 from "../assets/clientProject1.jpg";
 import ClientProject2 from "../assets/clientProject2.png";
@@ -12,7 +12,7 @@ interface Project {
   liveUrl: string;
   githubUrl?: string;
   image: string;
-  date: string; // Use format: "YYYY-MM-DD"
+  date: string; 
   featured?: boolean;
   status: string;
   client?: string;
@@ -181,10 +181,10 @@ const ProjectPage: React.FC = () => {
           <h3 className="text-xl font-semibold text-white group-hover:text-yellow-400 transition-colors duration-300">
             {project.title}
           </h3>
-          <div className="flex items-center text-yellow-400 text-xs">
+          {/* <div className="flex items-center text-yellow-400 text-xs">
             <Calendar className="w-3 h-3 mr-1" />
             {project.date}
-          </div>
+          </div> */}
         </div>
 
         {isFreelanced && project.client && (
