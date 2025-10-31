@@ -52,7 +52,7 @@ const Header: React.FC = () => {
               speed={1}
               enableShadows={true}
               enableOnHover={true}
-              className="text-white font-merienda text-xl lg:text-2xl leading-none text-center"
+              className="text-white font-merienda text-base sm:text-lg md:text-xl lg:text-2xl leading-none text-center"
             >
               {"<"} OrdinaryCoder {"/>"}
             </GlitchText>

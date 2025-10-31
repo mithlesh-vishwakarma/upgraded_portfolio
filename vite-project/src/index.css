@@ -121,6 +121,12 @@
   cursor: pointer;
 }
 
+@media (max-width: 639px) {
+  .glitch {
+    font-size: clamp(1.25rem, 6vw, 3rem);
+  }
+}
+
 .glitch::after,
 .glitch::before {
   content: attr(data-text);
