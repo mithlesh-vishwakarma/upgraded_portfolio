@@ -56,7 +56,7 @@ const Header: React.FC = () => {
             >
               {"<"} OrdinaryCoder {"/>"}
             </GlitchText>
-            <div className="flex justify-center text-[10px] text-gray-400 mt-1 lg:-mt-1 leading-none font-merienda">
+            <div className="logo-subtitle flex justify-center text-gray-400 mt-1 lg:-mt-1 leading-none font-merienda sm:text-[7px] md:text-[9px] lg:text-[10px]">
               <span className="mr-[30px]">Vishwakarma</span>
               <span>Mithlesh</span>
             </div>
