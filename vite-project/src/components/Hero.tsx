@@ -1,11 +1,13 @@
 import { motion } from "framer-motion";
 import ChangingText from "./ChangingText";
+import BackgroundPattern from "./BackgroundPattern";
 import ProfilePic1 from "../assets/profile-img-cutout.png";
 // import ProfilePic1 from "../assets/profile-img.webp";
 
 const Hero = () => {
   return (
-    <div className="bg-gray-900 relative flex items-center justify-center p-4 md:p-8 pt-32 pb-24 md:pt-40 md:pb-32">
+    <div className="relative flex items-center justify-center p-4 md:p-8 pt-32 pb-24 md:pt-40 md:pb-18">
+      <BackgroundPattern />
 
       <div className="container mx-auto px-4 md:px-8 py-8 md:py-16 flex items-center justify-center max-w-6xl relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-center w-full gap-8 md:gap-12">

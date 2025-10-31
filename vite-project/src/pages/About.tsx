@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {  Briefcase,GraduationCap, Code2, Database, Globe, Palette, Terminal, Server, GitBranch, Earth } from 'lucide-react';
+import BackgroundPattern from "../components/BackgroundPattern";
 
 const AboutPage = () => {
   const [activeTab, setActiveTab] = useState('experience');
@@ -78,6 +79,7 @@ const AboutPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800">
+      <BackgroundPattern />
       <div className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 text-white font-roboto">
         <div className="max-w-6xl mx-auto px-6 pt-28 pb-16">
           {/* Header Section */}

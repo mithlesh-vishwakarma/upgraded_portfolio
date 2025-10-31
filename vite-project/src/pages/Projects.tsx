@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import BackgroundPattern from '../components/BackgroundPattern';
 import { ExternalLink, Code, User, Briefcase, Globe, Github, Star } from 'lucide-react';
 import PersonalProject1 from "../assets/PersonalProject1.jpg";
 import ClientProject1 from "../assets/clientProject1.jpg";
@@ -240,6 +241,7 @@ const ProjectPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 text-white font-roboto">
+      <BackgroundPattern />
       <div className="max-w-6xl mx-auto px-6 pt-28 pb-16">
         {/* Header Section */}
         <div

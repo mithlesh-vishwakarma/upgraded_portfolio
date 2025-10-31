@@ -55,7 +55,7 @@ const Header: React.FC = () => {
               alt="OrdinaryCoder Logo"
               className="w-12 h-12 object-contain"
             /> */}
-            <span className="text-white font-merienda text-xl lg:text-2xl">OrdinaryCoder</span>
+            <span className="text-white font-merienda text-xl lg:text-2xl">{'<' } OrdinaryCoder {'/' } {'>' }</span>
           </motion.a>
         </motion.div>
 
