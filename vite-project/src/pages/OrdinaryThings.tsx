@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const OrdinaryThings = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -9,62 +9,62 @@ const OrdinaryThings = () => {
   }, []);
 
   // Sample art data - replace with your actual artworks
-  const artworks = [
-    {
-      id: 1,
-      title: 'Urban Sketches',
-      category: 'sketches',
-      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=800&fit=crop',
-      description: 'Pen and ink sketches of city life',
-      medium: 'Pen & Ink',
-      year: '2024'
-    },
-    {
-      id: 2,
-      title: 'Digital Portrait',
-      category: 'digital',
-      image: 'https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=600&h=800&fit=crop',
-      description: 'Digital art portrait with vibrant colors',
-      medium: 'Digital',
-      year: '2024'
-    },
-    {
-      id: 3,
-      title: 'Nature Study',
-      category: 'paintings',
-      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=800&fit=crop',
-      description: 'Watercolor study of natural forms',
-      medium: 'Watercolor',
-      year: '2023'
-    },
-    {
-      id: 4,
-      title: 'Character Design',
-      category: 'sketches',
-      image: 'https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=600&h=800&fit=crop',
-      description: 'Original character concept art',
-      medium: 'Pencil',
-      year: '2024'
-    },
-    {
-      id: 5,
-      title: 'Abstract Expression',
-      category: 'paintings',
-      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=800&fit=crop',
-      description: 'Abstract acrylic painting',
-      medium: 'Acrylic',
-      year: '2023'
-    },
-    {
-      id: 6,
-      title: 'Digital Landscape',
-      category: 'digital',
-      image: 'https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=600&h=800&fit=crop',
-      description: 'Surreal digital landscape',
-      medium: 'Digital',
-      year: '2024'
-    }
-  ];
+  // const artworks = [
+  //   {
+  //     id: 1,
+  //     title: 'Urban Sketches',
+  //     category: 'sketches',
+  //     image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=800&fit=crop',
+  //     description: 'Pen and ink sketches of city life',
+  //     medium: 'Pen & Ink',
+  //     year: '2024'
+  //   },
+  //   {
+  //     id: 2,
+  //     title: 'Digital Portrait',
+  //     category: 'digital',
+  //     image: 'https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=600&h=800&fit=crop',
+  //     description: 'Digital art portrait with vibrant colors',
+  //     medium: 'Digital',
+  //     year: '2024'
+  //   },
+  //   {
+  //     id: 3,
+  //     title: 'Nature Study',
+  //     category: 'paintings',
+  //     image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=800&fit=crop',
+  //     description: 'Watercolor study of natural forms',
+  //     medium: 'Watercolor',
+  //     year: '2023'
+  //   },
+  //   {
+  //     id: 4,
+  //     title: 'Character Design',
+  //     category: 'sketches',
+  //     image: 'https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=600&h=800&fit=crop',
+  //     description: 'Original character concept art',
+  //     medium: 'Pencil',
+  //     year: '2024'
+  //   },
+  //   {
+  //     id: 5,
+  //     title: 'Abstract Expression',
+  //     category: 'paintings',
+  //     image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=800&fit=crop',
+  //     description: 'Abstract acrylic painting',
+  //     medium: 'Acrylic',
+  //     year: '2023'
+  //   },
+  //   {
+  //     id: 6,
+  //     title: 'Digital Landscape',
+  //     category: 'digital',
+  //     image: 'https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=600&h=800&fit=crop',
+  //     description: 'Surreal digital landscape',
+  //     medium: 'Digital',
+  //     year: '2024'
+  //   }
+  // ];
 
   const categories = [
     { id: 'all', name: 'All Artworks', icon: '🎨' },
@@ -73,9 +73,9 @@ const OrdinaryThings = () => {
     { id: 'digital', name: 'Digital Art', icon: '💻' }
   ];
 
-  const filteredArtworks = selectedCategory === 'all' 
-    ? artworks 
-    : artworks.filter(art => art.category === selectedCategory);
+  // const filteredArtworks = selectedCategory === 'all'
+  //   ? artworks
+  //   : artworks.filter(art => art.category === selectedCategory);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 text-white font-roboto">

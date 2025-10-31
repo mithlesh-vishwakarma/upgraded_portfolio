@@ -1,4 +1,3 @@
-import React from 'react';
 import BackgroundPattern from '../components/BackgroundPattern';
 
 const ComingSoon = () => {

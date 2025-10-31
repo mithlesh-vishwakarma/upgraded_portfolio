@@ -1,14 +1,24 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import Projects from "./pages/Projects";
-import Articles from "./pages/Articles";
-import Contact from "./pages/Contact";
-import OrdinaryThings from "./pages/OrdinaryThings";
-import About from "./pages/About";
-import ComingSoon from "./components/ComingSoon";
+import { lazy, Suspense } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import BackgroundPattern from "./components/BackgroundPattern";
+
+// Lazy load non-critical components
+const HomePage = lazy(() => import("./pages/HomePage"));
+const Projects = lazy(() => import("./pages/Projects"));
+const Articles = lazy(() => import("./pages/Articles"));
+const Contact = lazy(() => import("./pages/Contact"));
+const OrdinaryThings = lazy(() => import("./pages/OrdinaryThings"));
+const About = lazy(() => import("./pages/About"));
+const ComingSoon = lazy(() => import("./components/ComingSoon"));
+const BackgroundPattern = lazy(() => import("./components/BackgroundPattern"));
+
+// Loading fallback component
+const LoadingFallback = () => (
+  <div className="flex items-center justify-center min-h-screen bg-gray-900">
+    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-yellow-500"></div>
+  </div>
+);
 
 function App() {
   return (
@@ -16,17 +26,18 @@ function App() {
       <div className="bg-gray-900 min-h-screen flex flex-col">
         <Header />
         <main className="flex-grow relative">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/coming-soon" element={<ComingSoon />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/articles" element={<Articles />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/ordinary-things" element={<OrdinaryThings />} />
-            <Route path="/background" element={<BackgroundPattern />} />
-
-          </Routes>
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/coming-soon" element={<ComingSoon />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/articles" element={<Articles />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/ordinary-things" element={<OrdinaryThings />} />
+              <Route path="/background" element={<BackgroundPattern />} />
+            </Routes>
+          </Suspense>
         </main>
         <Footer />
       </div>

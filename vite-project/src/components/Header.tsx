@@ -54,7 +54,7 @@ const Header: React.FC = () => {
               enableOnHover={true}
               className="text-white font-merienda text-base sm:text-lg md:text-xl lg:text-2xl leading-none text-center"
             >
-              {"<"} OrdinaryCoder {"/>"}
+              {"< OrdinaryCoder />"}
             </GlitchText>
             <div className="logo-subtitle flex justify-center text-gray-400 mt-1 lg:-mt-1 leading-none font-merienda sm:text-[7px] md:text-[9px] lg:text-[10px]">
               <span className="mr-[30px]">Vishwakarma</span>

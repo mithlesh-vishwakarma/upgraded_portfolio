@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import ChangingText from "./ChangingText";
 import BackgroundPattern from "./BackgroundPattern";
 import ProfilePic1 from "../assets/profile-img-cutout.png";
-// import ProfilePic1 from "../assets/profile-img.webp";
 
 const Hero = () => {
   return (
@@ -11,7 +10,7 @@ const Hero = () => {
 
       <div className="container mx-auto px-4 md:px-8 py-8 md:py-16 flex items-center justify-center max-w-6xl relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-center w-full gap-8 md:gap-12">
-          {/* ✅ Fixed Image Section */}
+          {/* Image Section */}
           <motion.div
             className="relative order-1 md:order-1 flex-shrink-0"
             initial={{ x: -200, opacity: 0 }}
@@ -20,8 +19,7 @@ const Hero = () => {
           >
             {/* Animated Yellow Background Shape */}
             <motion.div
-             className="absolute -left-1 -top-1 sm:-left-2 sm:-top-2 md:-left-5 md:-top-5 w-36 h-40 sm:w-40 sm:h-44 md:w-64 md:h-60 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-tr-3xl"
-
+              className="absolute -left-1 -top-1 sm:-left-2 sm:-top-2 md:-left-5 md:-top-5 w-36 h-40 sm:w-40 sm:h-44 md:w-64 md:h-60 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-tr-3xl"
               initial={{ scale: 0, rotate: -10 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{
@@ -73,30 +71,28 @@ const Hero = () => {
               />
             </motion.div>
 
-            {/* ✅ Profile Image */}
-            {/* ✅ Profile Image with Top Overflow (Head & Shoulders Out) */}
+            {/* Profile Image */}
             <motion.div
               className="relative z-20 w-40 h-40 sm:w-44 sm:h-44 md:w-64 md:h-56 bg-gray-800 rounded-tr-3xl overflow-visible shadow-[0_0_15px_#6b5815,0_0_30px_#6b5815] mx-auto"
-
             >
               {/* Background gradient box */}
               <div className="absolute inset-0 bg-gradient-to-br from-gray-700 to-gray-900 rounded-tr-3xl"></div>
 
-              {/* Cutout image - top part overflows */}
+              {/* Optimized image with lazy loading and async decoding */}
               <img
                 src={ProfilePic1}
-                alt="Profile Picture"
+                alt="Profile Picture of Mithlesh Vishwakarma"
+                loading="lazy"
+                decoding="async"
                 className="absolute bottom-1 left-1/2 -translate-x-1/2 w-[105%] object-contain z-10"
               />
-
 
               {/* Decorative glowing border */}
               <div className="absolute inset-0 border-2 border-yellow-400/30 rounded-tr-3xl"></div>
             </motion.div>
-
           </motion.div>
 
-          {/* ✅ Content Section */}
+          {/* Content Section */}
           <motion.div
             className="flex-1 order-2 md:order-2 text-center md:text-center md:ml-8 lg:ml-12 w-full"
             initial={{ x: 200, opacity: 0 }}
@@ -118,7 +114,7 @@ const Hero = () => {
               ></motion.div>
 
               <motion.h2
-                className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-200 mb-2 text-center md:text-left font-merienda "
+                className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-200 mb-2 text-center md:text-left font-merienda"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
@@ -129,12 +125,12 @@ const Hero = () => {
 
             {/* Role/Title */}
             <motion.p
-              className="text-gray-400 text-base md:text-lg leading-relaxed mb-4 text-center md:text-left "
+              className="text-gray-400 text-base md:text-lg leading-relaxed mb-4 text-center md:text-left"
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.9 }}
             >
-              Web Developer&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Ordinary Artist&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Fitness Enthusiast
+              Web Developer | Ordinary Artist | Fitness Enthusiast
             </motion.p>
 
             {/* Description */}
