@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
@@ -12,11 +12,11 @@ const ChangingText = () => {
   const [index, setIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
-  const [speed, setSpeed] = useState(120); // Typing speed
+  const [speed] = useState(120); // Typing speed
 
   useEffect(() => {
     const currentText = texts[index];
-    let timer;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     if (!isDeleting && displayText.length < currentText.length) {
       timer = setTimeout(() => {
         setDisplayText(currentText.substring(0, displayText.length + 1));
@@ -32,7 +32,9 @@ const ChangingText = () => {
       setIndex((prev) => (prev + 1) % texts.length);
     }
 
-    return () => clearTimeout(timer);
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [displayText, isDeleting, index]);
 
   return (

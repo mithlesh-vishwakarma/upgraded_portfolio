@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { GraduationCap, Briefcase, Code2, Database, Globe, Palette, Terminal, Server, GitBranch, Earth } from 'lucide-react';
 
 const AboutPage = () => {
@@ -97,8 +97,8 @@ const AboutPage = () => {
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2 border border-white/20 shadow-[0_0_15px_#6b5815,0_0_30px_#6b5815]">
               <div className="flex space-x-1">
                 {[
-                  { id: 'education', label: 'Education', icon: GraduationCap },
-                  { id: 'experience', label: 'Experience', icon: Briefcase },
+                  { id: 'experience', label: 'Experience', icon: GraduationCap },
+                  { id: 'education', label: 'Education', icon: Briefcase },
                   { id: 'skills', label: 'Skills', icon: Code2 }
                 ].map(({ id, label, icon: Icon }) => (
                   <button
@@ -227,7 +227,7 @@ const AboutPage = () => {
                     { name: "Team Leadership", level: "Advanced", icon: "👥" },
                     { name: "AI Enhanced-Frontend", level: "Advanced", icon: "🤖" },
                     { name: "Project Management", level: "Advanced", icon: "📋" }
-                  ].map((skill, index) => (
+                  ].map((skill) => (
                     <div
                       key={skill.name}
                       className="bg-gradient-to-br from-white/10 to-white/5 rounded-xl p-4 text-center border border-white/10 hover:border-yellow-400/30 transition-all duration-300 hover:transform hover:scale-105 group"
@@ -253,7 +253,18 @@ const AboutPage = () => {
   );
 };
 
-const SkillBar = ({ skill, delay = 0 }) => {
+type Skill = {
+  name: string;
+  percentage: number;
+  icon: React.ComponentType<any>;
+};
+
+type SkillBarProps = {
+  skill: Skill;
+  delay?: number;
+};
+
+const SkillBar: React.FC<SkillBarProps> = ({ skill, delay = 0 }) => {
   const IconComponent = skill.icon;
 
   return (
