@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-
+import GlitchText from './GlitchText';
 interface MenuItem {
   label: string;
   href: string;
@@ -47,21 +47,21 @@ const Header: React.FC = () => {
           <motion.a
             href="/"
             className="flex flex-col items-center hover:opacity-80 transition-opacity"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
           >
-            <span className="text-white font-merienda text-xl lg:text-2xl leading-none text-center">
+            <GlitchText
+              speed={1}
+              enableShadows={true}
+              enableOnHover={true}
+              className="text-white font-merienda text-xl lg:text-2xl leading-none text-center"
+            >
               {"<"} OrdinaryCoder {"/>"}
-            </span>
+            </GlitchText>
             <div className="flex justify-center text-[10px] text-gray-400 mt-1 lg:-mt-1 leading-none">
               <span className="mr-[30px]">Vishwakarma</span>
               <span>Mithlesh</span>
             </div>
           </motion.a>
         </motion.div>
-
-
-
         {/* Hamburger Menu Button (Mobile) */}
         {isMobile && (
           <motion.button
