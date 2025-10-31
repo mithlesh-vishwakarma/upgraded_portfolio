@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { GraduationCap, Briefcase, Code2, Database, Globe, Palette, Terminal, Server, GitBranch, Earth } from 'lucide-react';
+import {  Briefcase,GraduationCap, Code2, Database, Globe, Palette, Terminal, Server, GitBranch, Earth } from 'lucide-react';
 
 const AboutPage = () => {
-  const [activeTab, setActiveTab] = useState('education');
+  const [activeTab, setActiveTab] = useState('experience');
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -97,8 +97,8 @@ const AboutPage = () => {
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2 border border-white/20 shadow-[0_0_15px_#6b5815,0_0_30px_#6b5815]">
               <div className="flex space-x-1">
                 {[
-                  { id: 'experience', label: 'Experience', icon: GraduationCap },
-                  { id: 'education', label: 'Education', icon: Briefcase },
+                  { id: 'experience', label: 'Experience', icon: Briefcase },
+                  { id: 'education', label: 'Education', icon: GraduationCap },
                   { id: 'skills', label: 'Skills', icon: Code2 }
                 ].map(({ id, label, icon: Icon }) => (
                   <button
