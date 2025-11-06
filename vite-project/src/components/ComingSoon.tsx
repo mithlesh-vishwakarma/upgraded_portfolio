@@ -2,7 +2,7 @@ import BackgroundPattern from '../components/BackgroundPattern';
 
 const ComingSoon = () => {
   return (
-    <div className="h-100vh bg-gray-900 text-white flex items-center justify-center absolute inset-0">
+    <div className="h-100vh text-white flex items-center justify-center absolute inset-0">
       {/* Background Pattern */}
 
       <BackgroundPattern />

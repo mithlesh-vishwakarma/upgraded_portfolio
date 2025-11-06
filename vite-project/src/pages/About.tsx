@@ -78,9 +78,9 @@ const AboutPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800">
+    <div className="min-h-screen ">
       <BackgroundPattern />
-      <div className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 text-white font-roboto">
+      <div className="min-h-screen  text-white font-roboto">
         <div className="max-w-6xl mx-auto px-6 pt-28 pb-16">
           {/* Header Section */}
           <div

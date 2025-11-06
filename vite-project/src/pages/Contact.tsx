@@ -69,7 +69,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white font-roboto">
+    <div className="min-h-screen  text-white font-roboto">
       <BackgroundPattern />
       <div className="max-w-6xl mx-auto px-6 pt-28 pb-12">
         {/* Header Section */}

@@ -28,7 +28,7 @@ const Articles = () => {
   // ];
 
   return (
-  //   <div className="h-[calc(100vh)] bg-gray-900 text-white overflow-hidden relative">
+  //   <div className="h-[calc(100vh)]  text-white overflow-hidden relative">
   //     {/* Background Pattern */}
   //     <BackgroundPattern />
       

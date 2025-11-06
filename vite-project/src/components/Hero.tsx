@@ -1,12 +1,11 @@
 import { motion } from "framer-motion";
 import ChangingText from "./ChangingText";
-import BackgroundPattern from "./BackgroundPattern";
 import ProfilePic1 from "../assets/profile-img-cutout.png";
+import Magnet from './Magnet'
 
 const Hero = () => {
   return (
     <div className="relative flex items-center justify-center p-4 md:p-8 pt-32 pb-24 md:pt-40 md:pb-18">
-      <BackgroundPattern />
 
       <div className="container mx-auto px-4 md:px-8 py-8 md:py-16 flex items-center justify-center max-w-6xl relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-center w-full gap-8 md:gap-12">
@@ -152,15 +151,16 @@ const Hero = () => {
 
             {/* CTA Button */}
             <div className="flex justify-center md:justify-start">
+              <Magnet padding={100} disabled={false} magnetStrength={20}>
               <motion.a
                 href="/about"
-                className="relative inline-flex items-center overflow-hidden px-6 md:px-8 py-3 rounded-full font-semibold group cursor-pointer"
+                className="relative inline-flex border border-yellow-500 items-center overflow-hidden px-6 md:px-8 py-3 rounded-full font-semibold group cursor-pointer"
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 1.1 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <span className="absolute inset-0 w-0 bg-yellow-500 transition-all duration-500 ease-out group-hover:w-full border-2 border-yellow-500 rounded-full"></span>
+                <span className="absolute inset-0 w-0 bg-yellow-500 left-0 top-0 transition-all duration-500 ease-out group-hover:w-full"></span>
                 <span className="relative text-yellow-500 group-hover:text-gray-900 transition-colors duration-300 text-sm md:text-base">
                   More About Me
                 </span>
@@ -190,6 +190,7 @@ const Hero = () => {
                   </motion.svg>
                 </motion.span>
               </motion.a>
+              </Magnet>
             </div>
           </motion.div>
         </div>

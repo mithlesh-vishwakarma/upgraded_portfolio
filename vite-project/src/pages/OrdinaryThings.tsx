@@ -78,7 +78,7 @@ const OrdinaryThings = () => {
   //   : artworks.filter(art => art.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 text-white font-roboto">
+    <div className="min-h-screen  text-white font-roboto">
       {/* Animated Background Elements */}
       {/* <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-10 w-32 h-32 bg-yellow-500/10 rounded-full blur-xl animate-pulse"></div>

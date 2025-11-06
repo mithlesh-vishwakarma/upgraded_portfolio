@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
+
 // Lazy load non-critical components
 const HomePage = lazy(() => import("./pages/HomePage"));
 const Projects = lazy(() => import("./pages/Projects"));
@@ -15,7 +16,7 @@ const BackgroundPattern = lazy(() => import("./components/BackgroundPattern"));
 
 // Loading fallback component
 const LoadingFallback = () => (
-  <div className="flex items-center justify-center min-h-screen bg-gray-900">
+  <div className="flex items-center justify-center min-h-screen ">
     <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-yellow-500"></div>
   </div>
 );
@@ -23,9 +24,11 @@ const LoadingFallback = () => (
 function App() {
   return (
     <BrowserRouter>
-      <div className="bg-gray-900 min-h-screen flex flex-col">
+      <div className=" min-h-screen flex flex-col">
         <Header />
         <main className="flex-grow relative">
+          <BackgroundPattern />
+
           <Suspense fallback={<LoadingFallback />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
