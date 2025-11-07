@@ -13,6 +13,7 @@ const OrdinaryThings = lazy(() => import("./pages/OrdinaryThings"));
 const About = lazy(() => import("./pages/About"));
 const ComingSoon = lazy(() => import("./components/ComingSoon"));
 const BackgroundPattern = lazy(() => import("./components/BackgroundPattern"));
+const ResumeViewerPage = lazy(() => import("./pages/ResumeViewerPage"));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -39,6 +40,7 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/ordinary-things" element={<OrdinaryThings />} />
               <Route path="/background" element={<BackgroundPattern />} />
+              <Route path="/resume-mithlesh" element={<ResumeViewerPage />} />
             </Routes>
           </Suspense>
         </main>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import BackgroundPattern from "../components/BackgroundPattern";
+import Magnet from '../components/Magnet';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -254,10 +255,11 @@ export default function ContactPage() {
                 </div>
 
                 <div className="text-center">
+                    <Magnet padding={100} disabled={false} magnetStrength={20}>
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 font-semibold rounded-full hover:from-yellow-500 hover:to-yellow-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-yellow-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transition-all duration-100 "
+                    className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 font-semibold rounded-full hover:from-yellow-500 hover:to-yellow-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-yellow-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transition-all duration-100 whitespace-nowrap"
                   >
                     {isSubmitting ? (
                       <>
@@ -279,7 +281,7 @@ export default function ContactPage() {
                     ) : (
                       <>
                         <svg
-                          className="w-5 h-5 xs:px-6 xs:py-2"
+                          className="w-5 h-5"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -287,7 +289,7 @@ export default function ContactPage() {
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            strokeWidth="2"
+                            strokeWidth="1.50"
                             d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
                           />
                         </svg>
@@ -295,6 +297,7 @@ export default function ContactPage() {
                       </>
                     )}
                   </button>
+                  </Magnet>
                 </div>
               </form>
             </div>

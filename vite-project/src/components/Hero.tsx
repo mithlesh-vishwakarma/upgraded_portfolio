@@ -149,49 +149,93 @@ const Hero = () => {
 
             <ChangingText />
 
-            {/* CTA Button */}
-            <div className="flex justify-center md:justify-start">
+            {/* CTA Buttons */}
+            <div className="flex flex-col md:flex-row justify-center md:justify-start items-center md:items-start gap-4 mt-6 md:mt-8">
+              {/* Button 1 */}
               <Magnet padding={100} disabled={false} magnetStrength={20}>
-              <motion.a
-                href="/about"
-                className="relative inline-flex border border-yellow-500 items-center overflow-hidden px-6 md:px-8 py-3 rounded-full font-semibold group cursor-pointer"
-                initial={{ y: 30, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6, delay: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span className="absolute inset-0 w-0 bg-yellow-500 left-0 top-0 transition-all duration-500 ease-out group-hover:w-full"></span>
-                <span className="relative text-yellow-500 group-hover:text-gray-900 transition-colors duration-300 text-sm md:text-base">
-                  More About Me
-                </span>
-                <motion.span
-                  className="relative ml-2 flex items-center"
-                  animate={{ x: 0 }}
-                  whileHover={{ x: 5 }}
-                  transition={{ duration: 0.3 }}
+                <motion.a
+                  href="/about"
+                  className="relative inline-flex border border-yellow-500 items-center overflow-hidden px-6 md:px-8 py-3 rounded-full font-semibold group cursor-pointer"
+                  initial={{ y: 30, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.6, delay: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <motion.svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 md:h-6 md:w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                  <span className="absolute inset-0 w-0 bg-yellow-500 left-0 top-0 transition-all duration-500 ease-out group-hover:w-full"></span>
+                  <span className="relative text-yellow-500 group-hover:text-gray-900 transition-colors duration-300 text-sm md:text-base">
+                    More About Me
+                  </span>
+                  <motion.span
+                    className="relative ml-2 flex items-center"
                     animate={{ x: 0 }}
-                    whileHover={{ x: 3 }}
-                    transition={{ duration: 0.2 }}
+                    whileHover={{ x: 5 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                      className="text-yellow-500 group-hover:text-gray-900 transition-colors duration-300"
-                    />
-                  </motion.svg>
-                </motion.span>
-              </motion.a>
+                    <motion.svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 md:h-6 md:w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      animate={{ x: 0 }}
+                      whileHover={{ x: 3 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                        className="text-yellow-500 group-hover:text-gray-900 transition-colors duration-300"
+                      />
+                    </motion.svg>
+                  </motion.span>
+                </motion.a>
+              </Magnet>
+
+              {/* Button 2 */}
+              <Magnet padding={100} disabled={false} magnetStrength={20}>
+                <motion.a
+                  href="/resume-mithlesh"
+                  className="relative inline-flex border border-yellow-500 items-center overflow-hidden px-6 md:px-8 py-3 rounded-full font-semibold group cursor-pointer"
+                  initial={{ y: 30, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.6, delay: 1.3 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span className="absolute inset-0 w-0 bg-yellow-500 left-0 top-0 transition-all duration-500 ease-out group-hover:w-full"></span>
+                  <span className="relative text-yellow-500 group-hover:text-gray-900 transition-colors duration-300 text-sm md:text-base">
+                    View Resume !
+                  </span>
+                  <motion.span
+                    className="relative ml-2 flex items-center"
+                    animate={{ x: 0 }}
+                    whileHover={{ x: 5 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <motion.svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 md:h-6 md:w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      animate={{ x: 0 }}
+                      whileHover={{ x: 3 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                        className="text-yellow-500 group-hover:text-gray-900 transition-colors duration-300"
+                      />
+                    </motion.svg>
+                  </motion.span>
+                </motion.a>
               </Magnet>
             </div>
+
           </motion.div>
         </div>
       </div>

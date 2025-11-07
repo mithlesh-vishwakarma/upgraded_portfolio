@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Magnet from '../components/Magnet';
 
 const OrdinaryThings = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -201,11 +202,13 @@ const OrdinaryThings = () => {
     Whether it’s a portrait, couple sketch, or a unique concept, I’d love to bring your ideas to life. 
     Your vision, my art.
   </p>
+    <Magnet padding={100} disabled={false} magnetStrength={20}>
   <a href="/contact">
     <button className="px-8 py-3 bg-gradient-to-r from-yellow-500 to-yellow-400 text-slate-900 font-medium rounded-full hover:from-yellow-400 hover:to-yellow-300 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
       Let's Create Together
     </button>
   </a>
+  </Magnet>
 </div>
 
       </div>
