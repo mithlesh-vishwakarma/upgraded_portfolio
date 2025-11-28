@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Magnet from '../components/Magnet';
-
+import {FaInstagram } from "react-icons/fa";
 const OrdinaryThings = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [isLoaded, setIsLoaded] = useState(false);
@@ -203,9 +203,10 @@ const OrdinaryThings = () => {
     Your vision, my art.
   </p>
     <Magnet padding={100} disabled={false} magnetStrength={20}>
-  <a href="/contact">
-    <button className="px-8 py-3 bg-gradient-to-r from-yellow-500 to-yellow-400 text-slate-900 font-medium rounded-full hover:from-yellow-400 hover:to-yellow-300 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-      Let's Create Together
+  <a href="https://www.instagram.com/art_by_mithlesh/" target="_blank" rel="noopener noreferrer">
+    <button className="px-8 py-3 bg-gradient-to-r from-yellow-500 to-yellow-400 text-slate-900 font-medium rounded-full hover:from-yellow-400 hover:to-yellow-300 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-3 mx-auto">
+      <FaInstagram />
+      Explore More
     </button>
   </a>
   </Magnet>

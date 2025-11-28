@@ -36,7 +36,7 @@ const AboutPage = () => {
 
   const experienceData = [
     {
-      role: "Frontend Developer",
+      role: "Software Engineer",
       company: "Freelance & Personal Projects",
       duration: "2024 - Present",
       description: "Developing custom web applications and digital solutions for various clients. Specializing in modern JavaScript frameworks, responsive design, and scalable backend architectured clone. Successfully delivered 5+ projects ranging from e-commerce platforms to business management systems.",

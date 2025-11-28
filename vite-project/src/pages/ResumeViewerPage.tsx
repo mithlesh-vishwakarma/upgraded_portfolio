@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import PDFViewer from "../components/PDFViewer";
 import localPDF from "../assets/resume-07-Nov-Mithlesh-Vishwakarma.pdf";
 // import Magnet from '../components/Magnet';
