@@ -13,7 +13,7 @@ interface Project {
   liveUrl: string;
   githubUrl?: string;
   image: string;
-  date: string; 
+  date: string;
   featured?: boolean;
   status: string;
   client?: string;
@@ -75,7 +75,7 @@ const ProjectPage: React.FC = () => {
         "TypeScript",
         "Vercel",
       ],
-      liveUrl: "https://dev.bastionresearch.in/",
+      liveUrl: "https://bastionresearch.in/",
       githubUrl: "#",
       image: ClientProject2,
       date: "2025-10-11",
@@ -110,7 +110,7 @@ const ProjectPage: React.FC = () => {
       ExpressJs: "bg-gray-700/20 text-gray-400 border-gray-400/30",
       MongoDB: "bg-green-500/20 text-green-400 border-green-400/30",
       NodeJs: "bg-green-600/20 text-green-400 border-green-400/30",
-      
+
     };
     return colors[tech] || "bg-gray-500/20 text-gray-400 border-gray-400/30";
   };
@@ -245,9 +245,8 @@ const ProjectPage: React.FC = () => {
       <div className="max-w-6xl mx-auto px-6 pt-28 pb-16">
         {/* Header Section */}
         <div
-          className={`text-center mb-16 transition-all duration-1000 transform ${
-            isLoaded ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-          }`}
+          className={`text-center mb-16 transition-all duration-1000 transform ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+            }`}
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent animate-pulse">
             Projects
@@ -271,11 +270,10 @@ const ProjectPage: React.FC = () => {
                 <button
                   key={id}
                   onClick={() => setActiveTab(id)}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform ${
-                    activeTab === id
-                      ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 shadow-lg scale-105"
-                      : "text-gray-300 hover:text-yellow-400 hover:bg-white/5 hover:scale-105"
-                  }`}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform ${activeTab === id
+                    ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 shadow-lg scale-105"
+                    : "text-gray-300 hover:text-yellow-400 hover:bg-white/5 hover:scale-105"
+                    }`}
                 >
                   <Icon className="w-5 h-5" />
                   <span className="hidden sm:inline">{label}</span>
@@ -290,13 +288,13 @@ const ProjectPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {activeTab === "personal"
               ? sortedPersonalProjects.map((project, index) => (
-                  <ProjectCard key={project.id} project={project} index={index} />
-                ))
+                <ProjectCard key={project.id} project={project} index={index} />
+              ))
               : activeTab === "freelanced"
-              ? sortedFreelancedProjects.map((project, index) => (
+                ? sortedFreelancedProjects.map((project, index) => (
                   <ProjectCard key={project.id} project={project} isFreelanced={true} index={index} />
                 ))
-              : sortedAllProjects.map((project, index) => (
+                : sortedAllProjects.map((project, index) => (
                   <ProjectCard
                     key={project.id}
                     project={project}
