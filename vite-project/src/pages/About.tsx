@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {  Briefcase,GraduationCap, Code2, Database, Globe, Palette, Terminal, Server, GitBranch, Earth } from 'lucide-react';
+import { Briefcase, GraduationCap, Code2, Database, Globe, Palette, Terminal, Server, GitBranch, Earth } from 'lucide-react';
 import BackgroundPattern from "../components/BackgroundPattern";
 
 const AboutPage = () => {
@@ -36,7 +36,7 @@ const AboutPage = () => {
 
   const experienceData = [
     {
-      role: "Software Engineer",
+      role: "Front-End Web Developer",
       company: "Freelance & Personal Projects",
       duration: "2024 - Present",
       description: "Developing custom web applications and digital solutions for various clients. Specializing in modern JavaScript frameworks, responsive design, and scalable backend architectured clone. Successfully delivered 5+ projects ranging from e-commerce platforms to business management systems.",
@@ -66,8 +66,8 @@ const AboutPage = () => {
       { name: "Tailwind CSS", percentage: 65, icon: Palette }
     ],
     backend: [
-      { name: "Node.js", percentage: 35, icon: Server },
-      { name: "MySQL", percentage: 70, icon: Database }
+      { name: "Node.js", percentage: 10, icon: Server },
+      { name: "MySQL", percentage: 40, icon: Database }
     ],
     tools: [
       { name: "Git/GitHub", percentage: 70, icon: GitBranch },
