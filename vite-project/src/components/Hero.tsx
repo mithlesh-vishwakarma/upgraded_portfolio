@@ -1,7 +1,10 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import ChangingText from "./ChangingText";
 import ProfilePic1 from "../assets/profile-img-cutout.png";
 import Magnet from './Magnet'
+
+const MotionLink = motion.create(Link);
 
 const Hero = () => {
   return (
@@ -153,8 +156,8 @@ const Hero = () => {
             <div className="flex flex-col md:flex-row justify-center md:justify-start items-center md:items-start gap-4 mt-6 md:mt-8">
               {/* Button 1 */}
               <Magnet padding={100} disabled={false} magnetStrength={20}>
-                <motion.a
-                  href="/about"
+                <MotionLink
+                  to="/about"
                   className="relative inline-flex border border-yellow-500 items-center overflow-hidden px-6 md:px-8 py-3 rounded-full font-semibold group cursor-pointer"
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
@@ -190,13 +193,13 @@ const Hero = () => {
                       />
                     </motion.svg>
                   </motion.span>
-                </motion.a>
+                </MotionLink>
               </Magnet>
 
               {/* Button 2 */}
               <Magnet padding={100} disabled={false} magnetStrength={20}>
-                <motion.a
-                  href="/resume-mithlesh"
+                <MotionLink
+                  to="/resume-mithlesh"
                   className="relative inline-flex border border-yellow-500 items-center overflow-hidden px-6 md:px-8 py-3 rounded-full font-semibold group cursor-pointer"
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
@@ -232,7 +235,7 @@ const Hero = () => {
                       />
                     </motion.svg>
                   </motion.span>
-                </motion.a>
+                </MotionLink>
               </Magnet>
             </div>
 
@@ -244,3 +247,4 @@ const Hero = () => {
 };
 
 export default Hero;
+

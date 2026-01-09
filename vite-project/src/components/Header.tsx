@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import GlitchText from './GlitchText';
+
 interface MenuItem {
   label: string;
   href: string;
 }
+
+const MotionLink = motion.create(Link);
 
 const Header: React.FC = () => {
   const menuItems: MenuItem[] = [
@@ -44,8 +48,8 @@ const Header: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="flex-shrink-0 lg:ml-20"
         >
-          <motion.a
-            href="/"
+          <MotionLink
+            to="/"
             className="flex flex-col items-center hover:opacity-80 transition-opacity"
           >
             <GlitchText
@@ -60,7 +64,7 @@ const Header: React.FC = () => {
               <span className="mr-[30px]">Vishwakarma</span>
               <span>Mithlesh</span>
             </div>
-          </motion.a>
+          </MotionLink>
         </motion.div>
         {/* Hamburger Menu Button (Mobile) */}
         {isMobile && (
@@ -82,13 +86,13 @@ const Header: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
           >
             {menuItems.map((item, index) => (
-              <a
+              <Link
                 key={index}
-                href={item.href}
+                to={item.href}
                 className="px-4 py-2 rounded-full text-white hover:bg-yellow-500 hover:text-gray-900 transition-colors duration-300"
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
           </motion.nav>
         )}
@@ -105,9 +109,9 @@ const Header: React.FC = () => {
             >
               <nav className="container mx-auto py-4 px-4">
                 {menuItems.map((item, index) => (
-                  <motion.a
+                  <MotionLink
                     key={index}
-                    href={item.href}
+                    to={item.href}
                     className="flex items-center justify-center py-3 px-4 text-white hover:bg-yellow-500 hover:text-gray-900 rounded-full transition-colors"
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -115,7 +119,7 @@ const Header: React.FC = () => {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <span className="font-medium">{item.label}</span>
-                  </motion.a>
+                  </MotionLink>
                 ))}
               </nav>
             </motion.div>
