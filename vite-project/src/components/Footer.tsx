@@ -8,6 +8,8 @@ const Footer = () => {
         <div className="mb-4 flex justify-center space-x-4">
           <motion.a
             href="https://www.instagram.com/_ordinary_coder_/"
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.2 }}
             className="text-white text-2xl hover:text-yellow-500 transition-colors"
           >
@@ -15,6 +17,8 @@ const Footer = () => {
           </motion.a>
           <motion.a
             href="https://www.linkedin.com/in/mithlesh-vishwakarma-9a7b54235/"
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.2 }}
             className="text-white text-2xl hover:text-yellow-500 transition-colors"
           >
@@ -22,6 +26,8 @@ const Footer = () => {
           </motion.a>
           <motion.a
             href="https://github.com/mithlesh-vishwakarma"
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.2 }}
             className="text-white text-2xl hover:text-yellow-500 transition-colors"
           >
@@ -29,6 +35,8 @@ const Footer = () => {
           </motion.a>
           <motion.a
             href="https://x.com/Mithles08742315"
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.2 }}
             className="text-white text-2xl hover:text-yellow-500 transition-colors"
           >
