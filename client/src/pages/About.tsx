@@ -1,292 +1,243 @@
 import React, { useState, useEffect } from "react";
-import { Briefcase, GraduationCap, Code2, Database, Globe, Palette, Terminal, Server, GitBranch, Earth } from 'lucide-react';
+import { Briefcase, GraduationCap, Code2, GitBranch, Loader2, Zap } from 'lucide-react';
+import api from "../api/api";
 import BackgroundPattern from "../components/BackgroundPattern";
 
 const AboutPage = () => {
   const [activeTab, setActiveTab] = useState('experience');
   const [isLoaded, setIsLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
+  
+  const [educationData, setEducationData] = useState<any[]>([]);
+  const [experienceData, setExperienceData] = useState<any[]>([]);
+  const [skillsData, setSkillsData] = useState<{ categories: any[], extra_skills: any[] }>({ categories: [], extra_skills: [] });
 
   useEffect(() => {
     setIsLoaded(true);
+    fetchAllData();
   }, []);
 
-  const educationData = [
-    {
-      year: "2019 - 2024",
-      title: " BCA- Bachelor of Computer Applications",
-      institution: "IGNOU- Indira Gandhi National Open University",
-      description: "Comprehensive study in computer science fundamentals, software engineering principles, data structures, algorithms, and modern web technologies. Specialized in full-stack development with focus on scalable web applications.",
-      grade: "CGPA: 6.6/10"
-    },
-    {
-      year: "2016 - 2018",
-      title: "Higher Secondary Education-12th (Science)",
-      institution: "Gujarat State Education Board",
-      description: "Focused on Mathematics, Physics, and Computer Science. Built strong analytical and problem-solving foundations that later supported my journey into software development.",
-      grade: "Percentage: 80%"
-    },
-    {
-      year: "2015 - 2016",
-      title: "Secondary Education- 10th (SSC)",
-      institution: "Gujarat State Education Board",
-      description: "Completed with distinction, developing fundamental academic skills and discovering passion for technology and mathematics.",
-      grade: "Percentage: 88.69%"
+  const fetchAllData = async () => {
+    setLoading(true);
+    try {
+      const [edu, exp, skills] = await Promise.all([
+        api.get("/education"),
+        api.get("/experience"),
+        api.get("/skills")
+      ]);
+      setEducationData(edu.data);
+      setExperienceData(exp.data);
+      setSkillsData(skills.data);
+    } catch (error) {
+      console.error("Failed to fetch about data", error);
+    } finally {
+      setLoading(false);
     }
-  ];
-
-  const experienceData = [
-    {
-      role: "Front-End Web Developer",
-      company: "Freelance & Personal Projects",
-      duration: "2024 - Present",
-      description: "Developing custom web applications and digital solutions for various clients. Specializing in modern JavaScript frameworks, responsive design, and scalable backend architectured clone. Successfully delivered 5+ projects ranging from e-commerce platforms to business management systems.",
-      technologies: ["React", "HTML5", "CSS3", "TypeScript", "JavaScript", "Bootstrap", "Tailwind CSS"]
-    },
-    {
-      role: "Assistant Manager",
-      company: "La Colours - Ref/Promoted. from (Sarra Fab Int. P.Ltd.)",
-      duration: "2024 - 2025",
-      description: "Managed and supervised daily operations across multiple departments, ensuring smooth workflow and timely delivery. Conducted data analysis to monitor production efficiency, resource utilization, and cost optimization. Coordinated with cross-functional teams to implement process improvements, manage inventory, and enhance overall productivity.",
-      technologies: ["MS Excel", "Process Optimization", "ERP Systems", "Team Leadership", "Data Analysis", "Inventory Management Tools", "Reporting & Documentation"]
-    },
-    {
-      role: "Account Executive",
-      company: "Sarra Fab International Pvt. Ltd.",
-      duration: "2019 - 2024",
-      description: "Managed client accounts and maintained strong relationships to ensure customer satisfaction and repeat business. Handled order processing, invoicing, and payment follow-ups. Coordinated with production and logistics teams for timely delivery of goods. Prepared financial reports, monitored account statements, and ensured compliance with company policies.",
-      technologies: ["MS Excel", "Tally ERP", "Google Sheets", "Email Communication", "CRM Tools", "Account Handling", "Billing & Invoicing", "Data Entry & Analysis", "Financial Reporting"]
-    }
-  ];
-
-  const skillsData = {
-    frontend: [
-      { name: "HTML/CSS", percentage: 85, icon: Globe },
-      { name: "JavaScript", percentage: 75, icon: Terminal },
-      { name: "React.js + Vite", percentage: 75, icon: Code2 },
-      { name: "Tailwind CSS", percentage: 65, icon: Palette }
-    ],
-    backend: [
-      { name: "Node.js", percentage: 10, icon: Server },
-      { name: "MySQL", percentage: 40, icon: Database }
-    ],
-    tools: [
-      { name: "Git/GitHub", percentage: 70, icon: GitBranch },
-      { name: "VS Code", percentage: 95, icon: Terminal },
-      { name: "MS Office", percentage: 80, icon: Globe },
-      { name: "SEO Optimization", percentage: 95, icon: Earth }
-    ]
   };
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen text-white font-roboto relative">
       <BackgroundPattern />
-      <div className="min-h-screen  text-white font-roboto">
-        <div className="max-w-6xl mx-auto px-6 pt-28 pb-16">
-          {/* Header Section */}
-          <div
-            className={`text-center mb-16 transition-all duration-1000 transform ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
-          >
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent animate-pulse">
-              About Me
-            </h1>
-            <p className="text-gray-300 text-sm lg:text-lg leading-relaxed mb-6 md:mb-8 max-w-full">
-              Enthusiastic and self-taught web developer with a strong foundation in front-end technologies and a passion for building responsive, user-friendly websites. Quick learner, dedicated to continuous improvement, and actively engaged in freelance projects to gain hands-on experience.
-            </p>
-          </div>
+      
+      <div className="max-w-6xl mx-auto px-6 pt-28 pb-16 relative z-10">
+        {/* Header Section */}
+        <div
+          className={`text-center mb-16 transition-all duration-1000 transform ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
+        >
+          <h1 className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent animate-pulse">
+            The Journey
+          </h1>
+          <p className="text-gray-300 text-sm lg:text-lg leading-relaxed mb-6 md:mb-8 max-w-full">
+            Enthusiastic and self-taught web developer with a strong foundation in front-end technologies and a passion for building responsive, user-friendly websites. Quick learner, dedicated to continuous improvement.
+          </p>
+        </div>
 
-          {/* Tabs */}
-          <div className="flex justify-center mb-12">
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2 border border-white/20 shadow-[0_0_15px_#6b5815,0_0_30px_#6b5815]">
-              <div className="flex space-x-1">
-                {[
-                  { id: 'experience', label: 'Experience', icon: Briefcase },
-                  { id: 'education', label: 'Education', icon: GraduationCap },
-                  { id: 'skills', label: 'Skills', icon: Code2 }
-                ].map(({ id, label, icon: Icon }) => (
-                  <button
-                    key={id}
-                    onClick={() => setActiveTab(id)}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform ${activeTab === id ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 shadow-lg scale-105' : 'text-gray-300 hover:text-yellow-400 hover:bg-white/5 hover:scale-102'}`}
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span className="hidden sm:inline">{label}</span>
-                  </button>
-                ))}
-              </div>
+        {/* Tabs */}
+        <div className="flex justify-center mb-12">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2 border border-white/20 shadow-xl shadow-yellow-900/10">
+            <div className="flex space-x-1">
+              {[
+                { id: 'experience', label: 'Experience', icon: Briefcase },
+                { id: 'education', label: 'Education', icon: GraduationCap },
+                { id: 'skills', label: 'Expertise', icon: Code2 }
+              ].map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => setActiveTab(id)}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-black transition-all duration-300 transform ${activeTab === id ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 shadow-lg scale-105' : 'text-gray-300 hover:text-yellow-400 hover:bg-white/5 hover:scale-102'}`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="hidden sm:inline uppercase tracking-widest text-xs">{label}</span>
+                </button>
+              ))}
             </div>
           </div>
+        </div>
 
-          {/* Content */}
-          <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 md:p-12 border border-white/10 shadow-2xl min-h-[600px]">
-            {/* Education Tab */}
-            {activeTab === 'education' && (
-              <div className="space-y-8 animate-fade-in-up">
-                {educationData.map((edu, index) => (
-                  <div
-                    key={index}
-                    className="group bg-white/5 rounded-2xl p-6 border-l-4 border-yellow-400 hover:bg-white/10 hover:transform hover:translate-x-2 transition-all duration-300"
-                    style={{ animationDelay: `${index * 100}ms` }}
-                  >
-                    <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
-                      <div className="flex-1">
-                        <div className="text-yellow-400 font-bold text-sm mb-2">{edu.year}</div>
-                        <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-yellow-400 transition-colors">
-                          {edu.title}
-                        </h3>
-                        <div className="text-blue-400 text-lg mb-3">{edu.institution}</div>
-                      </div>
-                      <div className="text-green-400 font-semibold text-sm">{edu.grade}</div>
-                    </div>
-                    <p className="text-gray-300 leading-relaxed">{edu.description}</p>
-                    <div className="mt-4 h-0.5 bg-gradient-to-r from-yellow-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Experience Tab */}
-            {activeTab === 'experience' && (
-              <div className="space-y-8 animate-fade-in-up">
-                {experienceData.map((exp, index) => (
-                  <div
-                    key={index}
-                    className="group bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-yellow-400/50 hover:shadow-xl hover:scale-105 transition-all duration-300"
-                    style={{ animationDelay: `${index * 150}ms` }}
-                  >
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                      <div>
-                        <h3 className="text-xl font-semibold text-yellow-400 mb-1">{exp.role}</h3>
-                        <div className="text-white text-lg">{exp.company}</div>
-                      </div>
-                      <div className="text-blue-400 font-medium text-sm mt-2 md:mt-0">{exp.duration}</div>
-                    </div>
-
-                    <p className="text-gray-300 leading-relaxed mb-4">{exp.description}</p>
-
-                    <div className="flex flex-wrap gap-2">
-                      {exp.technologies.map((tech, techIndex) => (
-                        <span
-                          key={techIndex}
-                          className="bg-yellow-400/20 text-yellow-400 px-3 py-1 rounded-full text-sm font-medium border border-yellow-400/30 hover:bg-yellow-400/30 transition-all duration-200"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Skills Tab */}
-            {activeTab === 'skills' && (
-              <div className="animate-fade-in-up">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  {/* Frontend Skills */}
-                  <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-yellow-400/30 transition-all duration-300 group">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="p-2 bg-yellow-400/20 rounded-lg">
-                        <Palette className="w-6 h-6 text-yellow-400" />
-                      </div>
-                      <h3 className="text-xl font-semibold text-yellow-400">Frontend</h3>
-                    </div>
-                    {skillsData.frontend.map((skill, index) => (
-                      <SkillBar key={skill.name} skill={skill} delay={index * 100} />
-                    ))}
-                  </div>
-
-                  {/* Backend Skills */}
-                  <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-yellow-400/30 transition-all duration-300 group">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="p-2 bg-yellow-400/20 rounded-lg">
-                        <Server className="w-6 h-6 text-yellow-400" />
-                      </div>
-                      <h3 className="text-xl font-semibold text-yellow-400">Backend (Basics)</h3>
-                    </div>
-                    {skillsData.backend.map((skill, index) => (
-                      <SkillBar key={skill.name} skill={skill} delay={index * 100} />
-                    ))}
-                  </div>
-
-                  {/* Tools & Technologies */}
-                  <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-yellow-400/30 transition-all duration-300 group">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="p-2 bg-yellow-400/20 rounded-lg">
-                        <Terminal className="w-6 h-6 text-yellow-400" />
-                      </div>
-                      <h3 className="text-xl font-semibold text-yellow-400">Tools & Other Expertise</h3>
-                    </div>
-                    {skillsData.tools.map((skill, index) => (
-                      <SkillBar key={skill.name} skill={skill} delay={index * 100} />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Additional Skills Section */}
-                <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6">
-                  {[
-                    { name: "Problem Solving", level: "Expert", icon: "🧠" },
-                    { name: "Team Leadership", level: "Advanced", icon: "👥" },
-                    { name: "AI Enhanced-Frontend", level: "Advanced", icon: "🤖" },
-                    { name: "Project Management", level: "Advanced", icon: "📋" }
-                  ].map((skill) => (
+        {/* Content */}
+        <div className="bg-white/5 backdrop-blur-xl rounded-[40px] p-8 md:p-12 border border-white/10 shadow-2xl min-h-[600px] relative overflow-hidden">
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-40 gap-4">
+               <Loader2 className="w-12 h-12 text-yellow-500 animate-spin" />
+               <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Accessing Chronicles...</p>
+            </div>
+          ) : (
+            <>
+              {/* Education Tab */}
+              {activeTab === 'education' && (
+                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-500">
+                  {educationData.map((edu, index) => (
                     <div
-                      key={skill.name}
-                      className="bg-gradient-to-br from-white/10 to-white/5 rounded-xl p-4 text-center border border-white/10 hover:border-yellow-400/30 transition-all duration-300 hover:transform hover:scale-105 group"
+                      key={edu.id}
+                      className="group bg-white/5 rounded-[32px] p-8 border border-white/10 hover:border-yellow-400/50 hover:bg-white/10 transition-all duration-300 relative overflow-hidden shadow-xl"
+                      style={{ animationDelay: `${index * 100}ms` }}
                     >
-                      <div className="text-3xl mb-2 group-hover:animate-bounce">{skill.icon}</div>
-                      <div className="font-medium text-white text-sm">{skill.name}</div>
-                      <div className="text-yellow-400 text-xs font-semibold">{skill.level}</div>
+                      <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
+                        <div className="flex-1">
+                          <div className="text-yellow-400 font-black text-xs uppercase tracking-widest mb-3">{edu.year}</div>
+                          <h3 className="text-2xl font-black text-white mb-2 group-hover:text-yellow-400 transition-colors">
+                            {edu.title}
+                          </h3>
+                          <div className="text-blue-400 font-bold text-lg mb-3 flex items-center gap-2">
+                             <GraduationCap className="w-5 h-5" />
+                             {edu.institution}
+                          </div>
+                        </div>
+                        <div className="bg-green-500/10 text-green-400 px-4 py-2 rounded-2xl border border-green-500/20 font-black text-[10px] uppercase tracking-widest mt-4 md:mt-0 shadow-inner">
+                           {edu.grade}
+                        </div>
+                      </div>
+                      <p className="text-gray-400 leading-relaxed font-medium italic">"{edu.description}"</p>
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400/5 rounded-full blur-3xl group-hover:bg-yellow-400/10 transition-all"></div>
                     </div>
                   ))}
+                  {educationData.length === 0 && <p className="text-center py-20 text-gray-500 font-black italic uppercase tracking-widest">Educational ledger is empty.</p>}
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+
+              {/* Experience Tab */}
+              {activeTab === 'experience' && (
+                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-500">
+                  {experienceData.map((exp, index) => (
+                    <div
+                      key={exp.id}
+                      className="group bg-white/5 rounded-[32px] p-10 border border-white/10 hover:border-yellow-400/30 hover:bg-white/10 transition-all duration-300 shadow-xl"
+                      style={{ animationDelay: `${index * 150}ms` }}
+                    >
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                        <div>
+                          <h3 className="text-2xl font-black text-yellow-400 mb-1 group-hover:scale-105 transition-transform origin-left">{exp.role}</h3>
+                          <div className="text-white font-bold text-lg flex items-center gap-2">
+                             <Briefcase className="w-5 h-5 text-gray-500" />
+                             {exp.company}
+                          </div>
+                        </div>
+                        <div className="text-blue-400 font-black text-xs uppercase tracking-widest mt-2 md:mt-0 flex items-center gap-2">
+                           <GitBranch className="w-4 h-4" />
+                           {exp.duration}
+                        </div>
+                      </div>
+
+                      <p className="text-gray-400 leading-relaxed mb-8 font-medium italic">"{exp.description}"</p>
+
+                      <div className="flex flex-wrap gap-2">
+                        {exp.technologies?.map((tech: string, techIndex: number) => (
+                          <span
+                            key={techIndex}
+                            className="bg-white/5 text-gray-400 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/5 hover:border-yellow-400/30 hover:text-yellow-400 transition-all cursor-default"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                  {experienceData.length === 0 && <p className="text-center py-20 text-gray-500 font-black italic uppercase tracking-widest">Professional history pending entry.</p>}
+                </div>
+              )}
+
+              {/* Skills Tab */}
+              {activeTab === 'skills' && (
+                <div className="animate-in fade-in slide-in-from-bottom-5 duration-500">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    {skillsData.categories.map((cat) => (
+                      <div key={cat.id} className="bg-white/5 rounded-[32px] p-10 border border-white/10 hover:border-yellow-400/20 transition-all duration-300 group shadow-xl">
+                        <div className="flex items-center gap-4 mb-10">
+                          <div className="p-3 bg-yellow-400/10 rounded-2xl border border-yellow-400/20 group-hover:scale-110 transition-transform">
+                            <Code2 className="w-6 h-6 text-yellow-400" />
+                          </div>
+                          <h3 className="text-xl font-black text-yellow-400 uppercase tracking-tighter">{cat.name}</h3>
+                        </div>
+                        <div className="space-y-8">
+                          {cat.skills.map((skill: any, index: number) => (
+                            <SkillBar key={skill.name} skill={skill} delay={index * 100} />
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Extra Skills Section */}
+                  {skillsData.extra_skills.length > 0 && (
+                    <div className="mt-16">
+                       <div className="flex items-center gap-4 mb-8 px-2">
+                          <Zap className="w-5 h-5 text-blue-400" />
+                          <h3 className="text-lg font-black uppercase tracking-widest text-gray-400">Ancillary Proficiencies</h3>
+                          <div className="h-px flex-1 bg-white/5"></div>
+                       </div>
+                       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        {skillsData.extra_skills.map((skill: any) => (
+                          <div
+                            key={skill.id}
+                            className="bg-white/5 rounded-2xl p-5 text-center border border-white/5 hover:border-yellow-400/30 transition-all duration-500 hover:-translate-y-2 group shadow-lg"
+                          >
+                            <div className="text-2xl mb-3 group-hover:scale-125 transition-transform">⭐</div>
+                            <div className="font-black text-white text-[10px] uppercase tracking-widest">{skill.name}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
-
+      
       {/* Background Decorations */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-yellow-400/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl animate-pulse"></div>
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-1/4 -right-40 w-96 h-96 bg-yellow-400/10 rounded-full blur-[120px] animate-pulse"></div>
+        <div className="absolute bottom-1/4 -left-40 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] animate-pulse"></div>
       </div>
     </div>
   );
 };
 
-type Skill = {
-  name: string;
-  percentage: number;
-  icon: React.ComponentType<any>;
-};
-
 type SkillBarProps = {
-  skill: Skill;
+  skill: { name: string; percentage: number };
   delay?: number;
 };
 
 const SkillBar: React.FC<SkillBarProps> = ({ skill, delay = 0 }) => {
-  const IconComponent = skill.icon;
-
   return (
     <div
-      className="mb-6 transform transition-all duration-500 hover:scale-105 animate-fade-in-up"
+      className="transform transition-all duration-500 group/skill"
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="flex justify-between items-center mb-2">
-        <div className="flex items-center gap-2">
-          <IconComponent className="w-4 h-4 text-yellow-400" />
-          <span className="font-medium text-gray-200">{skill.name}</span>
+      <div className="flex justify-between items-center mb-3">
+        <div className="flex items-center gap-3">
+          <div className="w-1.5 h-1.5 rounded-full bg-yellow-400 group-hover/skill:scale-150 transition-all shadow-[0_0_8px_rgba(251,191,36,0.5)]"></div>
+          <span className="font-bold text-gray-300 uppercase tracking-widest text-[11px] group-hover/skill:text-white transition-colors">{skill.name}</span>
         </div>
-        <span className="text-yellow-400 font-semibold text-sm">{skill.percentage}%</span>
+        <span className="text-yellow-400 font-black text-xs group-hover/skill:scale-110 transition-transform">{skill.percentage}%</span>
       </div>
-      <div className="w-full bg-gray-700/50 rounded-full h-2 overflow-hidden">
+      <div className="w-full bg-white/5 rounded-full h-1.5 overflow-hidden border border-white/5 p-px">
         <div
-          className="h-full bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full transition-all duration-1000 ease-out relative overflow-hidden animate-skill-fill"
+          className="h-full bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full transition-all duration-[2000ms] ease-out relative overflow-hidden"
           style={{ width: `${skill.percentage}%` }}
         >
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 animate-shimmer"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-45 animate-shimmer"></div>
         </div>
       </div>
     </div>

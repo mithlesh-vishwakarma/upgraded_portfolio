@@ -1,10 +1,9 @@
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
-
-// Lazy load non-critical components
+// Public Pages
 const HomePage = lazy(() => import("./pages/HomePage"));
 const Projects = lazy(() => import("./pages/Projects"));
 const Articles = lazy(() => import("./pages/Articles"));
@@ -14,6 +13,16 @@ const About = lazy(() => import("./pages/About"));
 const ComingSoon = lazy(() => import("./components/ComingSoon"));
 const BackgroundPattern = lazy(() => import("./components/BackgroundPattern"));
 const ResumeViewerPage = lazy(() => import("./pages/ResumeViewerPage"));
+const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
+
+// Admin Pages
+const AdminLayout = lazy(() => import("./admin/components/AdminLayout"));
+const Login = lazy(() => import("./admin/pages/Login"));
+const Dashboard = lazy(() => import("./admin/pages/Dashboard"));
+const ProjectManager = lazy(() => import("./admin/pages/ProjectManager"));
+const ExperienceManager = lazy(() => import("./admin/pages/ExperienceManager"));
+const EducationManager = lazy(() => import("./admin/pages/EducationManager"));
+const SkillManager = lazy(() => import("./admin/pages/SkillManager"));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -22,30 +31,51 @@ const LoadingFallback = () => (
   </div>
 );
 
+const AppContent = () => {
+  const location = useLocation();
+  const isAdminPath = location.pathname.startsWith("/admin");
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {!isAdminPath && <Header />}
+      <main className="flex-grow relative">
+        {!isAdminPath && <BackgroundPattern />}
+
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/coming-soon" element={<ComingSoon />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/:id" element={<ProjectDetail />} />
+            <Route path="/articles" element={<Articles />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/ordinary-things" element={<OrdinaryThings />} />
+            <Route path="/background" element={<BackgroundPattern />} />
+            <Route path="/resume-mithlesh" element={<ResumeViewerPage />} />
+
+            {/* Admin Routes */}
+            <Route path="/admin/login" element={<Login />} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="projects" element={<ProjectManager />} />
+              <Route path="experience" element={<ExperienceManager />} />
+              <Route path="education" element={<EducationManager />} />
+              <Route path="skills" element={<SkillManager />} />
+            </Route>
+          </Routes>
+        </Suspense>
+      </main>
+      {!isAdminPath && <Footer />}
+    </div>
+  );
+};
+
 function App() {
   return (
     <BrowserRouter>
-      <div className=" min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-grow relative">
-          <BackgroundPattern />
-
-          <Suspense fallback={<LoadingFallback />}>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/coming-soon" element={<ComingSoon />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/articles" element={<Articles />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/ordinary-things" element={<OrdinaryThings />} />
-              <Route path="/background" element={<BackgroundPattern />} />
-              <Route path="/resume-mithlesh" element={<ResumeViewerPage />} />
-            </Routes>
-          </Suspense>
-        </main>
-        <Footer />
-      </div>
+      <AppContent />
     </BrowserRouter>
   );
 }
