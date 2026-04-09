@@ -29,7 +29,11 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("adminToken");
-      if (!window.location.pathname.startsWith("/admin/login")) {
+      const isAdminAuthPage =
+        window.location.pathname.startsWith("/admin/login") ||
+        window.location.pathname.startsWith("/admin/forgot-password");
+
+      if (!isAdminAuthPage) {
         window.location.href = "/admin/login";
       }
     }

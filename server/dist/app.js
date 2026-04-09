@@ -17,6 +17,7 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 // API Routes
+app.use("/admin", authRoutes_1.default);
 app.use("/api/admin", authRoutes_1.default);
 app.use("/api/projects", projectRoutes_1.default);
 app.use("/api/experience", experienceRoutes_1.default);

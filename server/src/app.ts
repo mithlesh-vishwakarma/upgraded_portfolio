@@ -17,6 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 // API Routes
+app.use("/admin", authRoutes);
 app.use("/api/admin", authRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/experience", experienceRoutes);

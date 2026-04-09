@@ -18,6 +18,7 @@ const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
 // Admin Pages
 const AdminLayout = lazy(() => import("./admin/components/AdminLayout"));
 const Login = lazy(() => import("./admin/pages/Login"));
+const ForgotPassword = lazy(() => import("./admin/pages/ForgotPassword"));
 const Dashboard = lazy(() => import("./admin/pages/Dashboard"));
 const ProjectManager = lazy(() => import("./admin/pages/ProjectManager"));
 const ExperienceManager = lazy(() => import("./admin/pages/ExperienceManager"));
@@ -57,6 +58,7 @@ const AppContent = () => {
 
             {/* Admin Routes */}
             <Route path="/admin/login" element={<Login />} />
+            <Route path="/admin/forgot-password" element={<ForgotPassword />} />
             <Route path="/admin" element={<AdminLayout />}>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="projects" element={<ProjectManager />} />

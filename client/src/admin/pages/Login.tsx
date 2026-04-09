@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../../api/api";
-import { Lock, Mail, AlertCircle, Loader2, ArrowRight } from "lucide-react";
+import { Lock, Mail, AlertCircle, Loader2, ArrowRight, Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -70,13 +71,21 @@ const Login = () => {
                         <div className="relative group">
                             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-yellow-500 transition-colors" />
                             <input 
-                                type="password" 
+                                type={showPassword ? "text" : "password"} 
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder="••••••••" 
-                                className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 focus:bg-white transition-all text-slate-900 font-medium"
+                                placeholder="••••••••"
+                                className="w-full pl-12 pr-12 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 focus:bg-white transition-all text-slate-900 font-medium"
                                 required 
                             />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword((value) => !value)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-yellow-500 transition-colors"
+                                aria-label={showPassword ? "Hide password" : "Show password"}
+                            >
+                                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                            </button>
                         </div>
                     </div>
 
@@ -95,6 +104,13 @@ const Login = () => {
                         )}
                     </button>
                 </form>
+
+                <div className="mt-6 flex items-center justify-between text-sm">
+                    <Link to="/admin/forgot-password" className="font-semibold text-yellow-600 hover:text-yellow-700 transition-colors">
+                        Forgot password?
+                    </Link>
+                    <span className="text-gray-300">Admin access only</span>
+                </div>
 
                 <div className="mt-12 text-center">
                     <p className="text-gray-300 text-sm font-medium">&copy; 2026 Mithlesh Vishwakarma. All Rights Reserved.</p>
