@@ -9,7 +9,10 @@ import {
   Building
 } from "lucide-react";
 
+import { useToast } from "../../context/ToastContext";
+
 const ExperienceManager = () => {
+    const { showToast } = useToast();
     const [experiences, setExperiences] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,7 +35,7 @@ const ExperienceManager = () => {
             const response = await api.get("/experience");
             setExperiences(response.data);
         } catch (err) {
-            console.error("Failed to fetch experience");
+            showToast("Failed to retrieve professional timeline", "error");
         } finally {
             setLoading(false);
         }
@@ -43,8 +46,9 @@ const ExperienceManager = () => {
         try {
             await api.delete(`/experience/${id}`);
             setExperiences(experiences.filter(e => e.id !== id));
+            showToast("Work history record purged", "success");
         } catch (err) {
-            alert("Failed to delete experience");
+            showToast("Failed to delete record: Persistence error", "error");
         }
     };
 
@@ -59,13 +63,15 @@ const ExperienceManager = () => {
         try {
             if (currentExp) {
                 await api.put(`/experience/${currentExp.id}`, formData);
+                showToast("Career milestone updated", "success");
             } else {
                 await api.post("/experience", formData);
+                showToast("New career chapter recorded", "success");
             }
             setIsModalOpen(false);
             fetchExperience();
         } catch (err) {
-            alert("Failed to save experience");
+            showToast("Failed to save experience: System validation error", "error");
         }
     };
 

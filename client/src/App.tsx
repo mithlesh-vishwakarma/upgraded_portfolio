@@ -32,6 +32,9 @@ const LoadingFallback = () => (
   </div>
 );
 
+import { ToastProvider } from "./context/ToastContext";
+import Toast from "./components/Toast";
+
 const AppContent = () => {
   const location = useLocation();
   const isAdminPath = location.pathname.startsWith("/admin");
@@ -70,6 +73,7 @@ const AppContent = () => {
         </Suspense>
       </main>
       {!isAdminPath && <Footer />}
+      <Toast />
     </div>
   );
 };
@@ -77,7 +81,9 @@ const AppContent = () => {
 function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </BrowserRouter>
   );
 }

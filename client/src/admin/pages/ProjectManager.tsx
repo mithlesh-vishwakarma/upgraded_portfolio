@@ -11,7 +11,10 @@ import {
   X
 } from "lucide-react";
 
+import { useToast } from "../../context/ToastContext";
+
 const ProjectManager = () => {
+    const { showToast } = useToast();
     const [projects, setProjects] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
@@ -55,7 +58,7 @@ const ProjectManager = () => {
             const response = await api.get("/projects");
             setProjects(response.data);
         } catch (err) {
-            console.error("Failed to fetch projects");
+            showToast("Critical failure: Could not reach project grid", "error");
         } finally {
             setLoading(false);
         }
@@ -66,8 +69,9 @@ const ProjectManager = () => {
         try {
             await api.delete(`/projects/${id}`);
             setProjects(projects.filter(p => p.id !== id));
+            showToast("Project purged from evolution history", "success");
         } catch (err) {
-            alert("Failed to delete project");
+            showToast("Purge failed: System integrity protected the project", "error");
         }
     };
 
@@ -78,7 +82,7 @@ const ProjectManager = () => {
             setFormData(response.data);
             setIsModalOpen(true);
         } catch (err) {
-            alert("Failed to fetch project details");
+            showToast("Access denied: Could not pull technical specs", "error");
         }
     };
 
@@ -87,13 +91,17 @@ const ProjectManager = () => {
         try {
             if (currentProject) {
                 await api.put(`/projects/${currentProject.id}`, formData);
+                showToast("Evolution sync complete: Database updated", "success");
             } else {
                 await api.post("/projects", formData);
+                showToast("Vision deployed: New project added to timeline", "success");
             }
             setIsModalOpen(false);
             fetchProjects();
-        } catch (err) {
-            alert("Failed to save project");
+        } catch (err: any) {
+            console.error("Submission Error:", err.response?.data || err);
+            const msg = err.response?.data?.message || err.response?.data?.error || "Failed to save project";
+            showToast(msg, "error");
         }
     };
 
@@ -112,7 +120,15 @@ const ProjectManager = () => {
                 <button 
                     onClick={() => {
                         setCurrentProject(null);
-                        setFormData({ title: "", category: "", projectType: "Personal", status: "Live", technologies: [], featured: false });
+                        setFormData({ 
+                            title: "", category: "", projectType: "Personal", status: "Live", 
+                            description: "", technologies: [], liveUrl: "", githubUrl: "", 
+                            image: "", problem: "", solution: "", techStackDescription: "", 
+                            result: "", date: "", assignedDate: "", location: "", 
+                            client: "", featured: false, tags: [], journey: [], 
+                            problems: [], solutions: [], techStack: [], results: [], 
+                            resources: [] 
+                        });
                         setIsModalOpen(true);
                     }}
                     className="bg-slate-900 text-white px-6 py-3.5 rounded-2xl font-bold flex items-center gap-2 hover:bg-yellow-500 hover:shadow-xl hover:shadow-yellow-200 transition-all duration-300"
@@ -206,7 +222,7 @@ const ProjectManager = () => {
             {/* Modal - Simplified version as example */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
-                    <div className="bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[40px] p-10 shadow-2xl relative">
+                    <div className="bg-white w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-[40px] p-10 shadow-2xl relative">
                         <button 
                             onClick={() => setIsModalOpen(false)}
                             className="absolute top-8 right-8 p-3 hover:bg-gray-100 rounded-2xl transition-all"
@@ -219,7 +235,7 @@ const ProjectManager = () => {
                             <p className="text-gray-400 font-medium">Provide the technical specs and creative context</p>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <div className="space-y-6">
                                 <section className="space-y-4">
                                     <h5 className="text-xs font-black text-yellow-500 uppercase tracking-widest">Base Metadata</h5>
@@ -254,6 +270,16 @@ const ProjectManager = () => {
                                                 <option value="Development">Development</option>
                                             </select>
                                         </div>
+                                        <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-2xl border border-gray-100">
+                                            <input 
+                                                type="checkbox"
+                                                id="featured"
+                                                checked={formData.featured}
+                                                onChange={e => setFormData({...formData, featured: e.target.checked})}
+                                                className="w-5 h-5 accent-yellow-400"
+                                            />
+                                            <label htmlFor="featured" className="text-xs font-black text-slate-700 uppercase tracking-widest">Featured Project</label>
+                                        </div>
                                     </div>
                                 </section>
 
@@ -284,6 +310,64 @@ const ProjectManager = () => {
 
                             <div className="space-y-6">
                                 <section className="space-y-4">
+                                    <h5 className="text-xs font-black text-green-500 uppercase tracking-widest">Context & Timeline</h5>
+                                    <div className="space-y-4">
+                                        <input 
+                                            placeholder="Location (e.g. Remote, Mumbai)" 
+                                            value={formData.location}
+                                            onChange={e => setFormData({...formData, location: e.target.value})}
+                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold"
+                                        />
+                                        <input 
+                                            placeholder="Client Name" 
+                                            value={formData.client}
+                                            onChange={e => setFormData({...formData, client: e.target.value})}
+                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold"
+                                        />
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Assigned</label>
+                                                <input 
+                                                    placeholder="Date" 
+                                                    value={formData.assignedDate}
+                                                    onChange={e => setFormData({...formData, assignedDate: e.target.value})}
+                                                    className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold"
+                                                />
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Delivery</label>
+                                                <input 
+                                                    placeholder="Date" 
+                                                    value={formData.date}
+                                                    onChange={e => setFormData({...formData, date: e.target.value})}
+                                                    className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section className="space-y-4">
+                                    <h5 className="text-xs font-black text-orange-500 uppercase tracking-widest">Outcome & Impact</h5>
+                                    <div className="space-y-4">
+                                        <textarea 
+                                            placeholder="Tech Stack Description" 
+                                            value={formData.techStackDescription}
+                                            onChange={e => setFormData({...formData, techStackDescription: e.target.value})}
+                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold min-h-[80px] resize-none"
+                                        />
+                                        <textarea 
+                                            placeholder="Project Impact / Result" 
+                                            value={formData.result}
+                                            onChange={e => setFormData({...formData, result: e.target.value})}
+                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold min-h-[80px] resize-none"
+                                        />
+                                    </div>
+                                </section>
+                            </div>
+
+                            <div className="space-y-6">
+                                <section className="space-y-4">
                                     <h5 className="text-xs font-black text-purple-500 uppercase tracking-widest">Storytelling</h5>
                                     <textarea 
                                         placeholder="One-line summary for cards" 
@@ -306,7 +390,7 @@ const ProjectManager = () => {
                                 </section>
                             </div>
 
-                            <div className="md:col-span-2 pt-6 flex gap-4">
+                            <div className="md:col-span-3 pt-6 flex gap-4">
                                 <button 
                                     type="submit"
                                     className="flex-1 bg-slate-900 text-white font-black py-5 rounded-3xl hover:bg-yellow-500 hover:shadow-2xl hover:shadow-yellow-200 transition-all duration-500 uppercase tracking-widest"

@@ -10,7 +10,10 @@ import {
   Zap
 } from "lucide-react";
 
+import { useToast } from "../../context/ToastContext";
+
 const SkillManager = () => {
+    const { showToast } = useToast();
     const [data, setData] = useState<any>({ categories: [], extra_skills: [] });
     const [loading, setLoading] = useState(true);
     const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
@@ -36,7 +39,7 @@ const SkillManager = () => {
                 setFormData((f: any) => ({ ...f, category_id: response.data.categories[0].id }));
             }
         } catch (err) {
-            console.error("Failed to fetch skills");
+            showToast("Failed to fetch expertise maps", "error");
         } finally {
             setLoading(false);
         }
@@ -47,13 +50,15 @@ const SkillManager = () => {
         try {
             if (currentSkill) {
                 await api.put(`/skills/${currentSkill.id}`, formData);
+                showToast("Competency calibrated successfully", "success");
             } else {
                 await api.post("/skills", formData);
+                showToast("New technical capacity established", "success");
             }
             setIsSkillModalOpen(false);
             fetchSkills();
         } catch (err) {
-            alert("Failed to save skill");
+            showToast("Calibration failed: Logic inconsistency detected", "error");
         }
     };
 
@@ -64,8 +69,9 @@ const SkillManager = () => {
             setExtraSkillName("");
             setIsExtraSkillModalOpen(false);
             fetchSkills();
+            showToast("Horizon expanded: Peripheral skill added", "success");
         } catch (err) {
-            alert("Failed to save extra skill");
+            showToast("Expansion blocked: Domain out of reach", "error");
         }
     };
 
@@ -74,8 +80,9 @@ const SkillManager = () => {
         try {
             await api.delete(`/skills/${id}`);
             fetchSkills();
+            showToast("Skill decommissioned from core reservoir", "success");
         } catch (err) {
-            alert("Failed to delete skill");
+            showToast("Decommission failed: Skill is hardwired", "error");
         }
     };
 
@@ -84,8 +91,9 @@ const SkillManager = () => {
         try {
             await api.delete(`/skills/extra/${id}`);
             fetchSkills();
+            showToast("Peripheral expertise archived", "success");
         } catch (err) {
-            alert("Failed to delete extra skill");
+            showToast("Archive failed: System memory locked", "error");
         }
     };
 

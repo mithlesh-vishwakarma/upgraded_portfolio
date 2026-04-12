@@ -77,15 +77,56 @@ export const getProjectById = async (req: Request, res: Response) => {
 export const createProject = async (req: Request, res: Response) => {
   const { tags, journey, problems, solutions, techStack, results, resources, ...projectData } = req.body;
   
+  // Sanitize projectData to only include columns that exist in the projects table
+  // This prevents Supabase from erroring out if extra fields (like 'technologies' or 'featured') 
+  // are sent but don't exist in the database schema.
+  const allowedFields = [
+    'title', 'category', 'description', 'liveUrl', 'githubUrl', 
+    'image', 'projectType', 'status', 'problem', 'solution', 
+    'techStackDescription', 'result', 'date', 'assignedDate', 
+    'location', 'client', 'featured', 'technologies'
+  ];
+
+  const sanitizedData: any = {};
+  allowedFields.forEach(field => {
+    // Provide default empty strings for critical fields if they are missing
+    if (projectData[field] !== undefined) {
+      sanitizedData[field] = projectData[field];
+    } else {
+      // Default values to satisfy NOT NULL constraints in DB
+      const defaults: any = {
+        description: "",
+        problem: "",
+        solution: "",
+        techStackDescription: "",
+        result: "",
+        date: "",
+        assignedDate: "",
+        location: "",
+        client: "",
+        image: "",
+        liveUrl: "",
+        githubUrl: "",
+        featured: false
+      };
+      if (defaults[field] !== undefined) {
+        sanitizedData[field] = defaults[field];
+      }
+    }
+  });
+
   try {
     // 1. Insert Project
     const { data: project, error: projectError } = await supabase
       .from("projects")
-      .insert([projectData])
+      .insert([sanitizedData])
       .select()
       .single();
 
-    if (projectError) throw projectError;
+    if (projectError) {
+      console.error("Supabase Project Error:", projectError);
+      throw projectError;
+    }
     const projectId = project.id;
 
     // 2. Insert Nested Data
@@ -102,7 +143,11 @@ export const createProject = async (req: Request, res: Response) => {
 
     res.status(201).json({ message: "Project created successfully", project });
   } catch (error: any) {
-    res.status(500).json({ message: "Error creating project", error: error.message });
+    console.error("Error creating project:", error);
+    res.status(500).json({ 
+      message: `Critcal DB Error: ${error.message || "Unknown Failure"}`, 
+      error: error.message 
+    });
   }
 };
 
@@ -110,14 +155,31 @@ export const updateProject = async (req: Request, res: Response) => {
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const { tags, journey, problems, solutions, techStack, results, resources, ...projectData } = req.body;
 
+  const allowedFields = [
+    'title', 'category', 'description', 'liveUrl', 'githubUrl', 
+    'image', 'projectType', 'status', 'problem', 'solution', 
+    'techStackDescription', 'result', 'date', 'assignedDate', 
+    'location', 'client', 'featured', 'technologies'
+  ];
+
+  const sanitizedData: any = {};
+  allowedFields.forEach(field => {
+    if (projectData[field] !== undefined) {
+      sanitizedData[field] = projectData[field];
+    }
+  });
+
   try {
     // 1. Update Project
     const { error: projectError } = await supabase
       .from("projects")
-      .update(projectData)
+      .update(sanitizedData)
       .eq("id", id);
 
-    if (projectError) throw projectError;
+    if (projectError) {
+      console.error("Supabase Project Error:", projectError);
+      throw projectError;
+    }
 
     // 2. Delete existing nested data
     await Promise.all([
@@ -144,7 +206,11 @@ export const updateProject = async (req: Request, res: Response) => {
 
     res.json({ message: "Project updated successfully" });
   } catch (error: any) {
-    res.status(500).json({ message: "Error updating project", error: error.message });
+    console.error("Error updating project:", error);
+    res.status(500).json({ 
+      message: `Evolution Sync Error: ${error.message || "Logic Inconsistency"}`, 
+      error: error.message 
+    });
   }
 };
 

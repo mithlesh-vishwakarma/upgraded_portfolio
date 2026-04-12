@@ -10,7 +10,10 @@ import {
   BookOpen
 } from "lucide-react";
 
+import { useToast } from "../../context/ToastContext";
+
 const EducationManager = () => {
+    const { showToast } = useToast();
     const [education, setEducation] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,7 +36,7 @@ const EducationManager = () => {
             const response = await api.get("/education");
             setEducation(response.data);
         } catch (err) {
-            console.error("Failed to fetch education records");
+            showToast("Academic records currently unreachable", "error");
         } finally {
             setLoading(false);
         }
@@ -44,8 +47,9 @@ const EducationManager = () => {
         try {
             await api.delete(`/education/${id}`);
             setEducation(education.filter(e => e.id !== id));
+            showToast("Educational entry archived", "success");
         } catch (err) {
-            alert("Failed to delete education");
+            showToast("Archive failed: System encryption locked", "error");
         }
     };
 
@@ -60,13 +64,15 @@ const EducationManager = () => {
         try {
             if (currentEdu) {
                 await api.put(`/education/${currentEdu.id}`, formData);
+                showToast("Academic certification updated", "success");
             } else {
                 await api.post("/education", formData);
+                showToast("New education milestone established", "success");
             }
             setIsModalOpen(false);
             fetchEducation();
         } catch (err) {
-            alert("Failed to save education entry");
+            showToast("Failed to sync education: Validation error", "error");
         }
     };
 
