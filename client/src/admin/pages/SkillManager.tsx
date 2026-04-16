@@ -18,7 +18,10 @@ const SkillManager = () => {
     const [loading, setLoading] = useState(true);
     const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
     const [isExtraSkillModalOpen, setIsExtraSkillModalOpen] = useState(false);
+    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
     const [currentSkill, setCurrentSkill] = useState<any>(null);
+    const [currentCategory, setCurrentCategory] = useState<any>(null);
+    const [categoryName, setCategoryName] = useState("");
     const [formData, setFormData] = useState<any>({
         name: "",
         percentage: 80,
@@ -97,6 +100,35 @@ const SkillManager = () => {
         }
     };
 
+    const handleCategorySubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            if (currentCategory) {
+                await api.put(`/skills/categories/${currentCategory.id}`, { name: categoryName });
+                showToast("Domain title updated", "success");
+            } else {
+                await api.post("/skills/categories", { name: categoryName });
+                showToast("New operational domain established", "success");
+            }
+            setCategoryName("");
+            setIsCategoryModalOpen(false);
+            fetchSkills();
+        } catch (err) {
+            showToast("Failed to manifest domain: Reality anchor failed", "error");
+        }
+    };
+
+    const deleteCategory = async (id: string) => {
+        if (!window.confirm("Delete this entire domain and ALL contained skills?")) return;
+        try {
+            await api.delete(`/skills/categories/${id}`);
+            fetchSkills();
+            showToast("Domain collapsed: All contained skills purged", "success");
+        } catch (err) {
+            showToast("Collapse failed: Domain is protected", "error");
+        }
+    };
+
     return (
         <div className="space-y-10 font-roboto">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -115,6 +147,17 @@ const SkillManager = () => {
                     >
                         <PlusCircle className="w-4 h-4" />
                         Add Core Skill
+                    </button>
+                    <button 
+                        onClick={() => {
+                            setCurrentCategory(null);
+                            setCategoryName("");
+                            setIsCategoryModalOpen(true);
+                        }}
+                        className="bg-slate-100 text-slate-600 px-6 py-3.5 rounded-3xl font-bold flex items-center gap-2 hover:bg-yellow-400/20 hover:text-yellow-600 transition-all duration-300 uppercase tracking-widest text-[10px]"
+                    >
+                        <Layers className="w-4 h-4" />
+                        New Domain
                     </button>
                     <button 
                         onClick={() => setIsExtraSkillModalOpen(true)}
@@ -144,6 +187,14 @@ const SkillManager = () => {
                                             <Layers className="w-5 h-5" />
                                         </div>
                                         <h4 className="text-xl font-black text-slate-900 uppercase tracking-tight">{cat.name}</h4>
+                                        <div className="flex gap-1">
+                                            <button onClick={() => {
+                                                setCurrentCategory(cat);
+                                                setCategoryName(cat.name);
+                                                setIsCategoryModalOpen(true);
+                                            }} className="p-1.5 text-slate-300 hover:text-yellow-600 transition-colors"><Edit3 className="w-3.5 h-3.5"/></button>
+                                            <button onClick={() => deleteCategory(cat.id)} className="p-1.5 text-slate-300 hover:text-red-500 transition-colors"><Trash2 className="w-3.5 h-3.5"/></button>
+                                        </div>
                                     </div>
                                     <span className="px-3 py-1 bg-gray-50 text-gray-300 text-[10px] font-black rounded-lg uppercase tracking-widest">
                                         {cat.skills.length} Items
@@ -209,6 +260,30 @@ const SkillManager = () => {
             )}
 
             {/* Modals */}
+            {isCategoryModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-md animate-in fade-in">
+                    <div className="bg-white w-full max-w-sm rounded-[40px] p-10 shadow-2xl relative animate-in zoom-in">
+                        <button onClick={() => setIsCategoryModalOpen(false)} className="absolute top-8 right-8 p-3 hover:bg-gray-100 rounded-2xl transition-all">
+                            <X className="w-6 h-6 text-gray-400" />
+                        </button>
+                        
+                        <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-8">{currentCategory ? "Rebrand Domain" : "Define Domain"}</h3>
+                        
+                        <form onSubmit={handleCategorySubmit} className="space-y-6">
+                            <input 
+                                placeholder="e.g. Distributed Systems" 
+                                value={categoryName}
+                                onChange={e => setCategoryName(e.target.value)}
+                                className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 outline-none font-black"
+                                required
+                            />
+                            <button className="w-full bg-slate-900 text-white font-black py-4 rounded-2xl hover:bg-yellow-500 hover:shadow-xl uppercase tracking-widest transition-all">
+                                {currentCategory ? "Finalize Rebrand" : "Establish Domain"}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
             {isSkillModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-md animate-in fade-in">
                     <div className="bg-white w-full max-w-md rounded-[40px] p-10 shadow-2xl relative animate-in slide-in-from-bottom-5">

@@ -78,3 +78,36 @@ export const deleteExtraSkill = async (req: Request, res: Response) => {
       res.status(500).json({ message: "Error deleting extra skill", error: error.message });
     }
 };
+
+// Category Management
+export const createCategory = async (req: Request, res: Response) => {
+  try {
+    const { data: category, error } = await supabase.from("skill_categories").insert([req.body]).select().single();
+    if (error) throw error;
+    res.status(201).json({ message: "Category created successfully", category });
+  } catch (error: any) {
+    res.status(500).json({ message: "Error creating category", error: error.message });
+  }
+};
+
+export const updateCategory = async (req: Request, res: Response) => {
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  try {
+    const { error } = await supabase.from("skill_categories").update(req.body).eq("id", id);
+    if (error) throw error;
+    res.json({ message: "Category updated successfully" });
+  } catch (error: any) {
+    res.status(500).json({ message: "Error updating category", error: error.message });
+  }
+};
+
+export const deleteCategory = async (req: Request, res: Response) => {
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  try {
+    const { error } = await supabase.from("skill_categories").delete().eq("id", id);
+    if (error) throw error;
+    res.json({ message: "Category deleted successfully" });
+  } catch (error: any) {
+    res.status(500).json({ message: "Error deleting category", error: error.message });
+  }
+};

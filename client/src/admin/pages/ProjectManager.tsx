@@ -90,6 +90,10 @@ const ProjectManager = () => {
         e.preventDefault();
         try {
             if (currentProject) {
+                if (!currentProject.id) {
+                    showToast("System Error: Project ID missing. Try refreshing.", "error");
+                    return;
+                }
                 await api.put(`/projects/${currentProject.id}`, formData);
                 showToast("Evolution sync complete: Database updated", "success");
             } else {
@@ -104,6 +108,41 @@ const ProjectManager = () => {
             showToast(msg, "error");
         }
     };
+
+
+
+    const handleArrayChange = (field: string, index: number, subField: string | null, value: any) => {
+        const newArray = [...formData[field]];
+        if (subField) {
+            newArray[index] = { ...newArray[index], [subField]: value };
+        } else {
+            newArray[index] = value;
+        }
+        setFormData({ ...formData, [field]: newArray });
+    };
+
+    const addArrayItem = (field: string, defaultValue: any) => {
+        setFormData({ ...formData, [field]: [...formData[field], defaultValue] });
+    };
+
+    const removeArrayItem = (field: string, index: number) => {
+        setFormData({ 
+            ...formData, 
+            [field]: formData[field].filter((_: any, i: number) => i !== index) 
+        });
+    };
+
+    const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, field: string) => {
+        if (e.key === 'Enter' || e.key === ',') {
+            e.preventDefault();
+            const val = e.currentTarget.value.trim().replace(',', '');
+            if (val && !formData[field].includes(val)) {
+                setFormData({ ...formData, [field]: [...formData[field], val] });
+                e.currentTarget.value = '';
+            }
+        }
+    };
+
 
     const filteredProjects = projects.filter(p => 
         p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -235,8 +274,9 @@ const ProjectManager = () => {
                             <p className="text-gray-400 font-medium">Provide the technical specs and creative context</p>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div className="space-y-6">
+                        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {/* Column 1: Identity & Timeline */}
+                            <div className="space-y-8">
                                 <section className="space-y-4">
                                     <h5 className="text-xs font-black text-yellow-500 uppercase tracking-widest">Base Metadata</h5>
                                     <div className="space-y-4">
@@ -246,17 +286,29 @@ const ProjectManager = () => {
                                             onChange={e => setFormData({...formData, title: e.target.value})}
                                             className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold"
                                         />
-                                        <input 
-                                            placeholder="Category (e.g. Full Stack)" 
-                                            value={formData.category}
-                                            onChange={e => setFormData({...formData, category: e.target.value})}
-                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold"
-                                        />
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <input 
+                                                placeholder="Category" 
+                                                value={formData.category}
+                                                onChange={e => setFormData({...formData, category: e.target.value})}
+                                                className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold text-xs"
+                                            />
+                                            <div className="flex items-center gap-2 px-4 bg-gray-50 rounded-2xl border border-gray-100">
+                                                <input 
+                                                    type="checkbox"
+                                                    id="featured"
+                                                    checked={formData.featured}
+                                                    onChange={e => setFormData({...formData, featured: e.target.checked})}
+                                                    className="w-4 h-4 accent-yellow-400"
+                                                />
+                                                <label htmlFor="featured" className="text-[10px] font-black text-slate-700 uppercase tracking-widest">Featured</label>
+                                            </div>
+                                        </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             <select 
                                                 value={formData.projectType}
                                                 onChange={e => setFormData({...formData, projectType: e.target.value})}
-                                                className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold appearance-none"
+                                                className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold appearance-none text-xs"
                                             >
                                                 <option value="Personal">Personal</option>
                                                 <option value="Freelanced">Freelanced</option>
@@ -264,146 +316,217 @@ const ProjectManager = () => {
                                             <select 
                                                value={formData.status}
                                                onChange={e => setFormData({...formData, status: e.target.value})}
-                                               className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold appearance-none"
+                                               className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold appearance-none text-xs"
                                             >
                                                 <option value="Live">Live</option>
                                                 <option value="Development">Development</option>
                                             </select>
                                         </div>
-                                        <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-2xl border border-gray-100">
-                                            <input 
-                                                type="checkbox"
-                                                id="featured"
-                                                checked={formData.featured}
-                                                onChange={e => setFormData({...formData, featured: e.target.checked})}
-                                                className="w-5 h-5 accent-yellow-400"
-                                            />
-                                            <label htmlFor="featured" className="text-xs font-black text-slate-700 uppercase tracking-widest">Featured Project</label>
-                                        </div>
                                     </div>
                                 </section>
 
                                 <section className="space-y-4">
-                                    <h5 className="text-xs font-black text-blue-500 uppercase tracking-widest">Visuals & Links</h5>
+                                    <h5 className="text-xs font-black text-blue-500 uppercase tracking-widest">Visuals & Assets</h5>
                                     <div className="space-y-4">
                                         <input 
                                             placeholder="Thumbnail URL" 
                                             value={formData.image}
                                             onChange={e => setFormData({...formData, image: e.target.value})}
-                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold"
-                                        />
-                                        <input 
-                                            placeholder="Public Link (Live)" 
-                                            value={formData.liveUrl}
-                                            onChange={e => setFormData({...formData, liveUrl: e.target.value})}
-                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold text-blue-500"
-                                        />
-                                        <input 
-                                            placeholder="Source Code Link" 
-                                            value={formData.githubUrl}
-                                            onChange={e => setFormData({...formData, githubUrl: e.target.value})}
-                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold text-slate-400"
-                                        />
-                                    </div>
-                                </section>
-                            </div>
-
-                            <div className="space-y-6">
-                                <section className="space-y-4">
-                                    <h5 className="text-xs font-black text-green-500 uppercase tracking-widest">Context & Timeline</h5>
-                                    <div className="space-y-4">
-                                        <input 
-                                            placeholder="Location (e.g. Remote, Mumbai)" 
-                                            value={formData.location}
-                                            onChange={e => setFormData({...formData, location: e.target.value})}
-                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold"
-                                        />
-                                        <input 
-                                            placeholder="Client Name" 
-                                            value={formData.client}
-                                            onChange={e => setFormData({...formData, client: e.target.value})}
-                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold"
+                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-3.5 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold text-xs"
                                         />
                                         <div className="grid grid-cols-2 gap-4">
-                                            <div className="space-y-1">
-                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Assigned</label>
-                                                <input 
-                                                    placeholder="Date" 
-                                                    value={formData.assignedDate}
-                                                    onChange={e => setFormData({...formData, assignedDate: e.target.value})}
-                                                    className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold"
-                                                />
-                                            </div>
-                                            <div className="space-y-1">
-                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Delivery</label>
-                                                <input 
-                                                    placeholder="Date" 
-                                                    value={formData.date}
-                                                    onChange={e => setFormData({...formData, date: e.target.value})}
-                                                    className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold"
-                                                />
-                                            </div>
+                                            <input 
+                                                placeholder="Live Link" 
+                                                value={formData.liveUrl}
+                                                onChange={e => setFormData({...formData, liveUrl: e.target.value})}
+                                                className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-3.5 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold text-xs text-blue-500"
+                                            />
+                                            <input 
+                                                placeholder="GitHub Repo" 
+                                                value={formData.githubUrl}
+                                                onChange={e => setFormData({...formData, githubUrl: e.target.value})}
+                                                className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-3.5 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold text-xs"
+                                            />
                                         </div>
                                     </div>
                                 </section>
 
                                 <section className="space-y-4">
-                                    <h5 className="text-xs font-black text-orange-500 uppercase tracking-widest">Outcome & Impact</h5>
+                                    <h5 className="text-xs font-black text-green-500 uppercase tracking-widest">Project Logistics</h5>
                                     <div className="space-y-4">
-                                        <textarea 
-                                            placeholder="Tech Stack Description" 
-                                            value={formData.techStackDescription}
-                                            onChange={e => setFormData({...formData, techStackDescription: e.target.value})}
-                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold min-h-[80px] resize-none"
+                                        <input 
+                                            placeholder="Location (e.g. Remote)" 
+                                            value={formData.location}
+                                            onChange={e => setFormData({...formData, location: e.target.value})}
+                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold text-xs"
                                         />
-                                        <textarea 
-                                            placeholder="Project Impact / Result" 
-                                            value={formData.result}
-                                            onChange={e => setFormData({...formData, result: e.target.value})}
-                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold min-h-[80px] resize-none"
+                                        <input 
+                                            placeholder="Client Name" 
+                                            value={formData.client}
+                                            onChange={e => setFormData({...formData, client: e.target.value})}
+                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold text-xs"
                                         />
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Assigned</label>
+                                                <input value={formData.assignedDate} onChange={e => setFormData({...formData, assignedDate: e.target.value})} className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-2 text-xs font-bold" />
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Delivery</label>
+                                                <input value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-2 text-xs font-bold" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section className="space-y-6">
+                                    <div className="flex items-center justify-between">
+                                        <h5 className="text-xs font-black text-purple-500 uppercase tracking-widest">Evolution Journey</h5>
+                                        <button type="button" onClick={() => addArrayItem('journey', { date: '', event: '' })} className="text-[10px] font-black text-purple-500 hover:underline">+ Add Milestone</button>
+                                    </div>
+                                    <div className="space-y-3">
+                                        {formData.journey.map((item: any, i: number) => (
+                                            <div key={i} className="flex gap-2 items-start bg-gray-50/50 p-2 rounded-xl border border-gray-100">
+                                                <input placeholder="Date" value={item.date} onChange={e => handleArrayChange('journey', i, 'date', e.target.value)} className="w-1/3 bg-white border border-gray-100 rounded-lg px-2 py-1.5 text-[10px] font-bold" />
+                                                <input placeholder="Event" value={item.event} onChange={e => handleArrayChange('journey', i, 'event', e.target.value)} className="w-full bg-white border border-gray-100 rounded-lg px-2 py-1.5 text-[10px] font-bold" />
+                                                <button type="button" onClick={() => removeArrayItem('journey', i)} className="text-red-500"><Trash2 className="w-3.5 h-3.5"/></button>
+                                            </div>
+                                        ))}
                                     </div>
                                 </section>
                             </div>
 
-                            <div className="space-y-6">
-                                <section className="space-y-4">
-                                    <h5 className="text-xs font-black text-purple-500 uppercase tracking-widest">Storytelling</h5>
+                            {/* Column 2: Challenge & Solution */}
+                            <div className="space-y-8">
+                                <section className="space-y-6">
+                                    <div className="flex items-center justify-between">
+                                        <h5 className="text-xs font-black text-orange-500 uppercase tracking-widest">Story & Description</h5>
+                                    </div>
                                     <textarea 
-                                        placeholder="One-line summary for cards" 
+                                        placeholder="One-line card description" 
                                         value={formData.description}
                                         onChange={e => setFormData({...formData, description: e.target.value})}
-                                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold min-h-[100px] resize-none"
+                                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold min-h-[80px] resize-none text-xs"
                                     />
-                                    <textarea 
-                                        placeholder="The Challenge (Problem)" 
-                                        value={formData.problem}
-                                        onChange={e => setFormData({...formData, problem: e.target.value})}
-                                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold min-h-[120px] resize-none"
-                                    />
-                                    <textarea 
-                                        placeholder="The Solution Architected" 
-                                        value={formData.solution}
-                                        onChange={e => setFormData({...formData, solution: e.target.value})}
-                                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold min-h-[120px] resize-none"
-                                    />
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <label className="text-[10px] font-black text-red-500 uppercase tracking-widest">The Challenge (Detailed)</label>
+                                            <button type="button" onClick={() => addArrayItem('problems', { problem: '' })} className="text-[10px] font-black text-red-500 hover:underline">+ Add Challenge</button>
+                                        </div>
+                                        <textarea value={formData.problem} onChange={e => setFormData({...formData, problem: e.target.value})} placeholder="Problem Summary" className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 text-xs font-bold min-h-[100px]" />
+                                        {formData.problems.map((item: any, i: number) => (
+                                            <div key={i} className="flex gap-2 items-center">
+                                                <input placeholder="Specific issue..." value={item.problem} onChange={e => handleArrayChange('problems', i, 'problem', e.target.value)} className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-2 text-[10px] font-bold" />
+                                                <button type="button" onClick={() => removeArrayItem('problems', i)} className="text-red-500"><Trash2 className="w-4 h-4"/></button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </section>
+
+                                <section className="space-y-6">
+                                    <div className="flex items-center justify-between">
+                                        <h5 className="text-xs font-black text-blue-500 uppercase tracking-widest">Solution Architecture</h5>
+                                        <button type="button" onClick={() => addArrayItem('solutions', { solution: '' })} className="text-[10px] font-black text-blue-500 hover:underline">+ Add Spec</button>
+                                    </div>
+                                    <textarea value={formData.solution} onChange={e => setFormData({...formData, solution: e.target.value})} placeholder="Solution Overview" className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 text-xs font-bold min-h-[100px]" />
+                                    <div className="space-y-3">
+                                        {formData.solutions.map((item: any, i: number) => (
+                                            <div key={i} className="flex gap-2 items-center">
+                                                <input placeholder="Implementation detail..." value={item.solution} onChange={e => handleArrayChange('solutions', i, 'solution', e.target.value)} className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-2 text-[10px] font-bold" />
+                                                <button type="button" onClick={() => removeArrayItem('solutions', i)} className="text-red-500"><Trash2 className="w-4 h-4"/></button>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </section>
                             </div>
 
-                            <div className="md:col-span-3 pt-6 flex gap-4">
+                            {/* Column 3: Tech, Results & Assets */}
+                            <div className="space-y-8">
+                                <section className="space-y-6">
+                                    <div className="flex items-center justify-between">
+                                        <h5 className="text-xs font-black text-slate-900 uppercase tracking-widest">Tech Stack & Tools</h5>
+                                        <button type="button" onClick={() => addArrayItem('techStack', { name: '', icon: '', category: '' })} className="text-[10px] font-black text-slate-900 hover:underline">+ Add Tech</button>
+                                    </div>
+                                    <textarea value={formData.techStackDescription} onChange={e => setFormData({...formData, techStackDescription: e.target.value})} placeholder="Tech Summary" className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 text-xs font-bold min-h-[60px]" />
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {formData.techStack.map((item: any, i: number) => (
+                                            <div key={i} className="flex gap-1 items-center bg-gray-50 p-1.5 rounded-lg border border-gray-100">
+                                                <input placeholder="Name" value={item.name} onChange={e => handleArrayChange('techStack', i, 'name', e.target.value)} className="w-full bg-white border-none text-[9px] font-bold" />
+                                                <button type="button" onClick={() => removeArrayItem('techStack', i)} className="text-red-400"><Trash2 className="w-3 h-3"/></button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </section>
+
+                                <section className="space-y-6">
+                                    <div className="flex items-center justify-between">
+                                        <h5 className="text-xs font-black text-orange-600 uppercase tracking-widest">Impact & Outcomes</h5>
+                                        <button type="button" onClick={() => addArrayItem('results', { result: '' })} className="text-[10px] font-black text-orange-600 hover:underline">+ Add Metric</button>
+                                    </div>
+                                    <textarea value={formData.result} onChange={e => setFormData({...formData, result: e.target.value})} placeholder="Overall Impact Summary" className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 text-xs font-bold min-h-[60px]" />
+                                    <div className="space-y-2">
+                                        {formData.results.map((item: any, i: number) => (
+                                            <div key={i} className="flex gap-2 items-center bg-gray-50/50 p-2 rounded-xl border border-gray-100">
+                                                <input placeholder="Achievement/Result..." value={item.result} onChange={e => handleArrayChange('results', i, 'result', e.target.value)} className="w-full bg-white border border-gray-100 px-3 py-2 rounded-lg text-[10px] font-bold" />
+                                                <button type="button" onClick={() => removeArrayItem('results', i)} className="text-red-500"><Trash2 className="w-3.5 h-3.5"/></button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="pt-4 space-y-4 border-t border-gray-100">
+                                        <div className="flex items-center justify-between">
+                                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Resources & Assets</label>
+                                            <button type="button" onClick={() => addArrayItem('resources', { name: '', url: '', icon: '' })} className="text-[10px] font-black text-orange-600 hover:underline">+ Add Link</button>
+                                        </div>
+                                        <div className="space-y-2">
+                                            {formData.resources.map((item: any, i: number) => (
+                                                <div key={i} className="flex gap-2 items-center bg-gray-50/50 p-2 rounded-xl border border-gray-100">
+                                                    <input placeholder="Name" value={item.name} onChange={e => handleArrayChange('resources', i, 'name', e.target.value)} className="w-1/2 bg-white border border-gray-100 px-2 py-1.5 rounded text-[9px] font-bold" />
+                                                    <input placeholder="URL" value={item.url} onChange={e => handleArrayChange('resources', i, 'url', e.target.value)} className="w-1/2 bg-white border border-gray-100 px-2 py-1.5 rounded text-[9px] font-bold" />
+                                                    <button type="button" onClick={() => removeArrayItem('resources', i)} className="text-red-500"><Trash2 className="w-3 h-3"/></button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section className="space-y-4">
+                                    <h5 className="text-xs font-black text-slate-400 uppercase tracking-widest">Tags & Search Metadata</h5>
+                                    <div className="space-y-4">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Technologies (Enter)</label>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {formData.technologies.map((tech: string, i: number) => (
+                                                    <span key={i} className="bg-slate-800 text-white px-2 py-0.5 rounded text-[9px] font-black flex items-center gap-1">
+                                                        {tech} <X className="w-2 h-2 cursor-pointer" onClick={() => removeArrayItem('technologies', i)} />
+                                                    </span>
+                                                ))}
+                                                <input placeholder="+ Tech" onKeyDown={e => handleTagKeyDown(e, 'technologies')} className="bg-transparent border-none text-[9px] font-bold outline-none w-16" />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Search Tags (Enter)</label>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {formData.tags.map((tag: string, i: number) => (
+                                                    <span key={i} className="bg-blue-600 text-white px-2 py-0.5 rounded text-[9px] font-black flex items-center gap-1">
+                                                        {tag} <X className="w-2 h-2 cursor-pointer" onClick={() => removeArrayItem('tags', i)} />
+                                                    </span>
+                                                ))}
+                                                <input placeholder="+ Tag" onKeyDown={e => handleTagKeyDown(e, 'tags')} className="bg-transparent border-none text-[9px] font-bold outline-none w-16" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                            </div>
+
+                            <div className="md:col-span-3 pt-6 flex gap-4 border-t border-gray-100">
                                 <button 
                                     type="submit"
-                                    className="flex-1 bg-slate-900 text-white font-black py-5 rounded-3xl hover:bg-yellow-500 hover:shadow-2xl hover:shadow-yellow-200 transition-all duration-500 uppercase tracking-widest"
+                                    className="flex-1 bg-slate-900 text-white font-black py-4 rounded-2xl hover:bg-yellow-500 transition-all uppercase tracking-widest text-sm"
                                 >
-                                    {currentProject ? "Sync Changes to Database" : "Deploy Vision to Portfolio"}
+                                    {currentProject ? "Sync Evolution" : "Launch Project"}
                                 </button>
-                                <button 
-                                    type="button"
-                                    onClick={() => setIsModalOpen(false)}
-                                    className="px-8 bg-gray-100 text-gray-500 font-black rounded-3xl hover:bg-red-50 hover:text-red-500 transition-all uppercase tracking-widest"
-                                >
-                                    Abort
-                                </button>
+                                <button type="button" onClick={() => setIsModalOpen(false)} className="px-8 bg-gray-50 text-gray-400 font-black rounded-2xl hover:bg-red-50 hover:text-red-500 transition-all uppercase text-sm">Abort</button>
                             </div>
                         </form>
                     </div>

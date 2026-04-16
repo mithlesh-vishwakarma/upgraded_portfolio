@@ -107,7 +107,8 @@ export const createProject = async (req: Request, res: Response) => {
         image: "",
         liveUrl: "",
         githubUrl: "",
-        featured: false
+        featured: false,
+        technologies: []
       };
       if (defaults[field] !== undefined) {
         sanitizedData[field] = defaults[field];
