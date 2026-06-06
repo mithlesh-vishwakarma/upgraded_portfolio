@@ -59,7 +59,7 @@ const AboutPage = () => {
               {[
                 { id: 'experience', label: 'Experience', icon: Briefcase },
                 { id: 'education', label: 'Education', icon: GraduationCap },
-                { id: 'skills', label: 'Expertise', icon: Code2 }
+                { id: 'skills', label: 'Skills', icon: Code2 }
               ].map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
@@ -162,15 +162,21 @@ const AboutPage = () => {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                     {skillsData.categories.map((cat) => (
                       <div key={cat.id} className="bg-white/5 rounded-[32px] p-10 border border-white/10 hover:border-yellow-400/20 transition-all duration-300 group shadow-xl">
-                        <div className="flex items-center gap-4 mb-10">
+                        <div className="flex items-center gap-4 mb-8">
                           <div className="p-3 bg-yellow-400/10 rounded-2xl border border-yellow-400/20 group-hover:scale-110 transition-transform">
                             <Code2 className="w-6 h-6 text-yellow-400" />
                           </div>
                           <h3 className="text-xl font-black text-yellow-400 uppercase tracking-tighter">{cat.name}</h3>
                         </div>
-                        <div className="space-y-8">
-                          {cat.skills.map((skill: any, index: number) => (
-                            <SkillBar key={skill.name} skill={skill} delay={index * 100} />
+                        <div className="flex flex-wrap gap-3">
+                          {cat.skills.map((skill: any) => (
+                            <div
+                              key={skill.name}
+                              className="bg-white/5 text-gray-300 px-4 py-2.5 rounded-xl text-xs font-bold border border-white/5 hover:border-yellow-400/30 hover:text-yellow-400 transition-all duration-300 cursor-default flex items-center gap-2 hover:-translate-y-1 shadow-lg"
+                            >
+                              <div className="w-1.5 h-1.5 rounded-full bg-yellow-400 shadow-[0_0_8px_rgba(251,191,36,0.5)]"></div>
+                              <span className="uppercase tracking-widest text-[10px]">{skill.name}</span>
+                            </div>
                           ))}
                         </div>
                       </div>
@@ -209,36 +215,6 @@ const AboutPage = () => {
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-1/4 -right-40 w-96 h-96 bg-yellow-400/10 rounded-full blur-[120px] animate-pulse"></div>
         <div className="absolute bottom-1/4 -left-40 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] animate-pulse"></div>
-      </div>
-    </div>
-  );
-};
-
-type SkillBarProps = {
-  skill: { name: string; percentage: number };
-  delay?: number;
-};
-
-const SkillBar: React.FC<SkillBarProps> = ({ skill, delay = 0 }) => {
-  return (
-    <div
-      className="transform transition-all duration-500 group/skill"
-      style={{ animationDelay: `${delay}ms` }}
-    >
-      <div className="flex justify-between items-center mb-3">
-        <div className="flex items-center gap-3">
-          <div className="w-1.5 h-1.5 rounded-full bg-yellow-400 group-hover/skill:scale-150 transition-all shadow-[0_0_8px_rgba(251,191,36,0.5)]"></div>
-          <span className="font-bold text-gray-300 uppercase tracking-widest text-[11px] group-hover/skill:text-white transition-colors">{skill.name}</span>
-        </div>
-        <span className="text-yellow-400 font-black text-xs group-hover/skill:scale-110 transition-transform">{skill.percentage}%</span>
-      </div>
-      <div className="w-full bg-white/5 rounded-full h-1.5 overflow-hidden border border-white/5 p-px">
-        <div
-          className="h-full bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full transition-all duration-[2000ms] ease-out relative overflow-hidden"
-          style={{ width: `${skill.percentage}%` }}
-        >
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-45 animate-shimmer"></div>
-        </div>
       </div>
     </div>
   );

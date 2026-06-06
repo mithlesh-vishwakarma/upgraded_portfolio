@@ -42,7 +42,7 @@ const SkillManager = () => {
                 setFormData((f: any) => ({ ...f, category_id: response.data.categories[0].id }));
             }
         } catch (err) {
-            showToast("Failed to fetch expertise maps", "error");
+            showToast("Failed to fetch skills", "error");
         } finally {
             setLoading(false);
         }
@@ -51,17 +51,18 @@ const SkillManager = () => {
     const handleSkillSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
+            const { id, ...payload } = formData;
             if (currentSkill) {
-                await api.put(`/skills/${currentSkill.id}`, formData);
-                showToast("Competency calibrated successfully", "success");
+                await api.put(`/skills/${currentSkill.id}`, payload);
+                showToast("Skill updated successfully", "success");
             } else {
-                await api.post("/skills", formData);
-                showToast("New technical capacity established", "success");
+                await api.post("/skills", payload);
+                showToast("New skill added successfully", "success");
             }
             setIsSkillModalOpen(false);
             fetchSkills();
         } catch (err) {
-            showToast("Calibration failed: Logic inconsistency detected", "error");
+            showToast("Failed to save skill", "error");
         }
     };
 
@@ -83,7 +84,7 @@ const SkillManager = () => {
         try {
             await api.delete(`/skills/${id}`);
             fetchSkills();
-            showToast("Skill decommissioned from core reservoir", "success");
+            showToast("Skill removed successfully", "success");
         } catch (err) {
             showToast("Decommission failed: Skill is hardwired", "error");
         }
@@ -94,7 +95,7 @@ const SkillManager = () => {
         try {
             await api.delete(`/skills/extra/${id}`);
             fetchSkills();
-            showToast("Peripheral expertise archived", "success");
+            showToast("Peripheral skill removed", "success");
         } catch (err) {
             showToast("Archive failed: System memory locked", "error");
         }
@@ -133,14 +134,18 @@ const SkillManager = () => {
         <div className="space-y-10 font-roboto">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-3xl font-black text-slate-900 tracking-tight">Expertise Reservoir</h2>
-                    <p className="text-gray-400 font-medium tracking-wide">Quantify and categorize your core technical abilities</p>
+                    <h2 className="text-3xl font-black text-slate-900 tracking-tight">Skills</h2>
+                    <p className="text-gray-400 font-medium tracking-wide">Categorize and manage your core technical abilities</p>
                 </div>
                 <div className="flex gap-4">
                     <button 
                         onClick={() => {
                             setCurrentSkill(null);
-                            setFormData({ ...formData, name: "", percentage: 80 });
+                            setFormData({
+                                name: "",
+                                percentage: 80,
+                                category_id: formData.category_id || (data.categories[0]?.id || "")
+                            });
                             setIsSkillModalOpen(true);
                         }}
                         className="bg-slate-900 text-white px-6 py-3.5 rounded-3xl font-bold flex items-center gap-2 hover:bg-yellow-500 hover:shadow-2xl transition-all duration-300 uppercase tracking-widest text-[10px]"
@@ -164,13 +169,13 @@ const SkillManager = () => {
                         className="bg-gray-100 text-slate-600 px-6 py-3.5 rounded-3xl font-bold flex items-center gap-2 hover:bg-yellow-400/20 hover:text-yellow-600 transition-all duration-300 uppercase tracking-widest text-[10px]"
                     >
                         <Zap className="w-4 h-4" />
-                        Other Expertise
+                        Other Skills
                     </button>
                 </div>
             </div>
 
             {loading ? (
-                <div className="text-center py-40 text-gray-300 font-bold uppercase tracking-widest">Profiling Expertise...</div>
+                <div className="text-center py-40 text-gray-300 font-bold uppercase tracking-widest">Profiling Skills...</div>
             ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                     <section className="space-y-6">
@@ -201,32 +206,21 @@ const SkillManager = () => {
                                     </span>
                                 </div>
 
-                                <div className="space-y-6">
+                                <div className="flex flex-wrap gap-2.5">
                                     {cat.skills.map((skill: any) => (
-                                        <div key={skill.id} className="group/skill relative">
-                                            <div className="flex justify-between items-center mb-2">
-                                                <span className="font-bold text-slate-700">{skill.name}</span>
-                                                <div className="flex items-center gap-3">
-                                                    <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{skill.percentage}% Proficiency</span>
-                                                    <div className="flex opacity-0 group-hover/skill:opacity-100 transition-opacity">
-                                                        <button onClick={() => {
-                                                            setCurrentSkill(skill);
-                                                            setFormData(skill);
-                                                            setIsSkillModalOpen(true);
-                                                        }} className="p-1 text-blue-500 hover:scale-125 transition-transform"><Edit3 className="w-3 h-3"/></button>
-                                                        <button onClick={() => deleteSkill(skill.id)} className="p-1 text-red-400 hover:scale-125 transition-transform"><Trash2 className="w-3 h-3"/></button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="h-2 w-full bg-gray-50 rounded-full overflow-hidden border border-gray-100">
-                                                <div 
-                                                    className="h-full bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full transition-all duration-1000"
-                                                    style={{ width: `${skill.percentage}%` }}
-                                                ></div>
+                                        <div key={skill.id} className="group/skill relative flex items-center gap-2 px-4 py-2 bg-slate-50 border border-gray-100 rounded-2xl hover:border-yellow-400/50 hover:bg-yellow-400/5 transition-all duration-200">
+                                            <span className="font-bold text-slate-700 text-sm">{skill.name}</span>
+                                            <div className="flex items-center gap-1.5 ml-2">
+                                                <button onClick={() => {
+                                                    setCurrentSkill(skill);
+                                                    setFormData(skill);
+                                                    setIsSkillModalOpen(true);
+                                                }} className="p-1 text-blue-500 hover:scale-125 transition-transform"><Edit3 className="w-3.5 h-3.5"/></button>
+                                                <button onClick={() => deleteSkill(skill.id)} className="p-1 text-red-400 hover:scale-125 transition-transform"><Trash2 className="w-3.5 h-3.5"/></button>
                                             </div>
                                         </div>
                                     ))}
-                                    {cat.skills.length === 0 && <p className="text-center text-xs font-bold text-gray-300 italic py-4">Domain empty. Insert technical capacity.</p>}
+                                    {cat.skills.length === 0 && <p className="w-full text-center text-xs font-bold text-gray-300 italic py-4">Domain empty. Insert technical capacity.</p>}
                                 </div>
                             </div>
                         ))}
@@ -251,7 +245,7 @@ const SkillManager = () => {
                                         </button>
                                     </div>
                                 ))}
-                                {data.extra_skills.length === 0 && <p className="col-span-2 text-center text-slate-500 font-bold italic py-10">Expand your horizontal Expertise.</p>}
+                                {data.extra_skills.length === 0 && <p className="col-span-2 text-center text-slate-500 font-bold italic py-10">Expand your horizontal skills.</p>}
                            </div>
                            <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400/10 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-yellow-400/20 transition-all"></div>
                         </div>
@@ -319,23 +313,8 @@ const SkillManager = () => {
                                 />
                             </div>
 
-                            <div className="space-y-2">
-                                <div className="flex justify-between ml-1 mb-2">
-                                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Mastery Level</label>
-                                    <span className="text-xl font-black text-yellow-600">{formData.percentage}%</span>
-                                </div>
-                                <input 
-                                    type="range"
-                                    min="0"
-                                    max="100"
-                                    value={formData.percentage}
-                                    onChange={e => setFormData({...formData, percentage: parseInt(e.target.value)})}
-                                    className="w-full h-3 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-slate-900"
-                                />
-                            </div>
-
                             <button className="w-full bg-slate-900 text-white font-black py-5 rounded-3xl hover:bg-yellow-500 uppercase tracking-widest transition-all mt-4">
-                                Calibrate Expertise
+                                Save Skill
                             </button>
                         </form>
                     </div>
