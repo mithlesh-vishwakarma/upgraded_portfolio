@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import api from "../../api/api";
 import { 
   Plus, 
@@ -7,11 +7,22 @@ import {
   ExternalLink, 
   Github, 
   Search,
-  CheckCircle2,
-  X
+  X,
+  Info,
+  Globe,
+  Cpu,
+  Sparkles,
+  Loader2,
+  Image as ImageIcon
 } from "lucide-react";
 
 import { useToast } from "../../context/ToastContext";
+
+const SECTIONS = [
+  { id: "general", label: "General Details", icon: Info },
+  { id: "links-assets", label: "Links & Assets", icon: Globe },
+  { id: "specifications", label: "Tech Stack & Features", icon: Cpu },
+];
 
 const ProjectManager = () => {
     const { showToast } = useToast();
@@ -20,32 +31,20 @@ const ProjectManager = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentProject, setCurrentProject] = useState<any>(null);
+    const [uploading, setUploading] = useState(false);
+    
+    const [activeSection, setActiveSection] = useState("general");
+    const formContainerRef = useRef<HTMLDivElement>(null);
+
     const [formData, setFormData] = useState<any>({
-        title: "",
-        category: "",
-        description: "",
-        technologies: [],
-        liveUrl: "",
-        githubUrl: "",
-        image: "",
-        projectType: "Personal",
-        status: "Live",
-        problem: "",
-        solution: "",
-        techStackDescription: "",
-        result: "",
-        date: "",
-        assignedDate: "",
-        location: "",
-        client: "",
-        featured: false,
-        tags: [],
-        journey: [],
-        problems: [],
-        solutions: [],
-        techStack: [],
-        results: [],
-        resources: []
+        name: "",
+        image_url: "",
+        short_description: "",
+        tech_stack: [],
+        features: [],
+        challenges_solved: "",
+        live_url: "",
+        github_url: ""
     });
 
     useEffect(() => {
@@ -78,8 +77,21 @@ const ProjectManager = () => {
     const handleEdit = async (project: any) => {
         try {
             const response = await api.get(`/projects/${project.id}`);
-            setCurrentProject(response.data);
-            setFormData(response.data);
+            const data = response.data;
+            const sanitized = {
+                id: data.id,
+                name: data.name || "",
+                image_url: data.image_url || "",
+                short_description: data.short_description || "",
+                tech_stack: data.tech_stack || [],
+                features: data.features || [],
+                challenges_solved: data.challenges_solved || "",
+                live_url: data.live_url || "",
+                github_url: data.github_url || ""
+            };
+            setCurrentProject(sanitized);
+            setFormData(sanitized);
+            setActiveSection("general");
             setIsModalOpen(true);
         } catch (err) {
             showToast("Access denied: Could not pull technical specs", "error");
@@ -109,44 +121,103 @@ const ProjectManager = () => {
         }
     };
 
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
 
-
-    const handleArrayChange = (field: string, index: number, subField: string | null, value: any) => {
-        const newArray = [...formData[field]];
-        if (subField) {
-            newArray[index] = { ...newArray[index], [subField]: value };
-        } else {
-            newArray[index] = value;
+        if (!file.type.startsWith("image/")) {
+            showToast("Only image assets are allowed", "error");
+            return;
         }
-        setFormData({ ...formData, [field]: newArray });
-    };
+        if (file.size > 5 * 1024 * 1024) {
+            showToast("Asset size must be under 5MB", "error");
+            return;
+        }
 
-    const addArrayItem = (field: string, defaultValue: any) => {
-        setFormData({ ...formData, [field]: [...formData[field], defaultValue] });
-    };
-
-    const removeArrayItem = (field: string, index: number) => {
-        setFormData({ 
-            ...formData, 
-            [field]: formData[field].filter((_: any, i: number) => i !== index) 
-        });
+        setUploading(true);
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+            try {
+                const response = await api.post("/projects/upload", {
+                    image: reader.result,
+                    name: file.name
+                });
+                setFormData(prev => ({ ...prev, image_url: response.data.imageUrl }));
+                showToast("Asset uploaded successfully", "success");
+            } catch (err: any) {
+                console.error("Asset upload failure:", err);
+                const msg = err.response?.data?.message || "Failed to upload image";
+                showToast(msg, "error");
+            } finally {
+                setUploading(false);
+            }
+        };
+        reader.readAsDataURL(file);
     };
 
     const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, field: string) => {
         if (e.key === 'Enter' || e.key === ',') {
             e.preventDefault();
             const val = e.currentTarget.value.trim().replace(',', '');
-            if (val && !formData[field].includes(val)) {
-                setFormData({ ...formData, [field]: [...formData[field], val] });
+            const arr = formData[field] || [];
+            if (val && !arr.includes(val)) {
+                setFormData({ ...formData, [field]: [...arr, val] });
                 e.currentTarget.value = '';
             }
         }
     };
 
+    const removeArrayItem = (field: string, index: number) => {
+        const arr = formData[field] || [];
+        setFormData({ 
+            ...formData, 
+            [field]: arr.filter((_: any, i: number) => i !== index) 
+        });
+    };
+
+    const addFeature = () => {
+        setFormData(prev => ({ ...prev, features: [...(prev.features || []), ""] }));
+    };
+
+    const handleFeatureChange = (index: number, value: string) => {
+        const updated = [...(formData.features || [])];
+        updated[index] = value;
+        setFormData({ ...formData, features: updated });
+    };
+
+    const scrollToSection = (sectionId: string) => {
+        setActiveSection(sectionId);
+        const container = formContainerRef.current;
+        const element = document.getElementById(sectionId);
+        if (container && element) {
+            const containerTop = container.getBoundingClientRect().top;
+            const elementTop = element.getBoundingClientRect().top;
+            const scrollPos = elementTop - containerTop + container.scrollTop - 24;
+            container.scrollTo({ top: scrollPos, behavior: "smooth" });
+        }
+    };
+
+    const handleScroll = () => {
+        const container = formContainerRef.current;
+        if (!container) return;
+        const containerTop = container.getBoundingClientRect().top;
+        
+        let currentActive = SECTIONS[0].id;
+        for (const sec of SECTIONS) {
+            const el = document.getElementById(sec.id);
+            if (el) {
+                const rect = el.getBoundingClientRect();
+                if (rect.top - containerTop <= 140) {
+                    currentActive = sec.id;
+                }
+            }
+        }
+        setActiveSection(currentActive);
+    };
 
     const filteredProjects = projects.filter(p => 
-        p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.category.toLowerCase().includes(searchTerm.toLowerCase())
+        (p.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (p.short_description || "").toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
@@ -154,98 +225,118 @@ const ProjectManager = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h2 className="text-3xl font-black text-slate-900 tracking-tight">Project Management</h2>
-                    <p className="text-gray-400 font-medium">Create, update or remove portfolio showcases</p>
+                    <p className="text-gray-500 font-medium text-sm">Create, update or remove portfolio showcases</p>
                 </div>
                 <button 
                     onClick={() => {
                         setCurrentProject(null);
                         setFormData({ 
-                            title: "", category: "", projectType: "Personal", status: "Live", 
-                            description: "", technologies: [], liveUrl: "", githubUrl: "", 
-                            image: "", problem: "", solution: "", techStackDescription: "", 
-                            result: "", date: "", assignedDate: "", location: "", 
-                            client: "", featured: false, tags: [], journey: [], 
-                            problems: [], solutions: [], techStack: [], results: [], 
-                            resources: [] 
+                            name: "",
+                            image_url: "",
+                            short_description: "",
+                            tech_stack: [],
+                            features: [],
+                            challenges_solved: "",
+                            live_url: "",
+                            github_url: ""
                         });
+                        setActiveSection("general");
                         setIsModalOpen(true);
                     }}
-                    className="bg-slate-900 text-white px-6 py-3.5 rounded-2xl font-bold flex items-center gap-2 hover:bg-yellow-500 hover:shadow-xl hover:shadow-yellow-200 transition-all duration-300"
+                    className="bg-slate-900 text-white px-6 py-3.5 rounded-2xl font-bold flex items-center gap-2 hover:bg-yellow-500 hover:text-slate-900 hover:shadow-xl hover:shadow-yellow-250 transition-all duration-300 text-sm shadow-md"
                 >
                     <Plus className="w-5 h-5" />
                     Add New Project
                 </button>
             </div>
 
-            <div className="bg-white border border-gray-100 rounded-3xl p-4 shadow-sm">
-                <div className="flex items-center bg-gray-50 border border-gray-100 rounded-2xl px-4 py-2 mb-6 w-full md:w-96 focus-within:ring-2 focus-within:ring-yellow-400/20 focus-within:border-yellow-400 transition-all duration-200">
-                    <Search className="w-5 h-5 text-gray-400 mr-2" />
+            <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-sm">
+                <div className="flex items-center bg-gray-55 border border-gray-200 rounded-2xl px-4 py-2.5 mb-6 w-full md:w-96 focus-within:ring-2 focus-within:ring-yellow-400/25 focus-within:border-yellow-400 transition-all duration-200">
+                    <Search className="w-5 h-5 text-gray-400 mr-2.5" />
                     <input 
                         type="text" 
-                        placeholder="Search by title or category..." 
+                        placeholder="Search by title or description..." 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="bg-transparent border-none focus:outline-none text-sm w-full py-1 text-slate-700"
+                        className="bg-transparent border-none focus:outline-none text-sm w-full py-1 text-slate-700 placeholder-gray-400"
                     />
                 </div>
 
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-separate border-spacing-y-2">
                         <thead>
-                            <tr className="text-gray-400 uppercase text-[10px] font-black tracking-widest px-4">
-                                <th className="pb-4 pl-4">Project Info</th>
-                                <th className="pb-4">Category / Type</th>
-                                <th className="pb-4">Status</th>
-                                <th className="pb-4">Featured</th>
+                            <tr className="text-gray-500 uppercase text-xs font-bold tracking-wider px-4">
+                                <th className="pb-4 pl-4">Project Name & Info</th>
+                                <th className="pb-4">Short Description</th>
+                                <th className="pb-4">Tech Stack</th>
                                 <th className="pb-4 pr-4 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {loading ? (
-                                <tr><td colSpan={5} className="text-center py-20 text-gray-300 font-bold">Spinning up projects...</td></tr>
+                                <tr><td colSpan={4} className="text-center py-20 text-gray-400 font-bold">Spinning up projects...</td></tr>
                             ) : filteredProjects.length === 0 ? (
-                                <tr><td colSpan={5} className="text-center py-20 text-gray-300 font-bold">No projects found.</td></tr>
+                                <tr><td colSpan={4} className="text-center py-20 text-gray-400 font-bold">No projects found.</td></tr>
                             ) : filteredProjects.map((project) => (
                                 <tr key={project.id} className="group hover:bg-gray-50/50 transition-all duration-200">
-                                    <td className="bg-white py-4 pl-4 rounded-l-2xl border-y border-l border-gray-50 group-hover:border-gray-200">
+                                    <td className="bg-white py-4 pl-4 rounded-l-2xl border-y border-l border-gray-200 group-hover:border-gray-300">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-14 h-14 rounded-xl bg-gray-100 overflow-hidden border border-gray-200">
-                                                <img src={project.image} alt="" className="w-full h-full object-cover" />
+                                            <div className="w-14 h-14 rounded-xl bg-gray-100 overflow-hidden border border-gray-200 shadow-sm flex-shrink-0">
+                                                {project.image_url ? (
+                                                    <img src={project.image_url} alt="" className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400 text-xs font-bold">No Img</div>
+                                                )}
                                             </div>
                                             <div>
-                                                <h4 className="font-black text-slate-900 group-hover:text-yellow-600 transition-colors">{project.title}</h4>
-                                                <div className="flex items-center gap-2 mt-1">
-                                                    <a href={project.liveUrl} target="_blank" className="text-[10px] font-bold text-blue-500 hover:underline flex items-center gap-0.5"><ExternalLink className="w-3 h-3"/> Live</a>
-                                                    {project.githubUrl && <a href={project.githubUrl} target="_blank" className="text-[10px] font-bold text-slate-400 hover:underline flex items-center gap-0.5"><Github className="w-3 h-3"/> Repo</a>}
+                                                <h4 className="text-sm font-bold text-slate-800 group-hover:text-yellow-600 transition-colors">{project.name}</h4>
+                                                <div className="flex items-center gap-3 mt-1.5">
+                                                    {project.live_url && (
+                                                        <a href={project.live_url} target="_blank" rel="noreferrer" className="text-xs font-semibold text-blue-500 hover:text-blue-600 flex items-center gap-1">
+                                                            <ExternalLink className="w-3.5 h-3.5"/> Live Demo
+                                                        </a>
+                                                    )}
+                                                    {project.github_url && (
+                                                        <a href={project.github_url} target="_blank" rel="noreferrer" className="text-xs font-semibold text-slate-500 hover:text-slate-700 flex items-center gap-1">
+                                                            <Github className="w-3.5 h-3.5"/> GitHub
+                                                        </a>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="bg-white py-4 border-y border-gray-50 group-hover:border-gray-200">
-                                        <div className="flex flex-col">
-                                            <span className="text-xs font-black text-slate-700 tracking-tight">{project.category}</span>
-                                            <span className="text-[10px] font-bold text-gray-400 tracking-widest uppercase">{project.projectType}</span>
+                                    <td className="bg-white py-4 border-y border-gray-200 group-hover:border-gray-300 max-w-xs">
+                                        <p className="text-sm text-slate-650 truncate" title={project.short_description}>
+                                            {project.short_description}
+                                        </p>
+                                    </td>
+                                    <td className="bg-white py-4 border-y border-gray-200 group-hover:border-gray-300">
+                                        <div className="flex flex-wrap gap-1 max-w-xs">
+                                            {(project.tech_stack || []).slice(0, 4).map((tech: string, i: number) => (
+                                                <span key={i} className="px-2 py-0.5 bg-slate-100 border border-slate-200 text-slate-700 text-[10px] font-bold rounded">
+                                                    {tech}
+                                                </span>
+                                            ))}
+                                            {(project.tech_stack || []).length > 4 && (
+                                                <span className="text-[10px] text-gray-400 font-bold self-center">
+                                                    +{project.tech_stack.length - 4} more
+                                                </span>
+                                            )}
                                         </div>
                                     </td>
-                                    <td className="bg-white py-4 border-y border-gray-50 group-hover:border-gray-200">
-                                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter ${project.status === "Live" ? "bg-green-50 text-green-600 border border-green-100" : "bg-orange-50 text-orange-600 border border-orange-100"}`}>
-                                            {project.status || "Live"}
-                                        </span>
-                                    </td>
-                                    <td className="bg-white py-4 border-y border-gray-50 group-hover:border-gray-200">
-                                       {project.featured ? <CheckCircle2 className="w-5 h-5 text-yellow-500" /> : <X className="w-5 h-5 text-gray-200" />}
-                                    </td>
-                                    <td className="bg-white py-4 pr-4 rounded-r-2xl border-y border-r border-gray-50 group-hover:border-gray-200 text-right">
+                                    <td className="bg-white py-4 pr-4 rounded-r-2xl border-y border-r border-gray-200 group-hover:border-gray-300 text-right">
                                         <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <button 
                                                 onClick={() => handleEdit(project)}
                                                 className="p-2 text-slate-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition-all"
+                                                title="Edit Project"
                                             >
                                                 <Edit3 className="w-5 h-5" />
                                             </button>
                                             <button 
                                                 onClick={() => handleDelete(project.id)}
-                                                className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                                                className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-55/10 rounded-lg transition-all"
+                                                title="Delete Project"
                                             >
                                                 <Trash2 className="w-5 h-5" />
                                             </button>
@@ -258,275 +349,306 @@ const ProjectManager = () => {
                 </div>
             </div>
 
-            {/* Modal - Simplified version as example */}
             {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
-                    <div className="bg-white w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-[40px] p-10 shadow-2xl relative">
-                        <button 
-                            onClick={() => setIsModalOpen(false)}
-                            className="absolute top-8 right-8 p-3 hover:bg-gray-100 rounded-2xl transition-all"
-                        >
-                            <X className="w-6 h-6 text-gray-400" />
-                        </button>
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white w-full max-w-5xl h-[85vh] flex flex-col rounded-[24px] md:rounded-[32px] shadow-2xl relative overflow-hidden border border-gray-100">
                         
-                        <div className="mb-10">
-                            <h3 className="text-3xl font-black text-slate-900 tracking-tight">{currentProject ? "Update Evolution" : "Launch New Vision"}</h3>
-                            <p className="text-gray-400 font-medium">Provide the technical specs and creative context</p>
+                        {/* Modal Header */}
+                        <div className="p-6 md:p-8 pb-4 md:pb-6 border-b border-gray-100 flex justify-between items-center bg-white">
+                            <div>
+                                <h3 className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                                    <Sparkles className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+                                    {currentProject ? "Update Evolution Details" : "Launch New Vision Project"}
+                                </h3>
+                                <p className="text-xs md:text-sm text-gray-400 font-medium mt-0.5">Provide project context, technical specifications, and links</p>
+                            </div>
+                            <button 
+                                type="button"
+                                onClick={() => setIsModalOpen(false)}
+                                className="p-2 hover:bg-gray-100 rounded-xl transition-all"
+                                title="Close Modal"
+                            >
+                                <X className="w-6 h-6 text-gray-400" />
+                            </button>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {/* Column 1: Identity & Timeline */}
-                            <div className="space-y-8">
-                                <section className="space-y-4">
-                                    <h5 className="text-xs font-black text-yellow-500 uppercase tracking-widest">Base Metadata</h5>
-                                    <div className="space-y-4">
-                                        <input 
-                                            placeholder="Project Title" 
-                                            value={formData.title}
-                                            onChange={e => setFormData({...formData, title: e.target.value})}
-                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold"
-                                        />
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <input 
-                                                placeholder="Category" 
-                                                value={formData.category}
-                                                onChange={e => setFormData({...formData, category: e.target.value})}
-                                                className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold text-xs"
-                                            />
-                                            <div className="flex items-center gap-2 px-4 bg-gray-50 rounded-2xl border border-gray-100">
+                        {/* Form Body */}
+                        <form onSubmit={handleSubmit} className="flex-grow flex flex-col overflow-hidden">
+                            <div className="flex-1 flex overflow-hidden">
+                                
+                                {/* Navigation Sidebar */}
+                                <div className="w-64 border-r border-gray-100 bg-gray-50/50 p-6 hidden md:flex flex-col gap-1.5 overflow-y-auto">
+                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-2">Sections Index</span>
+                                    {SECTIONS.map((sec) => {
+                                        const IconComponent = sec.icon;
+                                        const isSelected = activeSection === sec.id;
+                                        return (
+                                            <button
+                                                type="button"
+                                                key={sec.id}
+                                                onClick={() => scrollToSection(sec.id)}
+                                                className={`w-full text-left px-3.5 py-3 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center gap-3 ${
+                                                    isSelected 
+                                                        ? "bg-slate-900 text-white shadow-md shadow-slate-900/10 translate-x-1" 
+                                                        : "text-slate-500 hover:bg-gray-100 hover:text-slate-900"
+                                                }`}
+                                            >
+                                                <IconComponent className={`w-4 h-4 transition-colors ${isSelected ? "text-yellow-400" : "text-gray-400"}`} />
+                                                {sec.label}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Form Sections Container */}
+                                <div 
+                                    ref={formContainerRef} 
+                                    onScroll={handleScroll}
+                                    className="flex-grow overflow-y-auto p-6 md:p-8 space-y-8 scroll-smooth bg-gray-55/10"
+                                >
+                                    {/* Section 1: General Details */}
+                                    <div id="general" className="scroll-mt-6 bg-white border border-gray-150 rounded-2xl p-6 shadow-sm space-y-6">
+                                        <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
+                                            <div className="p-2.5 bg-yellow-50 text-yellow-600 rounded-xl">
+                                                <Info className="w-5 h-5" />
+                                            </div>
+                                            <div>
+                                                <h4 className="text-base font-bold text-slate-800">General Details</h4>
+                                                <p className="text-xs text-slate-400">Core details identifying this showcase</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="space-y-4">
+                                            <div className="space-y-1.5">
+                                                <label className="text-xs font-bold text-slate-650 uppercase tracking-wider block">Project Name *</label>
                                                 <input 
-                                                    type="checkbox"
-                                                    id="featured"
-                                                    checked={formData.featured}
-                                                    onChange={e => setFormData({...formData, featured: e.target.checked})}
-                                                    className="w-4 h-4 accent-yellow-400"
+                                                    required
+                                                    type="text"
+                                                    placeholder="e.g. Enterprise E-Commerce Platform" 
+                                                    value={formData.name || ""}
+                                                    onChange={e => setFormData({...formData, name: e.target.value})}
+                                                    className="w-full bg-gray-55 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 focus:bg-white focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all"
                                                 />
-                                                <label htmlFor="featured" className="text-[10px] font-black text-slate-700 uppercase tracking-widest">Featured</label>
                                             </div>
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <select 
-                                                value={formData.projectType}
-                                                onChange={e => setFormData({...formData, projectType: e.target.value})}
-                                                className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold appearance-none text-xs"
-                                            >
-                                                <option value="Personal">Personal</option>
-                                                <option value="Freelanced">Freelanced</option>
-                                            </select>
-                                            <select 
-                                               value={formData.status}
-                                               onChange={e => setFormData({...formData, status: e.target.value})}
-                                               className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold appearance-none text-xs"
-                                            >
-                                                <option value="Live">Live</option>
-                                                <option value="Development">Development</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </section>
 
-                                <section className="space-y-4">
-                                    <h5 className="text-xs font-black text-blue-500 uppercase tracking-widest">Visuals & Assets</h5>
-                                    <div className="space-y-4">
-                                        <input 
-                                            placeholder="Thumbnail URL" 
-                                            value={formData.image}
-                                            onChange={e => setFormData({...formData, image: e.target.value})}
-                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-3.5 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold text-xs"
-                                        />
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <input 
-                                                placeholder="Live Link" 
-                                                value={formData.liveUrl}
-                                                onChange={e => setFormData({...formData, liveUrl: e.target.value})}
-                                                className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-3.5 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold text-xs text-blue-500"
-                                            />
-                                            <input 
-                                                placeholder="GitHub Repo" 
-                                                value={formData.githubUrl}
-                                                onChange={e => setFormData({...formData, githubUrl: e.target.value})}
-                                                className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-3.5 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold text-xs"
-                                            />
-                                        </div>
-                                    </div>
-                                </section>
-
-                                <section className="space-y-4">
-                                    <h5 className="text-xs font-black text-green-500 uppercase tracking-widest">Project Logistics</h5>
-                                    <div className="space-y-4">
-                                        <input 
-                                            placeholder="Location (e.g. Remote)" 
-                                            value={formData.location}
-                                            onChange={e => setFormData({...formData, location: e.target.value})}
-                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold text-xs"
-                                        />
-                                        <input 
-                                            placeholder="Client Name" 
-                                            value={formData.client}
-                                            onChange={e => setFormData({...formData, client: e.target.value})}
-                                            className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold text-xs"
-                                        />
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div className="space-y-1">
-                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Assigned</label>
-                                                <input value={formData.assignedDate} onChange={e => setFormData({...formData, assignedDate: e.target.value})} className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-2 text-xs font-bold" />
+                                            <div className="space-y-1.5">
+                                                <label className="text-xs font-bold text-slate-650 uppercase tracking-wider block">Short Description *</label>
+                                                <textarea 
+                                                    required
+                                                    placeholder="A crisp, high-level summary of the project." 
+                                                    value={formData.short_description || ""}
+                                                    onChange={e => setFormData({...formData, short_description: e.target.value})}
+                                                    className="w-full bg-gray-55 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 focus:bg-white focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all min-h-[90px] resize-y"
+                                                />
                                             </div>
-                                            <div className="space-y-1">
-                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Delivery</label>
-                                                <input value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-2 text-xs font-bold" />
+
+                                            <div className="space-y-1.5">
+                                                <label className="text-xs font-bold text-slate-650 uppercase tracking-wider block">Challenges Solved *</label>
+                                                <textarea 
+                                                    required
+                                                    placeholder="Describe the hurdles faced and how you successfully overcame them." 
+                                                    value={formData.challenges_solved || ""}
+                                                    onChange={e => setFormData({...formData, challenges_solved: e.target.value})}
+                                                    className="w-full bg-gray-55 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 focus:bg-white focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all min-h-[120px] resize-y"
+                                                />
                                             </div>
                                         </div>
                                     </div>
-                                </section>
 
-                                <section className="space-y-6">
-                                    <div className="flex items-center justify-between">
-                                        <h5 className="text-xs font-black text-purple-500 uppercase tracking-widest">Evolution Journey</h5>
-                                        <button type="button" onClick={() => addArrayItem('journey', { date: '', event: '' })} className="text-[10px] font-black text-purple-500 hover:underline">+ Add Milestone</button>
-                                    </div>
-                                    <div className="space-y-3">
-                                        {formData.journey.map((item: any, i: number) => (
-                                            <div key={i} className="flex gap-2 items-start bg-gray-50/50 p-2 rounded-xl border border-gray-100">
-                                                <input placeholder="Date" value={item.date} onChange={e => handleArrayChange('journey', i, 'date', e.target.value)} className="w-1/3 bg-white border border-gray-100 rounded-lg px-2 py-1.5 text-[10px] font-bold" />
-                                                <input placeholder="Event" value={item.event} onChange={e => handleArrayChange('journey', i, 'event', e.target.value)} className="w-full bg-white border border-gray-100 rounded-lg px-2 py-1.5 text-[10px] font-bold" />
-                                                <button type="button" onClick={() => removeArrayItem('journey', i)} className="text-red-500"><Trash2 className="w-3.5 h-3.5"/></button>
+                                    {/* Section 2: Links & Assets */}
+                                    <div id="links-assets" className="scroll-mt-6 bg-white border border-gray-150 rounded-2xl p-6 shadow-sm space-y-6">
+                                        <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
+                                            <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl">
+                                                <Globe className="w-5 h-5" />
                                             </div>
-                                        ))}
-                                    </div>
-                                </section>
-                            </div>
-
-                            {/* Column 2: Challenge & Solution */}
-                            <div className="space-y-8">
-                                <section className="space-y-6">
-                                    <div className="flex items-center justify-between">
-                                        <h5 className="text-xs font-black text-orange-500 uppercase tracking-widest">Story & Description</h5>
-                                    </div>
-                                    <textarea 
-                                        placeholder="One-line card description" 
-                                        value={formData.description}
-                                        onChange={e => setFormData({...formData, description: e.target.value})}
-                                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:ring-4 focus:ring-yellow-400/20 focus:border-yellow-400 outline-none font-bold min-h-[80px] resize-none text-xs"
-                                    />
-                                    <div className="space-y-4">
-                                        <div className="flex items-center justify-between">
-                                            <label className="text-[10px] font-black text-red-500 uppercase tracking-widest">The Challenge (Detailed)</label>
-                                            <button type="button" onClick={() => addArrayItem('problems', { problem: '' })} className="text-[10px] font-black text-red-500 hover:underline">+ Add Challenge</button>
+                                            <div>
+                                                <h4 className="text-base font-bold text-slate-800">Links & Assets</h4>
+                                                <p className="text-xs text-slate-400">Project image uploads and button redirect locations</p>
+                                            </div>
                                         </div>
-                                        <textarea value={formData.problem} onChange={e => setFormData({...formData, problem: e.target.value})} placeholder="Problem Summary" className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 text-xs font-bold min-h-[100px]" />
-                                        {formData.problems.map((item: any, i: number) => (
-                                            <div key={i} className="flex gap-2 items-center">
-                                                <input placeholder="Specific issue..." value={item.problem} onChange={e => handleArrayChange('problems', i, 'problem', e.target.value)} className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-2 text-[10px] font-bold" />
-                                                <button type="button" onClick={() => removeArrayItem('problems', i)} className="text-red-500"><Trash2 className="w-4 h-4"/></button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </section>
 
-                                <section className="space-y-6">
-                                    <div className="flex items-center justify-between">
-                                        <h5 className="text-xs font-black text-blue-500 uppercase tracking-widest">Solution Architecture</h5>
-                                        <button type="button" onClick={() => addArrayItem('solutions', { solution: '' })} className="text-[10px] font-black text-blue-500 hover:underline">+ Add Spec</button>
-                                    </div>
-                                    <textarea value={formData.solution} onChange={e => setFormData({...formData, solution: e.target.value})} placeholder="Solution Overview" className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 text-xs font-bold min-h-[100px]" />
-                                    <div className="space-y-3">
-                                        {formData.solutions.map((item: any, i: number) => (
-                                            <div key={i} className="flex gap-2 items-center">
-                                                <input placeholder="Implementation detail..." value={item.solution} onChange={e => handleArrayChange('solutions', i, 'solution', e.target.value)} className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-2 text-[10px] font-bold" />
-                                                <button type="button" onClick={() => removeArrayItem('solutions', i)} className="text-red-500"><Trash2 className="w-4 h-4"/></button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </section>
-                            </div>
-
-                            {/* Column 3: Tech, Results & Assets */}
-                            <div className="space-y-8">
-                                <section className="space-y-6">
-                                    <div className="flex items-center justify-between">
-                                        <h5 className="text-xs font-black text-slate-900 uppercase tracking-widest">Tech Stack & Tools</h5>
-                                        <button type="button" onClick={() => addArrayItem('techStack', { name: '', icon: '', category: '' })} className="text-[10px] font-black text-slate-900 hover:underline">+ Add Tech</button>
-                                    </div>
-                                    <textarea value={formData.techStackDescription} onChange={e => setFormData({...formData, techStackDescription: e.target.value})} placeholder="Tech Summary" className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 text-xs font-bold min-h-[60px]" />
-                                    <div className="grid grid-cols-2 gap-2">
-                                        {formData.techStack.map((item: any, i: number) => (
-                                            <div key={i} className="flex gap-1 items-center bg-gray-50 p-1.5 rounded-lg border border-gray-100">
-                                                <input placeholder="Name" value={item.name} onChange={e => handleArrayChange('techStack', i, 'name', e.target.value)} className="w-full bg-white border-none text-[9px] font-bold" />
-                                                <button type="button" onClick={() => removeArrayItem('techStack', i)} className="text-red-400"><Trash2 className="w-3 h-3"/></button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </section>
-
-                                <section className="space-y-6">
-                                    <div className="flex items-center justify-between">
-                                        <h5 className="text-xs font-black text-orange-600 uppercase tracking-widest">Impact & Outcomes</h5>
-                                        <button type="button" onClick={() => addArrayItem('results', { result: '' })} className="text-[10px] font-black text-orange-600 hover:underline">+ Add Metric</button>
-                                    </div>
-                                    <textarea value={formData.result} onChange={e => setFormData({...formData, result: e.target.value})} placeholder="Overall Impact Summary" className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 text-xs font-bold min-h-[60px]" />
-                                    <div className="space-y-2">
-                                        {formData.results.map((item: any, i: number) => (
-                                            <div key={i} className="flex gap-2 items-center bg-gray-50/50 p-2 rounded-xl border border-gray-100">
-                                                <input placeholder="Achievement/Result..." value={item.result} onChange={e => handleArrayChange('results', i, 'result', e.target.value)} className="w-full bg-white border border-gray-100 px-3 py-2 rounded-lg text-[10px] font-bold" />
-                                                <button type="button" onClick={() => removeArrayItem('results', i)} className="text-red-500"><Trash2 className="w-3.5 h-3.5"/></button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div className="pt-4 space-y-4 border-t border-gray-100">
-                                        <div className="flex items-center justify-between">
-                                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Resources & Assets</label>
-                                            <button type="button" onClick={() => addArrayItem('resources', { name: '', url: '', icon: '' })} className="text-[10px] font-black text-orange-600 hover:underline">+ Add Link</button>
-                                        </div>
-                                        <div className="space-y-2">
-                                            {formData.resources.map((item: any, i: number) => (
-                                                <div key={i} className="flex gap-2 items-center bg-gray-50/50 p-2 rounded-xl border border-gray-100">
-                                                    <input placeholder="Name" value={item.name} onChange={e => handleArrayChange('resources', i, 'name', e.target.value)} className="w-1/2 bg-white border border-gray-100 px-2 py-1.5 rounded text-[9px] font-bold" />
-                                                    <input placeholder="URL" value={item.url} onChange={e => handleArrayChange('resources', i, 'url', e.target.value)} className="w-1/2 bg-white border border-gray-100 px-2 py-1.5 rounded text-[9px] font-bold" />
-                                                    <button type="button" onClick={() => removeArrayItem('resources', i)} className="text-red-500"><Trash2 className="w-3 h-3"/></button>
+                                        <div className="space-y-4">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-650 uppercase tracking-wider block">Live Demo Link</label>
+                                                    <input 
+                                                        type="text"
+                                                        placeholder="e.g. https://myproject.com" 
+                                                        value={formData.live_url || ""}
+                                                        onChange={e => setFormData({...formData, live_url: e.target.value})}
+                                                        className="w-full bg-gray-55 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 focus:bg-white focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all"
+                                                    />
                                                 </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </section>
 
-                                <section className="space-y-4">
-                                    <h5 className="text-xs font-black text-slate-400 uppercase tracking-widest">Tags & Search Metadata</h5>
-                                    <div className="space-y-4">
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Technologies (Enter)</label>
-                                            <div className="flex flex-wrap gap-1.5">
-                                                {formData.technologies.map((tech: string, i: number) => (
-                                                    <span key={i} className="bg-slate-800 text-white px-2 py-0.5 rounded text-[9px] font-black flex items-center gap-1">
-                                                        {tech} <X className="w-2 h-2 cursor-pointer" onClick={() => removeArrayItem('technologies', i)} />
-                                                    </span>
-                                                ))}
-                                                <input placeholder="+ Tech" onKeyDown={e => handleTagKeyDown(e, 'technologies')} className="bg-transparent border-none text-[9px] font-bold outline-none w-16" />
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-650 uppercase tracking-wider block">GitHub Link</label>
+                                                    <input 
+                                                        type="text"
+                                                        placeholder="e.g. https://github.com/profile/repo" 
+                                                        value={formData.github_url || ""}
+                                                        onChange={e => setFormData({...formData, github_url: e.target.value})}
+                                                        className="w-full bg-gray-55 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 focus:bg-white focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-3 pt-2">
+                                                <label className="text-xs font-bold text-slate-650 uppercase tracking-wider block">Project Image</label>
+                                                
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    {/* URL Input */}
+                                                    <div className="space-y-1.5">
+                                                        <span className="text-[10px] text-gray-400 font-bold block">Option A: Direct URL</span>
+                                                        <input 
+                                                            type="text"
+                                                            placeholder="https://domain.com/image.png" 
+                                                            value={formData.image_url || ""}
+                                                            onChange={e => setFormData({...formData, image_url: e.target.value})}
+                                                            className="w-full bg-gray-55 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 focus:bg-white focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all"
+                                                        />
+                                                    </div>
+
+                                                    {/* File Upload */}
+                                                    <div className="space-y-1.5">
+                                                        <span className="text-[10px] text-gray-400 font-bold block">Option B: Upload File</span>
+                                                        <label className="w-full flex items-center justify-center gap-2 border border-dashed border-gray-300 hover:border-yellow-400 hover:bg-yellow-50/10 rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 cursor-pointer transition-all bg-gray-55 select-none">
+                                                            {uploading ? (
+                                                                <>
+                                                                    <Loader2 className="w-4 h-4 animate-spin text-yellow-500" />
+                                                                    Uploading asset...
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <ImageIcon className="w-4 h-4 text-slate-400" />
+                                                                    Choose File (Max 5MB)
+                                                                </>
+                                                            )}
+                                                            <input 
+                                                                type="file" 
+                                                                accept="image/*" 
+                                                                onChange={handleImageUpload} 
+                                                                disabled={uploading}
+                                                                className="hidden" 
+                                                            />
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                {formData.image_url && (
+                                                    <div className="mt-2.5 flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-xl w-fit">
+                                                        <img 
+                                                            src={formData.image_url} 
+                                                            alt="Preview" 
+                                                            className="w-16 h-16 object-cover rounded-lg border border-gray-200 shadow-sm" 
+                                                            onError={(e)=>{(e.target as HTMLElement).style.display='none'}} 
+                                                        />
+                                                        <div className="flex flex-col">
+                                                            <span className="text-xs font-bold text-slate-700">Preview Asset Loaded</span>
+                                                            <button 
+                                                                type="button" 
+                                                                onClick={() => setFormData({...formData, image_url: ""})}
+                                                                className="text-[10px] text-red-500 font-bold mt-1 text-left hover:underline"
+                                                            >
+                                                                Clear Asset
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Search Tags (Enter)</label>
-                                            <div className="flex flex-wrap gap-1.5">
-                                                {formData.tags.map((tag: string, i: number) => (
-                                                    <span key={i} className="bg-blue-600 text-white px-2 py-0.5 rounded text-[9px] font-black flex items-center gap-1">
-                                                        {tag} <X className="w-2 h-2 cursor-pointer" onClick={() => removeArrayItem('tags', i)} />
-                                                    </span>
-                                                ))}
-                                                <input placeholder="+ Tag" onKeyDown={e => handleTagKeyDown(e, 'tags')} className="bg-transparent border-none text-[9px] font-bold outline-none w-16" />
+                                    </div>
+
+                                    {/* Section 3: Tech Stack & Features */}
+                                    <div id="specifications" className="scroll-mt-6 bg-white border border-gray-150 rounded-2xl p-6 shadow-sm space-y-6">
+                                        <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
+                                            <div className="p-2.5 bg-green-50 text-green-600 rounded-xl">
+                                                <Cpu className="w-5 h-5" />
+                                            </div>
+                                            <div>
+                                                <h4 className="text-base font-bold text-slate-800">Tech Stack & Features</h4>
+                                                <p className="text-xs text-slate-400">Outline specifications, frameworks, and key deliverables of this project</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-6">
+                                            {/* Tech Stack Dynamic Tags */}
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-bold text-slate-650 uppercase tracking-wider block">Tech Stack *</label>
+                                                <div className="flex flex-wrap gap-2 p-3 bg-gray-55 border border-gray-200 rounded-xl min-h-[50px] items-center">
+                                                    {(formData.tech_stack || []).map((tech: string, i: number) => (
+                                                        <span key={i} className="bg-slate-800 text-white px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-sm">
+                                                            {tech} 
+                                                            <X className="w-3 h-3 cursor-pointer hover:text-red-400" onClick={() => removeArrayItem('tech_stack', i)} />
+                                                        </span>
+                                                    ))}
+                                                    <input 
+                                                        placeholder="Type tech and press Enter or comma..." 
+                                                        onKeyDown={e => handleTagKeyDown(e, 'tech_stack')} 
+                                                        className="bg-transparent border-none text-sm font-semibold outline-none flex-grow min-w-[200px] text-slate-700 placeholder-gray-400" 
+                                                    />
+                                                </div>
+                                                <p className="text-[10px] text-gray-400 font-semibold italic">Separate items using commas or pressing Enter.</p>
+                                            </div>
+
+                                            {/* Features Dynamic Bullet Points */}
+                                            <div className="space-y-3 pt-4 border-t border-gray-100">
+                                                <label className="text-xs font-bold text-slate-655 uppercase tracking-wider block">Key Features *</label>
+                                                {(!formData.features || formData.features.length === 0) ? (
+                                                    <div className="text-center py-6 border border-dashed border-gray-200 rounded-xl bg-gray-55/20 text-gray-400 text-xs font-medium">
+                                                        No features added yet. Click the button below to add your first feature.
+                                                    </div>
+                                                ) : (
+                                                    <div className="space-y-2.5">
+                                                        {formData.features.map((feature: string, i: number) => (
+                                                            <div key={i} className="flex gap-2 items-center">
+                                                                <span className="text-xs font-bold text-gray-450 w-6 flex-shrink-0 text-center">{i + 1}.</span>
+                                                                <input 
+                                                                    required
+                                                                    placeholder="e.g. Secure payment gateway checkout system" 
+                                                                    value={feature} 
+                                                                    onChange={e => handleFeatureChange(i, e.target.value)} 
+                                                                    className="flex-grow bg-gray-55 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-705 focus:bg-white focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all" 
+                                                                />
+                                                                <button 
+                                                                    type="button" 
+                                                                    onClick={() => removeArrayItem('features', i)} 
+                                                                    className="p-2.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                                                                    title="Remove feature"
+                                                                >
+                                                                    <Trash2 className="w-4 h-4"/>
+                                                                </button>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                                <button 
+                                                    type="button" 
+                                                    onClick={addFeature} 
+                                                    className="flex items-center justify-center gap-1.5 text-xs font-bold text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50 px-4 py-2.5 rounded-xl border border-dashed border-yellow-300 w-fit transition-all mt-2"
+                                                >
+                                                    <Plus className="w-3.5 h-3.5" /> Add Project Feature
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
-                                </section>
-
+                                </div>
                             </div>
 
-                            <div className="md:col-span-3 pt-6 flex gap-4 border-t border-gray-100">
+                            {/* Modal Footer */}
+                            <div className="p-6 border-t border-gray-100 bg-white flex gap-4 justify-end">
+                                <button 
+                                    type="button" 
+                                    onClick={() => setIsModalOpen(false)} 
+                                    className="px-6 py-3 bg-gray-100 text-gray-600 hover:bg-gray-200 font-bold rounded-xl transition-all text-xs uppercase tracking-wider"
+                                >
+                                    Cancel
+                                </button>
                                 <button 
                                     type="submit"
-                                    className="flex-1 bg-slate-900 text-white font-black py-4 rounded-2xl hover:bg-yellow-500 transition-all uppercase tracking-widest text-sm"
+                                    className="px-8 py-3 bg-slate-900 text-white hover:bg-yellow-500 hover:text-slate-900 font-bold rounded-xl transition-all shadow-md shadow-slate-900/10 hover:shadow-yellow-500/20 text-xs uppercase tracking-widest flex items-center gap-2"
                                 >
                                     {currentProject ? "Sync Evolution" : "Launch Project"}
                                 </button>
-                                <button type="button" onClick={() => setIsModalOpen(false)} className="px-8 bg-gray-50 text-gray-400 font-black rounded-2xl hover:bg-red-50 hover:text-red-500 transition-all uppercase text-sm">Abort</button>
                             </div>
                         </form>
                     </div>

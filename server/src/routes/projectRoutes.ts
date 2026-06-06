@@ -5,7 +5,8 @@ import {
   createProject, 
   updateProject, 
   deleteProject, 
-  getRelatedProjects 
+  getRelatedProjects,
+  uploadProjectImage
 } from "../controllers/projectController";
 import { protect } from "../middleware/authMiddleware";
 
@@ -18,5 +19,6 @@ router.get("/:id/related", getRelatedProjects as any);
 router.post("/", protect as any, createProject as any);
 router.put("/:id", protect as any, updateProject as any);
 router.delete("/:id", protect as any, deleteProject as any);
+router.post("/upload", protect as any, uploadProjectImage as any);
 
 export default router;

@@ -1,37 +1,6 @@
 import { Request, Response } from "express";
 import { supabase } from "../config/supabase";
 
-// Helper to handle related project tables
-const fetchNestedData = async (projectId: string) => {
-  const [
-    { data: tags },
-    { data: journey },
-    { data: problems },
-    { data: solutions },
-    { data: techStack },
-    { data: results },
-    { data: resources }
-  ] = await Promise.all([
-    supabase.from("project_tags").select("*").eq("project_id", projectId),
-    supabase.from("project_journey").select("*").eq("project_id", projectId).order("order", { ascending: true }),
-    supabase.from("project_problems").select("*").eq("project_id", projectId),
-    supabase.from("project_solutions").select("*").eq("project_id", projectId),
-    supabase.from("project_tech_stack").select("*").eq("project_id", projectId),
-    supabase.from("project_results").select("*").eq("project_id", projectId),
-    supabase.from("project_resources").select("*").eq("project_id", projectId)
-  ]);
-
-  return {
-    tags: tags?.map(t => t.tag) || [],
-    journey: journey || [],
-    problems: problems || [],
-    solutions: solutions || [],
-    techStack: techStack || [],
-    results: results || [],
-    resources: resources || []
-  };
-};
-
 export const getProjects = async (req: Request, res: Response) => {
   try {
     const { data: projects, error } = await supabase
@@ -41,13 +10,7 @@ export const getProjects = async (req: Request, res: Response) => {
 
     if (error) throw error;
 
-    // Optionally include basic tags for the list view
-    const projectsWithTags = await Promise.all(projects.map(async (project) => {
-      const { data: tags } = await supabase.from("project_tags").select("tag").eq("project_id", project.id);
-      return { ...project, tags: tags?.map(t => t.tag) || [] };
-    }));
-
-    res.json(projectsWithTags);
+    res.json(projects);
   } catch (error: any) {
     res.status(500).json({ message: "Error fetching projects", error: error.message });
   }
@@ -66,152 +29,99 @@ export const getProjectById = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    const nestedData = await fetchNestedData(id);
-
-    res.json({ ...project, ...nestedData });
+    res.json(project);
   } catch (error: any) {
     res.status(500).json({ message: "Error fetching project detail", error: error.message });
   }
 };
 
 export const createProject = async (req: Request, res: Response) => {
-  const { tags, journey, problems, solutions, techStack, results, resources, ...projectData } = req.body;
-  
-  // Sanitize projectData to only include columns that exist in the projects table
-  // This prevents Supabase from erroring out if extra fields (like 'technologies' or 'featured') 
-  // are sent but don't exist in the database schema.
-  const allowedFields = [
-    'title', 'category', 'description', 'liveUrl', 'githubUrl', 
-    'image', 'projectType', 'status', 'problem', 'solution', 
-    'techStackDescription', 'result', 'date', 'assignedDate', 
-    'location', 'client', 'featured', 'technologies'
-  ];
+  const { name, image_url, short_description, tech_stack, features, challenges_solved, live_url, github_url } = req.body;
 
-  const sanitizedData: any = {};
-  allowedFields.forEach(field => {
-    // Provide default empty strings for critical fields if they are missing
-    if (projectData[field] !== undefined) {
-      sanitizedData[field] = projectData[field];
-    } else {
-      // Default values to satisfy NOT NULL constraints in DB
-      const defaults: any = {
-        description: "",
-        problem: "",
-        solution: "",
-        techStackDescription: "",
-        result: "",
-        date: "",
-        assignedDate: "",
-        location: "",
-        client: "",
-        image: "",
-        liveUrl: "",
-        githubUrl: "",
-        featured: false,
-        technologies: []
-      };
-      if (defaults[field] !== undefined) {
-        sanitizedData[field] = defaults[field];
-      }
-    }
-  });
+  if (!name || typeof name !== "string" || !name.trim()) {
+    return res.status(400).json({ message: "Project name is required" });
+  }
+  if (!short_description || typeof short_description !== "string" || !short_description.trim()) {
+    return res.status(400).json({ message: "Short description is required" });
+  }
+  if (!challenges_solved || typeof challenges_solved !== "string" || !challenges_solved.trim()) {
+    return res.status(400).json({ message: "Challenges solved description is required" });
+  }
+  if (!Array.isArray(tech_stack)) {
+    return res.status(400).json({ message: "Tech stack must be an array of strings" });
+  }
+  if (!Array.isArray(features)) {
+    return res.status(400).json({ message: "Features must be an array of strings" });
+  }
 
   try {
-    // 1. Insert Project
-    const { data: project, error: projectError } = await supabase
+    const { data: project, error } = await supabase
       .from("projects")
-      .insert([sanitizedData])
+      .insert([{
+        name: name.trim(),
+        image_url: image_url ? image_url.trim() : null,
+        short_description: short_description.trim(),
+        tech_stack,
+        features,
+        challenges_solved: challenges_solved.trim(),
+        live_url: live_url ? live_url.trim() : null,
+        github_url: github_url ? github_url.trim() : null
+      }])
       .select()
       .single();
 
-    if (projectError) {
-      console.error("Supabase Project Error:", projectError);
-      throw projectError;
-    }
-    const projectId = project.id;
-
-    // 2. Insert Nested Data
-    const promises = [];
-    if (tags?.length) promises.push(supabase.from("project_tags").insert(tags.map((tag: string) => ({ project_id: projectId, tag }))));
-    if (journey?.length) promises.push(supabase.from("project_journey").insert(journey.map((item: any) => ({ ...item, project_id: projectId }))));
-    if (problems?.length) promises.push(supabase.from("project_problems").insert(problems.map((item: any) => ({ ...item, project_id: projectId }))));
-    if (solutions?.length) promises.push(supabase.from("project_solutions").insert(solutions.map((item: any) => ({ ...item, project_id: projectId }))));
-    if (techStack?.length) promises.push(supabase.from("project_tech_stack").insert(techStack.map((item: any) => ({ ...item, project_id: projectId }))));
-    if (results?.length) promises.push(supabase.from("project_results").insert(results.map((item: any) => ({ ...item, project_id: projectId }))));
-    if (resources?.length) promises.push(supabase.from("project_resources").insert(resources.map((item: any) => ({ ...item, project_id: projectId }))));
-
-    await Promise.all(promises);
+    if (error) throw error;
 
     res.status(201).json({ message: "Project created successfully", project });
   } catch (error: any) {
     console.error("Error creating project:", error);
-    res.status(500).json({ 
-      message: `Critcal DB Error: ${error.message || "Unknown Failure"}`, 
-      error: error.message 
-    });
+    res.status(500).json({ message: "Error creating project", error: error.message });
   }
 };
 
 export const updateProject = async (req: Request, res: Response) => {
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  const { tags, journey, problems, solutions, techStack, results, resources, ...projectData } = req.body;
+  const { name, image_url, short_description, tech_stack, features, challenges_solved, live_url, github_url } = req.body;
 
-  const allowedFields = [
-    'title', 'category', 'description', 'liveUrl', 'githubUrl', 
-    'image', 'projectType', 'status', 'problem', 'solution', 
-    'techStackDescription', 'result', 'date', 'assignedDate', 
-    'location', 'client', 'featured', 'technologies'
-  ];
-
-  const sanitizedData: any = {};
-  allowedFields.forEach(field => {
-    if (projectData[field] !== undefined) {
-      sanitizedData[field] = projectData[field];
-    }
-  });
+  if (!name || typeof name !== "string" || !name.trim()) {
+    return res.status(400).json({ message: "Project name is required" });
+  }
+  if (!short_description || typeof short_description !== "string" || !short_description.trim()) {
+    return res.status(400).json({ message: "Short description is required" });
+  }
+  if (!challenges_solved || typeof challenges_solved !== "string" || !challenges_solved.trim()) {
+    return res.status(400).json({ message: "Challenges solved description is required" });
+  }
+  if (!Array.isArray(tech_stack)) {
+    return res.status(400).json({ message: "Tech stack must be an array of strings" });
+  }
+  if (!Array.isArray(features)) {
+    return res.status(400).json({ message: "Features must be an array of strings" });
+  }
 
   try {
-    // 1. Update Project
-    const { error: projectError } = await supabase
+    const { data: project, error } = await supabase
       .from("projects")
-      .update(sanitizedData)
-      .eq("id", id);
+      .update({
+        name: name.trim(),
+        image_url: image_url ? image_url.trim() : null,
+        short_description: short_description.trim(),
+        tech_stack,
+        features,
+        challenges_solved: challenges_solved.trim(),
+        live_url: live_url ? live_url.trim() : null,
+        github_url: github_url ? github_url.trim() : null
+      })
+      .eq("id", id)
+      .select()
+      .single();
 
-    if (projectError) {
-      console.error("Supabase Project Error:", projectError);
-      throw projectError;
-    }
+    if (error) throw error;
 
-    // 2. Delete existing nested data
-    await Promise.all([
-      supabase.from("project_tags").delete().eq("project_id", id),
-      supabase.from("project_journey").delete().eq("project_id", id),
-      supabase.from("project_problems").delete().eq("project_id", id),
-      supabase.from("project_solutions").delete().eq("project_id", id),
-      supabase.from("project_tech_stack").delete().eq("project_id", id),
-      supabase.from("project_results").delete().eq("project_id", id),
-      supabase.from("project_resources").delete().eq("project_id", id)
-    ]);
-
-    // 3. Insert new nested data
-    const promises = [];
-    if (tags?.length) promises.push(supabase.from("project_tags").insert(tags.map((tag: string) => ({ project_id: id, tag }))));
-    if (journey?.length) promises.push(supabase.from("project_journey").insert(journey.map((item: any) => ({ ...item, project_id: id }))));
-    if (problems?.length) promises.push(supabase.from("project_problems").insert(problems.map((item: any) => ({ ...item, project_id: id }))));
-    if (solutions?.length) promises.push(supabase.from("project_solutions").insert(solutions.map((item: any) => ({ ...item, project_id: id }))));
-    if (techStack?.length) promises.push(supabase.from("project_tech_stack").insert(techStack.map((item: any) => ({ ...item, project_id: id }))));
-    if (results?.length) promises.push(supabase.from("project_results").insert(results.map((item: any) => ({ ...item, project_id: id }))));
-    if (resources?.length) promises.push(supabase.from("project_resources").insert(resources.map((item: any) => ({ ...item, project_id: id }))));
-
-    await Promise.all(promises);
-
-    res.json({ message: "Project updated successfully" });
+    res.json({ message: "Project updated successfully", project });
   } catch (error: any) {
     console.error("Error updating project:", error);
-    res.status(500).json({ 
-      message: `Evolution Sync Error: ${error.message || "Logic Inconsistency"}`, 
-      error: error.message 
-    });
+    res.status(500).json({ message: "Error updating project", error: error.message });
   }
 };
 
@@ -229,21 +139,10 @@ export const deleteProject = async (req: Request, res: Response) => {
 export const getRelatedProjects = async (req: Request, res: Response) => {
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   try {
-    // 1. Get current project category
-    const { data: currentProject } = await supabase
-      .from("projects")
-      .select("category")
-      .eq("id", id)
-      .single();
-
-    if (!currentProject) return res.status(404).json({ message: "Project not found" });
-
-    // 2. Fetch related by category
     const { data: related, error } = await supabase
       .from("projects")
       .select("*")
       .neq("id", id)
-      .eq("category", currentProject.category)
       .limit(3);
 
     if (error) throw error;
@@ -251,5 +150,54 @@ export const getRelatedProjects = async (req: Request, res: Response) => {
     res.json(related);
   } catch (error: any) {
     res.status(500).json({ message: "Error fetching related projects", error: error.message });
+  }
+};
+
+export const uploadProjectImage = async (req: Request, res: Response) => {
+  const { image, name } = req.body;
+
+  if (!image || typeof image !== "string" || !image.startsWith("data:image/")) {
+    return res.status(400).json({ message: "Invalid image format. Expected base64 data URL." });
+  }
+  if (!name || typeof name !== "string") {
+    return res.status(400).json({ message: "Image filename is required." });
+  }
+
+  try {
+    const matches = image.match(/^data:image\/([A-Za-z-+\/]+);base64,(.+)$/);
+    if (!matches || matches.length !== 3) {
+      return res.status(400).json({ message: "Invalid base64 image encoding." });
+    }
+
+    const fileExtension = matches[1];
+    const base64Data = matches[2];
+    const fileBuffer = Buffer.from(base64Data, "base64");
+
+    const uniqueFilename = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
+
+    const { error } = await supabase.storage
+      .from("portfolio")
+      .upload(uniqueFilename, fileBuffer, {
+        contentType: `image/${fileExtension}`,
+        upsert: true
+      });
+
+    if (error) {
+      console.error("Supabase storage error:", error);
+      throw error;
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from("portfolio")
+      .getPublicUrl(uniqueFilename);
+
+    if (!publicUrlData || !publicUrlData.publicUrl) {
+      throw new Error("Could not retrieve public URL for uploaded asset.");
+    }
+
+    res.json({ imageUrl: publicUrlData.publicUrl });
+  } catch (error: any) {
+    console.error("Upload error:", error);
+    res.status(500).json({ message: "Error uploading image", error: error.message });
   }
 };

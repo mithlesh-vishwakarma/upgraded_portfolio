@@ -12,7 +12,7 @@ async function diagnose() {
   } else {
     console.log("Table 'projects' is empty. Trying to guess schema...");
     // Try to select specific common columns to see which ones fail
-    const testColumns = ["assignedDate", "assigned_date", "projectType", "project_type", "techStackDescription", "tech_stack_description"];
+    const testColumns = ["name", "image_url", "short_description", "tech_stack", "features", "challenges_solved", "live_url", "github_url"];
     for (const col of testColumns) {
       const { error } = await supabase.from("projects").select(col).limit(1);
       if (error) {
