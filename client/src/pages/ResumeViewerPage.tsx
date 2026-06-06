@@ -1,7 +1,7 @@
 import { useLocation } from "react-router";
 import PDFViewer from "../components/PDFViewer";
-import localPDF from "../assets/resume-07-Nov-Mithlesh-Vishwakarma.pdf";
-// import Magnet from '../components/Magnet';
+import localPDF from "../assets/mithlesh-vishwakarma.pdf";
+import Magnet from '../components/Magnet';
 
 type LocationState = {
   url?: string;
@@ -12,65 +12,44 @@ const ResumeViewerPage = () => {
   const state = location.state as LocationState;
   const url = state?.url || localPDF; // fallback to manual PDF if no URL passed
 
-  // const handleGoBack = () => {
-  //   if (window.history.length > 1) {
-  //     window.history.back();
-  //   } else {
-  //     window.location.assign("/");
-  //   }
-  // };
-
-  // const handleDownload = () => {
-  //   const now = new Date();
-
-    // Format: YYYY-MM-DD_HH-MM-SS
-    // const formattedDateTime = now
-    //   .toLocaleString("en-GB", {
-    //     year: "numeric",
-    //     month: "2-digit",
-    //     day: "2-digit",
-    //     hour: "2-digit",
-    //     minute: "2-digit",
-    //     second: "2-digit",
-    //     hour12: false,
-    //   })
-    //   .replace(/[\/, ]/g, "-")
-    //   .replace(/--/g, "-");
-
-  //   const fileName = `mithlesh-vishwakarma-resume-${formattedDateTime}.pdf`;
-
-  //   const link = document.createElement("a");
-  //   link.href = url;
-  //   link.download = fileName;
-  //   link.click();
-  // };
+  const handleGoBack = () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.assign("/");
+    }
+  };
 
   return (
-    <div className="relative">
-      {/* Fixed buttons below header */}
-      {/* <div className="fixed top-[9rem] left-[23rem] z-50 flex gap-[3.5rem]">
-        <Magnet padding={100} disabled={false} magnetStrength={20}>
-        <button
-          onClick={handleGoBack}
-          className="text-xs px-3 py-1 bg-yellow-500 border border-gray-900 rounded shadow-md text-gray-900 font-medium cursor-pointer hover:bg-gray-50"
-          aria-label="Go back"
-        >
-          ← Go Back
-        </button>
+    <div className="relative min-h-screen bg-gray-950 text-white">
+      {/* Left-aligned back button bar below header */}
+      <div className="max-w-[1000px] w-full mx-auto px-6 pt-[7rem] lg:pt-[8rem] flex justify-start">
+        <Magnet padding={50} disabled={false} magnetStrength={15}>
+          <button
+            onClick={handleGoBack}
+            className="text-sm px-5 py-2.5 bg-yellow-500 hover:bg-yellow-600 border border-gray-900 rounded-full shadow-[0_4px_14px_rgba(234,179,8,0.3)] text-gray-900 font-semibold cursor-pointer transition-all duration-300 flex items-center gap-2"
+            aria-label="Go back"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12 19 5 12 12 5" />
+            </svg>
+            Go Back
+          </button>
         </Magnet>
-        <Magnet padding={100} disabled={false} magnetStrength={20}>
-        <button
-          onClick={handleDownload}
-          className="text-xs px-3 py-1 bg-yellow-500 border border-gray-900 rounded shadow-md text-gray-900 font-medium cursor-pointer hover:bg-gray-50"
-          aria-label="Download resume"
-        >
-          Download Resume
-        </button>
-        </Magnet>
-      </div> */}
+      </div>
 
       {/* PDF Viewer */}
-      <div className="mt-[10rem] overflow-hidden">
+      <div className="mt-4 overflow-hidden">
         <PDFViewer pdfUrl={url} />
       </div>
     </div>
