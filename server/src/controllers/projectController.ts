@@ -36,7 +36,7 @@ export const getProjectById = async (req: Request, res: Response) => {
 };
 
 export const createProject = async (req: Request, res: Response) => {
-  const { name, image_url, short_description, tech_stack, features, challenges_solved, live_url, github_url } = req.body;
+  const { name, image_url, short_description, tech_stack, features, challenges_solved, live_url, github_url, project_type, start_date, end_date } = req.body;
 
   if (!name || typeof name !== "string" || !name.trim()) {
     return res.status(400).json({ message: "Project name is required" });
@@ -65,7 +65,10 @@ export const createProject = async (req: Request, res: Response) => {
         features,
         challenges_solved: challenges_solved.trim(),
         live_url: live_url ? live_url.trim() : null,
-        github_url: github_url ? github_url.trim() : null
+        github_url: github_url ? github_url.trim() : null,
+        project_type: project_type || 'Personal',
+        start_date: start_date ? start_date.trim() : null,
+        end_date: end_date ? end_date.trim() : null
       }])
       .select()
       .single();
@@ -81,7 +84,7 @@ export const createProject = async (req: Request, res: Response) => {
 
 export const updateProject = async (req: Request, res: Response) => {
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  const { name, image_url, short_description, tech_stack, features, challenges_solved, live_url, github_url } = req.body;
+  const { name, image_url, short_description, tech_stack, features, challenges_solved, live_url, github_url, project_type, start_date, end_date } = req.body;
 
   if (!name || typeof name !== "string" || !name.trim()) {
     return res.status(400).json({ message: "Project name is required" });
@@ -110,7 +113,10 @@ export const updateProject = async (req: Request, res: Response) => {
         features,
         challenges_solved: challenges_solved.trim(),
         live_url: live_url ? live_url.trim() : null,
-        github_url: github_url ? github_url.trim() : null
+        github_url: github_url ? github_url.trim() : null,
+        project_type: project_type || 'Personal',
+        start_date: start_date ? start_date.trim() : null,
+        end_date: end_date ? end_date.trim() : null
       })
       .eq("id", id)
       .select()

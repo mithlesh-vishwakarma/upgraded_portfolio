@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ExternalLink, Code, Github, Loader2 } from 'lucide-react';
 import api from '../api/api';
 import { Link } from 'react-router-dom';
+import { toTitleCase } from '../lib/utils';
 
 interface Project {
   id: string;
@@ -13,6 +14,9 @@ interface Project {
   challenges_solved: string;
   live_url: string;
   github_url?: string;
+  project_type?: string;
+  start_date?: string;
+  end_date?: string;
 }
 
 const ProjectPage: React.FC = () => {
@@ -64,7 +68,7 @@ const ProjectPage: React.FC = () => {
         {project.image_url ? (
           <img
             src={project.image_url}
-            alt={project.name}
+            alt={toTitleCase(project.name)}
             className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
           />
         ) : (
@@ -76,9 +80,16 @@ const ProjectPage: React.FC = () => {
       </div>
 
       <div className="p-6 flex-1 flex flex-col">
-        <h3 className="text-xl font-bold text-white group-hover:text-yellow-400 transition-colors duration-300 line-clamp-2 h-14 mb-2 flex items-center">
-          {project.name}
+        <h3 className="text-xl font-bold text-white group-hover:text-yellow-400 transition-colors duration-300 line-clamp-2 h-14 mb-1 flex items-center">
+          {toTitleCase(project.name)}
         </h3>
+
+        {/* Project Type */}
+        <div className="flex flex-wrap items-center gap-2 mb-4 text-xs font-semibold">
+          <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider ${project.project_type === 'Freelanced' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'}`}>
+            {project.project_type || 'Personal'}
+          </span>
+        </div>
 
         <p className="text-gray-400 text-sm mb-6 leading-relaxed line-clamp-3 h-[4.5rem] overflow-hidden">
           {project.short_description}

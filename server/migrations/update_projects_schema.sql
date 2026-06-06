@@ -20,6 +20,9 @@ CREATE TABLE projects (
     challenges_solved TEXT NOT NULL,
     live_url TEXT,
     github_url TEXT,
+    project_type TEXT NOT NULL DEFAULT 'Personal', -- 'Personal' or 'Freelanced'
+    start_date TEXT, -- e.g., 'Oct 2023'
+    end_date TEXT,   -- e.g., 'Mar 2024' or 'Present'
     created_at TIMESTAMPTZ DEFAULT now()
 );
 

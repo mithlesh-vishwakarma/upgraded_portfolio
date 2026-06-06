@@ -17,12 +17,16 @@ import {
 } from "lucide-react";
 
 import { useToast } from "../../context/ToastContext";
+import { toTitleCase } from "../../lib/utils";
 
 const SECTIONS = [
   { id: "general", label: "General Details", icon: Info },
   { id: "links-assets", label: "Links & Assets", icon: Globe },
   { id: "specifications", label: "Tech Stack & Features", icon: Cpu },
 ];
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const YEARS = Array.from({ length: 15 }, (_, i) => (2020 + i).toString());
 
 const ProjectManager = () => {
     const { showToast } = useToast();
@@ -33,6 +37,13 @@ const ProjectManager = () => {
     const [currentProject, setCurrentProject] = useState<any>(null);
     const [uploading, setUploading] = useState(false);
     
+    // Timeline States
+    const [startMonth, setStartMonth] = useState("Jan");
+    const [startYear, setStartYear] = useState("2023");
+    const [endMonth, setEndMonth] = useState("Dec");
+    const [endYear, setEndYear] = useState("2024");
+    const [isOngoing, setIsOngoing] = useState(false);
+
     const [activeSection, setActiveSection] = useState("general");
     const formContainerRef = useRef<HTMLDivElement>(null);
 
@@ -44,7 +55,10 @@ const ProjectManager = () => {
         features: [],
         challenges_solved: "",
         live_url: "",
-        github_url: ""
+        github_url: "",
+        project_type: "Personal",
+        start_date: "",
+        end_date: ""
     });
 
     useEffect(() => {
@@ -87,10 +101,30 @@ const ProjectManager = () => {
                 features: data.features || [],
                 challenges_solved: data.challenges_solved || "",
                 live_url: data.live_url || "",
-                github_url: data.github_url || ""
+                github_url: data.github_url || "",
+                project_type: data.project_type || "Personal",
+                start_date: data.start_date || "",
+                end_date: data.end_date || ""
             };
             setCurrentProject(sanitized);
             setFormData(sanitized);
+
+            // Parse start/end dates
+            const startParts = (data.start_date || "Jan 2023").split(" ");
+            setStartMonth(startParts[0] || "Jan");
+            setStartYear(startParts[1] || "2023");
+
+            if (data.end_date === "Present" || data.end_date === "Ongoing" || data.end_date === "Under Development") {
+                setIsOngoing(true);
+                setEndMonth("Dec");
+                setEndYear("2024");
+            } else {
+                setIsOngoing(false);
+                const endParts = (data.end_date || "Dec 2024").split(" ");
+                setEndMonth(endParts[0] || "Dec");
+                setEndYear(endParts[1] || "2024");
+            }
+
             setActiveSection("general");
             setIsModalOpen(true);
         } catch (err) {
@@ -100,16 +134,22 @@ const ProjectManager = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        const payload = {
+            ...formData,
+            name: toTitleCase(formData.name.trim()),
+            start_date: `${startMonth} ${startYear}`,
+            end_date: isOngoing ? "Under Development" : `${endMonth} ${endYear}`
+        };
         try {
             if (currentProject) {
                 if (!currentProject.id) {
                     showToast("System Error: Project ID missing. Try refreshing.", "error");
                     return;
                 }
-                await api.put(`/projects/${currentProject.id}`, formData);
+                await api.put(`/projects/${currentProject.id}`, payload);
                 showToast("Evolution sync complete: Database updated", "success");
             } else {
-                await api.post("/projects", formData);
+                await api.post("/projects", payload);
                 showToast("Vision deployed: New project added to timeline", "success");
             }
             setIsModalOpen(false);
@@ -238,8 +278,16 @@ const ProjectManager = () => {
                             features: [],
                             challenges_solved: "",
                             live_url: "",
-                            github_url: ""
+                            github_url: "",
+                            project_type: "Personal",
+                            start_date: "",
+                            end_date: ""
                         });
+                        setStartMonth("Jan");
+                        setStartYear("2023");
+                        setEndMonth("Dec");
+                        setEndYear("2024");
+                        setIsOngoing(false);
                         setActiveSection("general");
                         setIsModalOpen(true);
                     }}
@@ -289,7 +337,19 @@ const ProjectManager = () => {
                                                 )}
                                             </div>
                                             <div>
-                                                <h4 className="text-sm font-bold text-slate-800 group-hover:text-yellow-600 transition-colors">{project.name}</h4>
+                                                <h4 className="text-sm font-bold text-slate-800 group-hover:text-yellow-600 transition-colors">{toTitleCase(project.name)}</h4>
+                                                
+                                                <div className="flex flex-wrap items-center gap-2 mt-1">
+                                                    <span className={`px-1.5 py-0.5 text-[9px] font-bold rounded ${project.project_type === "Freelanced" ? "bg-purple-50 text-purple-600 border border-purple-100" : "bg-blue-50 text-blue-600 border border-blue-100"}`}>
+                                                        {project.project_type || "Personal"}
+                                                    </span>
+                                                    {project.start_date && (
+                                                        <span className="text-[9px] text-gray-400 font-bold">
+                                                            ({project.start_date} - {(!project.end_date || project.end_date === "Present" || project.end_date === "Ongoing" || project.end_date === "Under Development") ? "Under Development" : project.end_date})
+                                                        </span>
+                                                    )}
+                                                </div>
+
                                                 <div className="flex items-center gap-3 mt-1.5">
                                                     {project.live_url && (
                                                         <a href={project.live_url} target="_blank" rel="noreferrer" className="text-xs font-semibold text-blue-500 hover:text-blue-600 flex items-center gap-1">
@@ -306,7 +366,7 @@ const ProjectManager = () => {
                                         </div>
                                     </td>
                                     <td className="bg-white py-4 border-y border-gray-200 group-hover:border-gray-300 max-w-xs">
-                                        <p className="text-sm text-slate-650 truncate" title={project.short_description}>
+                                        <p className="text-sm text-slate-655 truncate" title={project.short_description}>
                                             {project.short_description}
                                         </p>
                                     </td>
@@ -360,7 +420,7 @@ const ProjectManager = () => {
                                     <Sparkles className="w-5 h-5 text-yellow-500 fill-yellow-500" />
                                     {currentProject ? "Update Evolution Details" : "Launch New Vision Project"}
                                 </h3>
-                                <p className="text-xs md:text-sm text-gray-400 font-medium mt-0.5">Provide project context, technical specifications, and links</p>
+                                <p className="text-xs md:text-sm text-gray-400 font-medium mt-0.5">Provide project context, timeline specifications, and links</p>
                             </div>
                             <button 
                                 type="button"
@@ -431,7 +491,88 @@ const ProjectManager = () => {
                                                 />
                                             </div>
 
-                                            <div className="space-y-1.5">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-650 uppercase tracking-wider block">Project Type *</label>
+                                                    <select 
+                                                        value={formData.project_type || "Personal"}
+                                                        onChange={e => setFormData({...formData, project_type: e.target.value})}
+                                                        className="w-full bg-gray-55 border border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-705 focus:bg-white focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all"
+                                                    >
+                                                        <option value="Personal">Personal Project</option>
+                                                        <option value="Freelanced">Freelanced Project (Client Work)</option>
+                                                    </select>
+                                                </div>
+
+                                                <div className="space-y-1.5 flex flex-col justify-end">
+                                                    <div 
+                                                        onClick={() => setIsOngoing(!isOngoing)}
+                                                        className="flex items-center gap-3 px-4 py-3 bg-gray-55 hover:bg-gray-100/70 border border-gray-200 rounded-xl cursor-pointer transition-all duration-200"
+                                                    >
+                                                        <input 
+                                                            type="checkbox"
+                                                            id="isOngoing"
+                                                            checked={isOngoing}
+                                                            onChange={e => setIsOngoing(e.target.checked)}
+                                                            onClick={e => e.stopPropagation()}
+                                                            className="w-4 h-4 rounded border-gray-300 text-yellow-505 focus:ring-yellow-500 accent-yellow-500 cursor-pointer"
+                                                        />
+                                                        <div className="flex flex-col">
+                                                            <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Ongoing Project</span>
+                                                            <span className="text-[10px] text-slate-400">Currently active / work in progress</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Date Timeline Selects */}
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-gray-100">
+                                                {/* Start Date */}
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-650 uppercase tracking-wider block">Start Date *</label>
+                                                    <div className="grid grid-cols-2 gap-2">
+                                                        <select 
+                                                            value={startMonth}
+                                                            onChange={e => setStartMonth(e.target.value)}
+                                                            className="bg-gray-55 border border-gray-200 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 focus:bg-white focus:ring-2 focus:ring-yellow-400 outline-none transition-all"
+                                                        >
+                                                            {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                                                        </select>
+                                                        <select 
+                                                            value={startYear}
+                                                            onChange={e => setStartYear(e.target.value)}
+                                                            className="bg-gray-55 border border-gray-200 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 focus:bg-white focus:ring-2 focus:ring-yellow-400 outline-none transition-all"
+                                                        >
+                                                            {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                {/* End Date */}
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-650 uppercase tracking-wider block">End Date *</label>
+                                                    <div className="grid grid-cols-2 gap-2">
+                                                        <select 
+                                                            disabled={isOngoing}
+                                                            value={endMonth}
+                                                            onChange={e => setEndMonth(e.target.value)}
+                                                            className="bg-gray-55 border border-gray-200 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 focus:bg-white focus:ring-2 focus:ring-yellow-400 outline-none transition-all disabled:opacity-50 disabled:bg-gray-100"
+                                                        >
+                                                            {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                                                        </select>
+                                                        <select 
+                                                            disabled={isOngoing}
+                                                            value={endYear}
+                                                            onChange={e => setEndYear(e.target.value)}
+                                                            className="bg-gray-55 border border-gray-200 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 focus:bg-white focus:ring-2 focus:ring-yellow-400 outline-none transition-all disabled:opacity-50 disabled:bg-gray-100"
+                                                        >
+                                                            {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-1.5 pt-4 border-t border-gray-100">
                                                 <label className="text-xs font-bold text-slate-650 uppercase tracking-wider block">Short Description *</label>
                                                 <textarea 
                                                     required
@@ -443,7 +584,7 @@ const ProjectManager = () => {
                                             </div>
 
                                             <div className="space-y-1.5">
-                                                <label className="text-xs font-bold text-slate-650 uppercase tracking-wider block">Challenges Solved *</label>
+                                                <label className="text-xs font-bold text-slate-655 uppercase tracking-wider block">Challenges Solved *</label>
                                                 <textarea 
                                                     required
                                                     placeholder="Describe the hurdles faced and how you successfully overcame them." 
@@ -481,7 +622,7 @@ const ProjectManager = () => {
                                                 </div>
 
                                                 <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-650 uppercase tracking-wider block">GitHub Link</label>
+                                                    <label className="text-xs font-bold text-slate-655 uppercase tracking-wider block">GitHub Link</label>
                                                     <input 
                                                         type="text"
                                                         placeholder="e.g. https://github.com/profile/repo" 
@@ -511,7 +652,7 @@ const ProjectManager = () => {
                                                     {/* File Upload */}
                                                     <div className="space-y-1.5">
                                                         <span className="text-[10px] text-gray-400 font-bold block">Option B: Upload File</span>
-                                                        <label className="w-full flex items-center justify-center gap-2 border border-dashed border-gray-300 hover:border-yellow-400 hover:bg-yellow-50/10 rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 cursor-pointer transition-all bg-gray-55 select-none">
+                                                        <label className="w-full flex items-center justify-center gap-2 border border-dashed border-gray-300 hover:border-yellow-400 hover:bg-yellow-50/10 rounded-xl px-4 py-3 text-sm font-semibold text-slate-605 cursor-pointer transition-all bg-gray-55 select-none">
                                                             {uploading ? (
                                                                 <>
                                                                     <Loader2 className="w-4 h-4 animate-spin text-yellow-500" />

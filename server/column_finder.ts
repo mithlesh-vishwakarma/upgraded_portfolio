@@ -3,7 +3,8 @@ import { supabase } from "./src/config/supabase";
 async function findColumns() {
   const fields = [
     "id", "name", "image_url", "short_description", "tech_stack", 
-    "features", "challenges_solved", "live_url", "github_url", "created_at"
+    "features", "challenges_solved", "live_url", "github_url", 
+    "project_type", "start_date", "end_date", "created_at"
   ];
 
   console.log("Testing columns in 'projects' table...");

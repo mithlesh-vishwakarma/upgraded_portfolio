@@ -4,7 +4,7 @@ const SCHEMA = {
   experience: ["id", "role", "company", "description", "duration"],
   experience_tech: ["experience_id", "tech"],
   education: ["id", "title", "institution", "year", "description", "grade"],
-  projects: ["id", "name", "image_url", "short_description", "tech_stack", "features", "challenges_solved", "live_url", "github_url"]
+  projects: ["id", "name", "image_url", "short_description", "tech_stack", "features", "challenges_solved", "live_url", "github_url", "project_type", "start_date", "end_date"]
   skills: ["id", "name", "category_id", "percentage"],
   extra_skills: ["id", "name"],
   skill_categories: ["id", "name"]

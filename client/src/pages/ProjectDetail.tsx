@@ -12,6 +12,7 @@ import {
   Github
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { toTitleCase } from "../lib/utils";
 
 interface Project {
   id: string;
@@ -122,7 +123,7 @@ const ProjectDetail: React.FC = () => {
           {project.image_url ? (
             <img
               src={project.image_url}
-              alt={project.name}
+              alt={toTitleCase(project.name)}
               className="w-full h-full object-cover"
             />
           ) : (
@@ -134,8 +135,13 @@ const ProjectDetail: React.FC = () => {
           
           <div className="absolute bottom-10 left-10 right-10">
             <h1 className="text-4xl md:text-7xl font-black text-white mb-2 tracking-tight">
-              {project.name}
+              {toTitleCase(project.name)}
             </h1>
+            <div className="flex flex-wrap items-center gap-2.5 mt-3 font-semibold">
+              <span className={`px-3 py-1 rounded text-[10px] uppercase font-black tracking-widest ${project.project_type === 'Freelanced' ? 'bg-purple-500/35 text-purple-300 border border-purple-500/40' : 'bg-blue-500/35 text-blue-300 border border-blue-500/40'}`}>
+                {project.project_type || 'Personal'}
+              </span>
+            </div>
           </div>
         </motion.div>
 
@@ -144,6 +150,45 @@ const ProjectDetail: React.FC = () => {
           
           <div className="lg:col-span-2 space-y-10">
             
+            {/* Project Timeline Section */}
+            {project.start_date && (
+              <motion.div
+                variants={cardVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="bg-white/5 backdrop-blur-xl p-6 rounded-[32px] border border-white/10 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-yellow-450/20 text-yellow-400 flex items-center justify-center font-black">
+                    📅
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-white uppercase tracking-wider">Project Timeline</h4>
+                    <p className="text-xs text-gray-400 font-semibold mt-0.5">Development lifecycle duration</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 flex-grow max-w-md sm:justify-end">
+                  <div className="bg-white/5 px-4 py-2 rounded-xl border border-white/10 text-center flex-shrink-0">
+                    <span className="text-[10px] text-gray-500 font-black uppercase tracking-wider block">Started</span>
+                    <span className="text-sm font-bold text-yellow-400">{project.start_date}</span>
+                  </div>
+                  
+                  <div className="flex-grow h-0.5 bg-gradient-to-r from-yellow-400 to-emerald-450 opacity-30 relative">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-yellow-400"></div>
+                  </div>
+
+                  <div className="bg-white/5 px-4 py-2 rounded-xl border border-white/10 text-center flex-shrink-0">
+                    <span className="text-[10px] text-gray-500 font-black uppercase tracking-wider block">Delivered</span>
+                    <span className="text-sm font-bold text-emerald-400">
+                      {(!project.end_date || project.end_date === 'Present' || project.end_date === 'Ongoing' || project.end_date === 'Under Development') ? 'Under Development' : project.end_date}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
             {/* Overview / Description */}
             <motion.div 
                variants={cardVariants}
@@ -281,14 +326,14 @@ const ProjectDetail: React.FC = () => {
                 >
                   <div className="relative h-48 overflow-hidden">
                     {p.image_url ? (
-                      <img src={p.image_url} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                      <img src={p.image_url} alt={toTitleCase(p.name)} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                     ) : (
                       <div className="w-full h-full bg-slate-800 flex items-center justify-center text-slate-400 text-xs font-bold">No Image Preview</div>
                     )}
                     <div className="absolute inset-0 bg-slate-900/60 group-hover:bg-slate-900/20 transition-colors"></div>
                   </div>
                   <div className="p-8">
-                    <h4 className="font-black text-lg group-hover:text-yellow-400 transition-colors truncate mb-2">{p.name}</h4>
+                    <h4 className="font-black text-lg group-hover:text-yellow-400 transition-colors truncate mb-2">{toTitleCase(p.name)}</h4>
                     <p className="text-xs text-gray-500 font-medium leading-relaxed line-clamp-3 h-12 italic">"{p.short_description}"</p>
                   </div>
                 </Link>

@@ -10,6 +10,9 @@ export type Project = {
   challenges_solved: string;
   live_url: string;
   github_url?: string;
+  project_type: string;
+  start_date: string;
+  end_date: string;
 };
 
 export const getProjects = () => api<Project[]>("/projects");
