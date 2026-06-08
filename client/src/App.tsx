@@ -34,6 +34,8 @@ const LoadingFallback = () => (
 
 import { ToastProvider } from "./context/ToastContext";
 import Toast from "./components/Toast";
+import { ConfirmProvider } from "./context/ConfirmContext";
+
 
 const AppContent = () => {
   const location = useLocation();
@@ -82,7 +84,9 @@ function App() {
   return (
     <BrowserRouter>
       <ToastProvider>
-        <AppContent />
+        <ConfirmProvider>
+          <AppContent />
+        </ConfirmProvider>
       </ToastProvider>
     </BrowserRouter>
   );

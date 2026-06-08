@@ -166,7 +166,7 @@ const AboutPage = () => {
                           <div className="p-3 bg-yellow-400/10 rounded-2xl border border-yellow-400/20 group-hover:scale-110 transition-transform">
                             <Code2 className="w-6 h-6 text-yellow-400" />
                           </div>
-                          <h3 className="text-xl font-black text-yellow-400 uppercase tracking-tighter">{cat.name}</h3>
+                          <h3 className="text-xl font-black text-yellow-400 uppercase tracking-wider">{cat.name}</h3>
                         </div>
                         <div className="flex flex-wrap gap-3">
                           {cat.skills.map((skill: any) => (

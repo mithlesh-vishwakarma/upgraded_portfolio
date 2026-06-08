@@ -11,9 +11,12 @@ import {
 } from "lucide-react";
 
 import { useToast } from "../../context/ToastContext";
+import { useConfirm } from "../../context/ConfirmContext";
+
 
 const EducationManager = () => {
     const { showToast } = useToast();
+    const confirm = useConfirm();
     const [education, setEducation] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,7 +46,14 @@ const EducationManager = () => {
     };
 
     const handleDelete = async (id: string) => {
-        if (!window.confirm("Archive this education record?")) return;
+        const isConfirmed = await confirm({
+            title: "Archive Education Record",
+            message: "Are you sure you want to archive this academic education record?",
+            confirmText: "Archive",
+            cancelText: "Cancel",
+            type: "warning"
+        });
+        if (!isConfirmed) return;
         try {
             await api.delete(`/education/${id}`);
             setEducation(education.filter(e => e.id !== id));

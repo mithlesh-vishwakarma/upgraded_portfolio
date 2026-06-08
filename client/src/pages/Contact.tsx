@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import BackgroundPattern from "../components/BackgroundPattern";
 import Magnet from '../components/Magnet';
+import { useToast } from "../context/ToastContext";
+
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -11,6 +13,7 @@ export default function ContactPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const { showToast } = useToast();
 
   useEffect(() => {
     setIsLoaded(true);
@@ -51,7 +54,7 @@ export default function ContactPage() {
       const result = await response.json();
 
       if (result.success) {
-        alert("Thank you for your message ! I'll get back to you soon.");
+        showToast("Thank you for your message! I'll get back to you soon.", "success");
         setFormData({
           fullName: "",
           email: "",
@@ -59,11 +62,11 @@ export default function ContactPage() {
           message: "",
         });
       } else {
-        alert("Something went wrong. Please try again later.");
+        showToast("Something went wrong. Please try again later.", "error");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Error submitting the form. Please check your connection.");
+      showToast("Error submitting the form. Please check your connection.", "error");
     } finally {
       setIsSubmitting(false);
     }

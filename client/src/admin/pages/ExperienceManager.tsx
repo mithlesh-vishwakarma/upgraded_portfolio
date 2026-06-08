@@ -10,9 +10,12 @@ import {
 } from "lucide-react";
 
 import { useToast } from "../../context/ToastContext";
+import { useConfirm } from "../../context/ConfirmContext";
+
 
 const ExperienceManager = () => {
     const { showToast } = useToast();
+    const confirm = useConfirm();
     const [experiences, setExperiences] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,7 +45,14 @@ const ExperienceManager = () => {
     };
 
     const handleDelete = async (id: string) => {
-        if (!window.confirm("Delete this experience record?")) return;
+        const isConfirmed = await confirm({
+            title: "Delete Experience",
+            message: "Are you sure you want to delete this experience record from your career history?",
+            confirmText: "Delete",
+            cancelText: "Cancel",
+            type: "danger"
+        });
+        if (!isConfirmed) return;
         try {
             await api.delete(`/experience/${id}`);
             setExperiences(experiences.filter(e => e.id !== id));

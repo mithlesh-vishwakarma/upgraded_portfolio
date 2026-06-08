@@ -11,9 +11,12 @@ import {
 } from "lucide-react";
 
 import { useToast } from "../../context/ToastContext";
+import { useConfirm } from "../../context/ConfirmContext";
+
 
 const SkillManager = () => {
     const { showToast } = useToast();
+    const confirm = useConfirm();
     const [data, setData] = useState<any>({ categories: [], extra_skills: [] });
     const [loading, setLoading] = useState(true);
     const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
@@ -80,7 +83,14 @@ const SkillManager = () => {
     };
 
     const deleteSkill = async (id: string) => {
-        if (!window.confirm("Remove this skill?")) return;
+        const isConfirmed = await confirm({
+            title: "Remove Skill",
+            message: "Are you sure you want to remove this skill?",
+            confirmText: "Remove",
+            cancelText: "Cancel",
+            type: "danger"
+        });
+        if (!isConfirmed) return;
         try {
             await api.delete(`/skills/${id}`);
             fetchSkills();
@@ -91,7 +101,14 @@ const SkillManager = () => {
     };
 
     const deleteExtraSkill = async (id: string) => {
-        if (!window.confirm("Remove this extra skill?")) return;
+        const isConfirmed = await confirm({
+            title: "Remove Ancillary Skill",
+            message: "Are you sure you want to remove this extra skill?",
+            confirmText: "Remove",
+            cancelText: "Cancel",
+            type: "danger"
+        });
+        if (!isConfirmed) return;
         try {
             await api.delete(`/skills/extra/${id}`);
             fetchSkills();
@@ -120,7 +137,14 @@ const SkillManager = () => {
     };
 
     const deleteCategory = async (id: string) => {
-        if (!window.confirm("Delete this entire domain and ALL contained skills?")) return;
+        const isConfirmed = await confirm({
+            title: "Collapse Domain",
+            message: "Are you sure you want to delete this entire operational domain and ALL contained skills? This action cannot be undone.",
+            confirmText: "Collapse Domain",
+            cancelText: "Cancel",
+            type: "danger"
+        });
+        if (!isConfirmed) return;
         try {
             await api.delete(`/skills/categories/${id}`);
             fetchSkills();
@@ -191,7 +215,7 @@ const SkillManager = () => {
                                         <div className="p-3 bg-yellow-400/10 rounded-2xl text-yellow-500">
                                             <Layers className="w-5 h-5" />
                                         </div>
-                                        <h4 className="text-xl font-black text-slate-900 uppercase tracking-tight">{cat.name}</h4>
+                                        <h4 className="text-xl font-black text-slate-900 uppercase tracking-wider">{cat.name}</h4>
                                         <div className="flex gap-1">
                                             <button onClick={() => {
                                                 setCurrentCategory(cat);

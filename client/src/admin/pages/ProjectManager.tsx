@@ -17,7 +17,9 @@ import {
 } from "lucide-react";
 
 import { useToast } from "../../context/ToastContext";
+import { useConfirm } from "../../context/ConfirmContext";
 import { toTitleCase } from "../../lib/utils";
+
 
 const SECTIONS = [
   { id: "general", label: "General Details", icon: Info },
@@ -30,6 +32,7 @@ const YEARS = Array.from({ length: 15 }, (_, i) => (2020 + i).toString());
 
 const ProjectManager = () => {
     const { showToast } = useToast();
+    const confirm = useConfirm();
     const [projects, setProjects] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
@@ -78,7 +81,14 @@ const ProjectManager = () => {
     };
 
     const handleDelete = async (id: string) => {
-        if (!window.confirm("Are you sure you want to delete this project?")) return;
+        const isConfirmed = await confirm({
+            title: "Delete Project",
+            message: "Are you sure you want to delete this project? This will permanently purge it from your portfolio history.",
+            confirmText: "Delete",
+            cancelText: "Cancel",
+            type: "danger"
+        });
+        if (!isConfirmed) return;
         try {
             await api.delete(`/projects/${id}`);
             setProjects(projects.filter(p => p.id !== id));
