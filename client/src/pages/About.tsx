@@ -45,6 +45,66 @@ const getCategoryIcon = (name: string) => {
   return Code2; // Default fallback icon
 };
 
+const parseDateStr = (str: string): { date: Date; hasMonth: boolean } | null => {
+  const normalized = str.trim().toLowerCase();
+  if (normalized === 'present' || normalized === 'current' || normalized === 'now') {
+    return { date: new Date(), hasMonth: true };
+  }
+  
+  const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+  const monthRegex = /(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)/i;
+  const yearRegex = /\b(19\d\d|20\d\d)\b/;
+  
+  const yearMatch = normalized.match(yearRegex);
+  if (!yearMatch) return null;
+  
+  const year = parseInt(yearMatch[1], 10);
+  let month = 0;
+  let hasMonth = false;
+  
+  const monthMatch = normalized.match(monthRegex);
+  if (monthMatch) {
+    const monthStr = monthMatch[1].substring(0, 3).toLowerCase();
+    const monthIdx = months.indexOf(monthStr);
+    if (monthIdx !== -1) {
+      month = monthIdx;
+      hasMonth = true;
+    }
+  }
+  
+  return { date: new Date(year, month, 1), hasMonth };
+};
+
+const calculateExperience = (durationStr: string): string => {
+  if (!durationStr) return "";
+  const parts = durationStr.split(/[-–—]|\bto\b/i);
+  if (parts.length < 2) return "";
+  
+  const startObj = parseDateStr(parts[0]);
+  const endObj = parseDateStr(parts[1]);
+  
+  if (!startObj || !endObj) return "";
+  
+  const { date: startDate } = startObj;
+  const { date: endDate } = endObj;
+  
+  const diffMonths = (endDate.getFullYear() - startDate.getFullYear()) * 12 + (endDate.getMonth() - startDate.getMonth());
+  if (diffMonths <= 0) {
+    return "1 Month";
+  }
+  
+  const years = Math.floor(diffMonths / 12);
+  const months = diffMonths % 12;
+  
+  const yearsStr = years > 0 ? `${years} Year${years > 1 ? 's' : ''}` : "";
+  const monthsStr = months > 0 ? `${months} Month${months > 1 ? 's' : ''}` : "";
+  
+  if (yearsStr && monthsStr) {
+    return `${yearsStr} ${monthsStr}`;
+  }
+  return yearsStr || monthsStr;
+};
+
 const AboutPage = () => {
   const [activeTab, setActiveTab] = useState('experience');
   const [isLoaded, setIsLoaded] = useState(false);
@@ -168,7 +228,14 @@ const AboutPage = () => {
                     >
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                         <div>
-                          <h3 className="text-2xl font-black text-yellow-400 mb-1 group-hover:scale-105 transition-transform origin-left">{exp.role}</h3>
+                          <h3 className="text-2xl font-black text-yellow-400 mb-1 group-hover:scale-105 transition-transform origin-left flex items-center flex-wrap gap-2">
+                            <span>{exp.role}</span>
+                            {calculateExperience(exp.duration) && (
+                              <span className="text-xs font-bold text-gray-400 bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-lg select-none tracking-normal normal-case">
+                                {calculateExperience(exp.duration)}
+                              </span>
+                            )}
+                          </h3>
                           <div className="text-white font-bold text-lg flex items-center gap-2">
                             <Briefcase className="w-5 h-5 text-gray-500" />
                             {exp.company}
@@ -229,7 +296,7 @@ const AboutPage = () => {
                   </div>
 
                   {/* Extra Skills Section */}
-                  {skillsData.extra_skills.length > 0 && (
+                  {/* {skillsData.extra_skills.length > 0 && (
                     <div className="mt-16">
                       <div className="flex items-center gap-4 mb-8 px-2">
                         <Zap className="w-5 h-5 text-blue-400" />
@@ -248,7 +315,7 @@ const AboutPage = () => {
                         ))}
                       </div>
                     </div>
-                  )}
+                  )} */}
                 </div>
               )}
             </>

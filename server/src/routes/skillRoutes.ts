@@ -6,9 +6,11 @@ import {
   deleteSkill,
   createExtraSkill,
   deleteExtraSkill,
-  createCategory,
-  updateCategory,
-  deleteCategory
+  createCategory, 
+  updateCategory, 
+  deleteCategory,
+  reorderCategories,
+  reorderSkills
 } from "../controllers/skillController";
 import { protect } from "../middleware/authMiddleware";
 
@@ -28,5 +30,9 @@ router.delete("/extra/:id", protect as any, deleteExtraSkill as any);
 router.post("/categories", protect as any, createCategory as any);
 router.put("/categories/:id", protect as any, updateCategory as any);
 router.delete("/categories/:id", protect as any, deleteCategory as any);
+router.post("/categories/reorder", protect as any, reorderCategories as any);
+
+// Skills reorder
+router.post("/reorder", protect as any, reorderSkills as any);
 
 export default router;

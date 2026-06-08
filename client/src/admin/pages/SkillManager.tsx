@@ -15,7 +15,8 @@ import {
   Wrench,
   Award,
   Terminal,
-  Code2
+  Code2,
+  GripVertical
 } from "lucide-react";
 
 import { useToast } from "../../context/ToastContext";
@@ -67,6 +68,90 @@ const SkillManager = () => {
         category_id: ""
     });
     const [extraSkillName, setExtraSkillName] = useState("");
+
+    const [draggedCategoryIndex, setDraggedCategoryIndex] = useState<number | null>(null);
+    const [draggedSkillInfo, setDraggedSkillInfo] = useState<{ categoryId: string; index: number } | null>(null);
+
+    const handleCategoryDragStart = (e: React.DragEvent, index: number) => {
+        setDraggedCategoryIndex(index);
+        e.dataTransfer.effectAllowed = "move";
+    };
+
+    const handleCategoryDragOver = (e: React.DragEvent, index: number) => {
+        e.preventDefault();
+        if (draggedCategoryIndex === null || draggedCategoryIndex === index) return;
+        
+        const categories = [...data.categories];
+        const draggedItem = categories[draggedCategoryIndex];
+        categories.splice(draggedCategoryIndex, 1);
+        categories.splice(index, 0, draggedItem);
+        
+        const updated = categories.map((cat, idx) => ({ ...cat, sort_order: idx }));
+        setData({ ...data, categories: updated });
+        setDraggedCategoryIndex(index);
+    };
+
+    const handleCategoryDragEnd = async () => {
+        setDraggedCategoryIndex(null);
+        
+        const orders = data.categories.map((cat: any, idx: number) => ({
+            id: cat.id,
+            sort_order: idx
+        }));
+        
+        try {
+            await api.post("/skills/categories/reorder", { orders });
+            showToast("Category order synchronized", "success");
+        } catch (err) {
+            showToast("Failed to save category order", "error");
+        }
+    };
+
+    const handleSkillDragStart = (e: React.DragEvent, categoryId: string, index: number) => {
+        e.stopPropagation(); // prevent category drag
+        setDraggedSkillInfo({ categoryId, index });
+        e.dataTransfer.effectAllowed = "move";
+    };
+
+    const handleSkillDragOver = (e: React.DragEvent, categoryId: string, index: number) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (draggedSkillInfo === null || draggedSkillInfo.categoryId !== categoryId || draggedSkillInfo.index === index) return;
+        
+        const categories = [...data.categories];
+        const categoryIdx = categories.findIndex(cat => cat.id === categoryId);
+        if (categoryIdx === -1) return;
+        
+        const skills = [...categories[categoryIdx].skills];
+        const draggedItem = skills[draggedSkillInfo.index];
+        skills.splice(draggedSkillInfo.index, 1);
+        skills.splice(index, 0, draggedItem);
+        
+        categories[categoryIdx].skills = skills.map((s, idx) => ({ ...s, sort_order: idx }));
+        setData({ ...data, categories });
+        setDraggedSkillInfo({ categoryId, index });
+    };
+
+    const handleSkillDragEnd = async () => {
+        if (!draggedSkillInfo) return;
+        const categoryId = draggedSkillInfo.categoryId;
+        setDraggedSkillInfo(null);
+        
+        const category = data.categories.find((cat: any) => cat.id === categoryId);
+        if (!category) return;
+        
+        const orders = category.skills.map((s: any, idx: number) => ({
+            id: s.id,
+            sort_order: idx
+        }));
+        
+        try {
+            await api.post("/skills/reorder", { orders });
+            showToast("Skill order synchronized", "success");
+        } catch (err) {
+            showToast("Failed to save skill order", "error");
+        }
+    };
 
     useEffect(() => {
         fetchSkills();
@@ -244,48 +329,71 @@ const SkillManager = () => {
                             <div className="h-px flex-1 bg-gray-100"></div>
                         </div>
                         
-                        {data.categories.map((cat: any) => {
+                        {data.categories.map((cat: any, index: number) => {
                             const CategoryIcon = getCategoryIcon(cat.name);
                             return (
-                                <div key={cat.id} className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm group">
+                                <div 
+                                    key={cat.id} 
+                                    draggable
+                                    onDragStart={(e) => handleCategoryDragStart(e, index)}
+                                    onDragOver={(e) => handleCategoryDragOver(e, index)}
+                                    onDragEnd={handleCategoryDragEnd}
+                                    className={`bg-white border rounded-[32px] p-8 shadow-sm group transition-all duration-200 cursor-grab active:cursor-grabbing ${
+                                        draggedCategoryIndex === index ? "opacity-45 border-dashed border-yellow-500 scale-98 shadow-inner" : "border-gray-100"
+                                    }`}
+                                >
                                     <div className="flex items-center justify-between mb-8">
                                         <div className="flex items-center gap-3">
+                                            <div className="p-1 bg-gray-50 border border-gray-150 rounded cursor-grab active:cursor-grabbing text-slate-400 hover:text-slate-600 transition-colors pointer-events-auto">
+                                                <GripVertical className="w-3.5 h-3.5" />
+                                            </div>
                                             <div className="p-3 bg-yellow-400/10 rounded-2xl text-yellow-500">
                                                 <CategoryIcon className="w-5 h-5" />
                                             </div>
                                             <h4 className="text-xl font-black text-slate-900 uppercase tracking-wider">{cat.name}</h4>
-                                        <div className="flex gap-1">
-                                            <button onClick={() => {
-                                                setCurrentCategory(cat);
-                                                setCategoryName(cat.name);
-                                                setIsCategoryModalOpen(true);
-                                            }} className="p-1.5 text-slate-300 hover:text-yellow-600 transition-colors"><Edit3 className="w-3.5 h-3.5"/></button>
-                                            <button onClick={() => deleteCategory(cat.id)} className="p-1.5 text-slate-300 hover:text-red-500 transition-colors"><Trash2 className="w-3.5 h-3.5"/></button>
-                                        </div>
-                                    </div>
-                                    <span className="px-3 py-1 bg-gray-50 text-gray-300 text-[10px] font-black rounded-lg uppercase tracking-widest">
-                                        {cat.skills.length} Items
-                                    </span>
-                                </div>
-
-                                <div className="flex flex-wrap gap-2.5">
-                                    {cat.skills.map((skill: any) => (
-                                        <div key={skill.id} className="group/skill relative flex items-center gap-2 px-4 py-2 bg-slate-50 border border-gray-100 rounded-2xl hover:border-yellow-400/50 hover:bg-yellow-400/5 transition-all duration-200">
-                                            <span className="font-bold text-slate-700 text-sm">{skill.name}</span>
-                                            <div className="flex items-center gap-1.5 ml-2">
+                                            <div className="flex gap-1">
                                                 <button onClick={() => {
-                                                    setCurrentSkill(skill);
-                                                    setFormData(skill);
-                                                    setIsSkillModalOpen(true);
-                                                }} className="p-1 text-blue-500 hover:scale-125 transition-transform"><Edit3 className="w-3.5 h-3.5"/></button>
-                                                <button onClick={() => deleteSkill(skill.id)} className="p-1 text-red-400 hover:scale-125 transition-transform"><Trash2 className="w-3.5 h-3.5"/></button>
+                                                    setCurrentCategory(cat);
+                                                    setCategoryName(cat.name);
+                                                    setIsCategoryModalOpen(true);
+                                                }} className="p-1.5 text-slate-300 hover:text-yellow-600 transition-colors"><Edit3 className="w-3.5 h-3.5"/></button>
+                                                <button onClick={() => deleteCategory(cat.id)} className="p-1.5 text-slate-300 hover:text-red-500 transition-colors"><Trash2 className="w-3.5 h-3.5"/></button>
                                             </div>
                                         </div>
-                                    ))}
-                                    {cat.skills.length === 0 && <p className="w-full text-center text-xs font-bold text-gray-300 italic py-4">Domain empty. Insert technical capacity.</p>}
+                                        <span className="px-3 py-1 bg-gray-50 text-gray-300 text-[10px] font-black rounded-lg uppercase tracking-widest">
+                                            {cat.skills.length} Items
+                                        </span>
+                                    </div>
+
+                                    <div className="flex flex-wrap gap-2.5">
+                                        {cat.skills.map((skill: any, skillIdx: number) => (
+                                            <div 
+                                                key={skill.id} 
+                                                draggable
+                                                onDragStart={(e) => handleSkillDragStart(e, cat.id, skillIdx)}
+                                                onDragOver={(e) => handleSkillDragOver(e, cat.id, skillIdx)}
+                                                onDragEnd={handleSkillDragEnd}
+                                                className={`group/skill relative flex items-center gap-2 px-4 py-2 border rounded-2xl transition-all duration-200 cursor-grab active:cursor-grabbing ${
+                                                    draggedSkillInfo?.categoryId === cat.id && draggedSkillInfo?.index === skillIdx
+                                                        ? "bg-yellow-400/10 border-dashed border-yellow-500 opacity-60 scale-95"
+                                                        : "bg-slate-50 border-gray-100 hover:border-yellow-400/50 hover:bg-yellow-400/5"
+                                                }`}
+                                            >
+                                                <span className="font-bold text-slate-700 text-sm">{skill.name}</span>
+                                                <div className="flex items-center gap-1.5 ml-2">
+                                                    <button onClick={() => {
+                                                        setCurrentSkill(skill);
+                                                        setFormData(skill);
+                                                        setIsSkillModalOpen(true);
+                                                    }} className="p-1 text-blue-500 hover:scale-125 transition-transform"><Edit3 className="w-3.5 h-3.5"/></button>
+                                                    <button onClick={() => deleteSkill(skill.id)} className="p-1 text-red-400 hover:scale-125 transition-transform"><Trash2 className="w-3.5 h-3.5"/></button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        {cat.skills.length === 0 && <p className="w-full text-center text-xs font-bold text-gray-300 italic py-4">Domain empty. Insert technical capacity.</p>}
+                                    </div>
                                 </div>
-                            </div>
-                        );
+                            );
                         })}
                     </section>
 
