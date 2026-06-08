@@ -8,7 +8,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "migrate": "ts-node src/migrate.ts",
-    "start": "node server.js"
+    "migrate:prod": "node dist/migrate.js",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
