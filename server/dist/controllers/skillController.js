@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteExtraSkill = exports.createExtraSkill = exports.deleteSkill = exports.updateSkill = exports.createSkill = exports.getSkills = void 0;
+exports.deleteCategory = exports.updateCategory = exports.createCategory = exports.deleteExtraSkill = exports.createExtraSkill = exports.deleteSkill = exports.updateSkill = exports.createSkill = exports.getSkills = void 0;
 const supabase_1 = require("../config/supabase");
 const getSkills = async (req, res) => {
     try {
@@ -88,3 +88,42 @@ const deleteExtraSkill = async (req, res) => {
     }
 };
 exports.deleteExtraSkill = deleteExtraSkill;
+// Category Management
+const createCategory = async (req, res) => {
+    try {
+        const { data: category, error } = await supabase_1.supabase.from("skill_categories").insert([req.body]).select().single();
+        if (error)
+            throw error;
+        res.status(201).json({ message: "Category created successfully", category });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Error creating category", error: error.message });
+    }
+};
+exports.createCategory = createCategory;
+const updateCategory = async (req, res) => {
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    try {
+        const { error } = await supabase_1.supabase.from("skill_categories").update(req.body).eq("id", id);
+        if (error)
+            throw error;
+        res.json({ message: "Category updated successfully" });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Error updating category", error: error.message });
+    }
+};
+exports.updateCategory = updateCategory;
+const deleteCategory = async (req, res) => {
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    try {
+        const { error } = await supabase_1.supabase.from("skill_categories").delete().eq("id", id);
+        if (error)
+            throw error;
+        res.json({ message: "Category deleted successfully" });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Error deleting category", error: error.message });
+    }
+};
+exports.deleteCategory = deleteCategory;

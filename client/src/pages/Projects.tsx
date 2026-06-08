@@ -139,16 +139,26 @@ const ProjectPage: React.FC = () => {
                 </a>
               )}
               {project.github_url && (
-                <a 
-                  href={project.github_url} 
-                  target="_blank" 
-                  rel="noreferrer"
-                  onClick={(e) => e.stopPropagation()} 
-                  className="text-gray-400 hover:text-yellow-400 transition-colors duration-200"
-                  title="GitHub Repository"
-                >
-                  <Github className="w-5 h-5" />
-                </a>
+                project.project_type === 'Freelanced' ? (
+                  <span 
+                    className="text-gray-600 cursor-not-allowed opacity-40"
+                    title="Source Code Private (Freelanced Project)"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Github className="w-5 h-5" />
+                  </span>
+                ) : (
+                  <a 
+                    href={project.github_url} 
+                    target="_blank" 
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()} 
+                    className="text-gray-400 hover:text-yellow-400 transition-colors duration-200"
+                    title="GitHub Repository"
+                  >
+                    <Github className="w-5 h-5" />
+                  </a>
+                )
               )}
             </div>
           </div>

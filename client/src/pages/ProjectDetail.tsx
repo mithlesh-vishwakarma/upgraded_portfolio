@@ -24,6 +24,7 @@ interface Project {
   challenges_solved: string;
   live_url: string;
   github_url?: string;
+  project_type?: string;
 }
 
 const ProjectDetail: React.FC = () => {
@@ -267,10 +268,20 @@ const ProjectDetail: React.FC = () => {
                     </a>
                   )}
                   {project.github_url && (
-                    <a href={project.github_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-5 bg-white/5 rounded-3xl hover:bg-blue-500 transition-all border border-white/5 group">
-                      <span className="font-black text-xs uppercase tracking-widest">GitHub Code</span>
-                      <Github className="w-5 h-5 text-blue-400 group-hover:text-white" />
-                    </a>
+                    project.project_type === 'Freelanced' ? (
+                      <div 
+                        className="flex items-center justify-between p-5 bg-white/5 rounded-3xl border border-white/5 opacity-40 cursor-not-allowed select-none" 
+                        title="Source Code Private (Freelanced Project)"
+                      >
+                        <span className="font-black text-xs uppercase tracking-widest text-gray-500">GitHub (Private Code)</span>
+                        <Github className="w-5 h-5 text-gray-600" />
+                      </div>
+                    ) : (
+                      <a href={project.github_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-5 bg-white/5 rounded-3xl hover:bg-blue-500 transition-all border border-white/5 group">
+                        <span className="font-black text-xs uppercase tracking-widest">GitHub Code</span>
+                        <Github className="w-5 h-5 text-blue-400 group-hover:text-white" />
+                      </a>
+                    )
                   )}
                 </div>
             </div>

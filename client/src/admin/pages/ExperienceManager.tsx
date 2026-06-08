@@ -127,9 +127,9 @@ const ExperienceManager = () => {
                             </div>
                             <div>
                                 <h4 className="text-xl font-black text-slate-900 group-hover:text-yellow-600 transition-colors">{exp.role}</h4>
-                                <div className="flex items-center gap-4 mt-1 text-xs font-bold uppercase tracking-widest text-blue-500">
+                                <div className="flex items-center gap-4 mt-1.5 text-[10px] font-bold uppercase tracking-widest text-blue-500 font-roboto">
                                     <span className="flex items-center gap-1"><Building className="w-3 h-3"/> {exp.company}</span>
-                                    <span className="flex items-center gap-1 text-gray-400"><Clock className="w-3 h-3"/> {exp.duration}</span>
+                                    <span className="flex items-center gap-1 text-gray-450 border border-gray-150 px-2 py-0.5 rounded-lg bg-gray-50/50"><Clock className="w-2.5 h-2.5 text-gray-400"/> {exp.duration}</span>
                                 </div>
                             </div>
                         </div>

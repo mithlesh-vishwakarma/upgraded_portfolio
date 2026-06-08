@@ -13,7 +13,9 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     try {
         if (!email || !password) {
-            return res.status(400).json({ message: "Please provide email and password" });
+            return res
+                .status(400)
+                .json({ message: "Please provide email and password" });
         }
         // Fetch admin from Supabase
         const { data: admin, error } = await supabase_1.supabase
@@ -51,7 +53,9 @@ const resetPassword = async (req, res) => {
     const { email, newPassword, resetKey } = req.body;
     try {
         if (!email || !newPassword || !resetKey) {
-            return res.status(400).json({ message: "Please provide email, reset key, and new password" });
+            return res
+                .status(400)
+                .json({ message: "Please provide email, reset key, and new password" });
         }
         if (resetKey !== ADMIN_RESET_KEY) {
             return res.status(401).json({ message: "Invalid reset key" });
@@ -70,7 +74,12 @@ const resetPassword = async (req, res) => {
             .update({ password: hashedPassword })
             .eq("email", email);
         if (updateError) {
-            return res.status(500).json({ message: "Failed to update password", error: updateError.message });
+            return res
+                .status(500)
+                .json({
+                message: "Failed to update password",
+                error: updateError.message,
+            });
         }
         res.json({ message: "Password updated successfully" });
     }

@@ -7,11 +7,47 @@ import {
   Star, 
   X,
   PlusCircle,
-  Zap
+  Zap,
+  Server,
+  Layout,
+  Database,
+  Cpu,
+  Wrench,
+  Award,
+  Terminal,
+  Code2
 } from "lucide-react";
 
 import { useToast } from "../../context/ToastContext";
 import { useConfirm } from "../../context/ConfirmContext";
+
+const getCategoryIcon = (name: string) => {
+  const normalizedName = name.toLowerCase();
+  
+  if (normalizedName.includes('front')) {
+    return Layout;
+  }
+  if (normalizedName.includes('back') || normalizedName.includes('api')) {
+    return Server;
+  }
+  if (normalizedName.includes('database') || normalizedName.includes('db')) {
+    return Database;
+  }
+  if (normalizedName.includes('language') || normalizedName.includes('programming') || normalizedName.includes('code')) {
+    return Terminal;
+  }
+  if (normalizedName.includes('ai') || normalizedName.includes('artificial') || normalizedName.includes('machine learning')) {
+    return Cpu;
+  }
+  if (normalizedName.includes('tool') || normalizedName.includes('devops') || normalizedName.includes('git') || normalizedName.includes('cloud')) {
+    return Wrench;
+  }
+  if (normalizedName.includes('soft') || normalizedName.includes('interpersonal') || normalizedName.includes('skill')) {
+    return Award;
+  }
+  
+  return Code2; // Default fallback icon
+};
 
 
 const SkillManager = () => {
@@ -208,14 +244,16 @@ const SkillManager = () => {
                             <div className="h-px flex-1 bg-gray-100"></div>
                         </div>
                         
-                        {data.categories.map((cat: any) => (
-                            <div key={cat.id} className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm group">
-                                <div className="flex items-center justify-between mb-8">
-                                    <div className="flex items-center gap-3">
-                                        <div className="p-3 bg-yellow-400/10 rounded-2xl text-yellow-500">
-                                            <Layers className="w-5 h-5" />
-                                        </div>
-                                        <h4 className="text-xl font-black text-slate-900 uppercase tracking-wider">{cat.name}</h4>
+                        {data.categories.map((cat: any) => {
+                            const CategoryIcon = getCategoryIcon(cat.name);
+                            return (
+                                <div key={cat.id} className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm group">
+                                    <div className="flex items-center justify-between mb-8">
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-3 bg-yellow-400/10 rounded-2xl text-yellow-500">
+                                                <CategoryIcon className="w-5 h-5" />
+                                            </div>
+                                            <h4 className="text-xl font-black text-slate-900 uppercase tracking-wider">{cat.name}</h4>
                                         <div className="flex gap-1">
                                             <button onClick={() => {
                                                 setCurrentCategory(cat);
@@ -247,7 +285,8 @@ const SkillManager = () => {
                                     {cat.skills.length === 0 && <p className="w-full text-center text-xs font-bold text-gray-300 italic py-4">Domain empty. Insert technical capacity.</p>}
                                 </div>
                             </div>
-                        ))}
+                        );
+                        })}
                     </section>
 
                     <section className="space-y-6">

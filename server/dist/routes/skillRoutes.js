@@ -11,4 +11,8 @@ router.delete("/:id", authMiddleware_1.protect, skillController_1.deleteSkill);
 // Extra skills
 router.post("/extra", authMiddleware_1.protect, skillController_1.createExtraSkill);
 router.delete("/extra/:id", authMiddleware_1.protect, skillController_1.deleteExtraSkill);
+// Categories
+router.post("/categories", authMiddleware_1.protect, skillController_1.createCategory);
+router.put("/categories/:id", authMiddleware_1.protect, skillController_1.updateCategory);
+router.delete("/categories/:id", authMiddleware_1.protect, skillController_1.deleteCategory);
 exports.default = router;

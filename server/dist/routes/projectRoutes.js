@@ -10,4 +10,6 @@ router.get("/:id/related", projectController_1.getRelatedProjects);
 router.post("/", authMiddleware_1.protect, projectController_1.createProject);
 router.put("/:id", authMiddleware_1.protect, projectController_1.updateProject);
 router.delete("/:id", authMiddleware_1.protect, projectController_1.deleteProject);
+router.post("/upload", authMiddleware_1.protect, projectController_1.uploadProjectImage);
+router.post("/reorder", authMiddleware_1.protect, projectController_1.reorderProjects);
 exports.default = router;

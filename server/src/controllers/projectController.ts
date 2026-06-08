@@ -1,16 +1,30 @@
 import { Request, Response } from "express";
 import { supabase } from "../config/supabase";
+import fs from "fs";
+import path from "path";
 
 export const getProjects = async (req: Request, res: Response) => {
   try {
+    let projectsData;
     const { data: projects, error } = await supabase
       .from("projects")
       .select("*")
+      .order("sort_order", { ascending: true })
       .order("created_at", { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      console.warn("Sorting by sort_order failed (column might not exist yet), falling back to created_at:", error.message);
+      const fallback = await supabase
+        .from("projects")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (fallback.error) throw fallback.error;
+      projectsData = fallback.data;
+    } else {
+      projectsData = projects;
+    }
 
-    res.json(projects);
+    res.json(projectsData);
   } catch (error: any) {
     res.status(500).json({ message: "Error fetching projects", error: error.message });
   }
@@ -36,7 +50,7 @@ export const getProjectById = async (req: Request, res: Response) => {
 };
 
 export const createProject = async (req: Request, res: Response) => {
-  const { name, image_url, short_description, tech_stack, features, challenges_solved, live_url, github_url, project_type, start_date, end_date } = req.body;
+  const { name, image_url, short_description, tech_stack, features, challenges_solved, live_url, github_url, project_type, start_date, end_date, sort_order } = req.body;
 
   if (!name || typeof name !== "string" || !name.trim()) {
     return res.status(400).json({ message: "Project name is required" });
@@ -54,26 +68,38 @@ export const createProject = async (req: Request, res: Response) => {
     return res.status(400).json({ message: "Features must be an array of strings" });
   }
 
+  const parsedSortOrder = typeof sort_order !== "undefined" ? parseInt(sort_order as any, 10) : 0;
+  const insertPayload: any = {
+    name: name.trim(),
+    image_url: image_url ? image_url.trim() : null,
+    short_description: short_description.trim(),
+    tech_stack,
+    features,
+    challenges_solved: challenges_solved.trim(),
+    live_url: live_url ? live_url.trim() : null,
+    github_url: github_url ? github_url.trim() : null,
+    project_type: project_type || 'Personal',
+    start_date: start_date ? start_date.trim() : null,
+    end_date: end_date ? end_date.trim() : null
+  };
+
   try {
     const { data: project, error } = await supabase
       .from("projects")
-      .insert([{
-        name: name.trim(),
-        image_url: image_url ? image_url.trim() : null,
-        short_description: short_description.trim(),
-        tech_stack,
-        features,
-        challenges_solved: challenges_solved.trim(),
-        live_url: live_url ? live_url.trim() : null,
-        github_url: github_url ? github_url.trim() : null,
-        project_type: project_type || 'Personal',
-        start_date: start_date ? start_date.trim() : null,
-        end_date: end_date ? end_date.trim() : null
-      }])
+      .insert([{ ...insertPayload, sort_order: isNaN(parsedSortOrder) ? 0 : parsedSortOrder }])
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      // If sort_order column does not exist, retry without it
+      if (error.message.includes('column "sort_order" of relation "projects" does not exist') || error.code === '42703') {
+        console.warn("Column sort_order does not exist, retrying insert without it.");
+        const retry = await supabase.from("projects").insert([insertPayload]).select().single();
+        if (retry.error) throw retry.error;
+        return res.status(201).json({ message: "Project created successfully (without sort_order fallback)", project: retry.data });
+      }
+      throw error;
+    }
 
     res.status(201).json({ message: "Project created successfully", project });
   } catch (error: any) {
@@ -84,7 +110,7 @@ export const createProject = async (req: Request, res: Response) => {
 
 export const updateProject = async (req: Request, res: Response) => {
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  const { name, image_url, short_description, tech_stack, features, challenges_solved, live_url, github_url, project_type, start_date, end_date } = req.body;
+  const { name, image_url, short_description, tech_stack, features, challenges_solved, live_url, github_url, project_type, start_date, end_date, sort_order } = req.body;
 
   if (!name || typeof name !== "string" || !name.trim()) {
     return res.status(400).json({ message: "Project name is required" });
@@ -102,27 +128,38 @@ export const updateProject = async (req: Request, res: Response) => {
     return res.status(400).json({ message: "Features must be an array of strings" });
   }
 
+  const parsedSortOrder = typeof sort_order !== "undefined" ? parseInt(sort_order as any, 10) : 0;
+  const updatePayload: any = {
+    name: name.trim(),
+    image_url: image_url ? image_url.trim() : null,
+    short_description: short_description.trim(),
+    tech_stack,
+    features,
+    challenges_solved: challenges_solved.trim(),
+    live_url: live_url ? live_url.trim() : null,
+    github_url: github_url ? github_url.trim() : null,
+    project_type: project_type || 'Personal',
+    start_date: start_date ? start_date.trim() : null,
+    end_date: end_date ? end_date.trim() : null
+  };
+
   try {
     const { data: project, error } = await supabase
       .from("projects")
-      .update({
-        name: name.trim(),
-        image_url: image_url ? image_url.trim() : null,
-        short_description: short_description.trim(),
-        tech_stack,
-        features,
-        challenges_solved: challenges_solved.trim(),
-        live_url: live_url ? live_url.trim() : null,
-        github_url: github_url ? github_url.trim() : null,
-        project_type: project_type || 'Personal',
-        start_date: start_date ? start_date.trim() : null,
-        end_date: end_date ? end_date.trim() : null
-      })
+      .update({ ...updatePayload, sort_order: isNaN(parsedSortOrder) ? 0 : parsedSortOrder })
       .eq("id", id)
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      if (error.message.includes('column "sort_order" of relation "projects" does not exist') || error.code === '42703') {
+        console.warn("Column sort_order does not exist, retrying update without it.");
+        const retry = await supabase.from("projects").update(updatePayload).eq("id", id).select().single();
+        if (retry.error) throw retry.error;
+        return res.json({ message: "Project updated successfully (without sort_order fallback)", project: retry.data });
+      }
+      throw error;
+    }
 
     res.json({ message: "Project updated successfully", project });
   } catch (error: any) {
@@ -181,29 +218,80 @@ export const uploadProjectImage = async (req: Request, res: Response) => {
 
     const uniqueFilename = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
 
-    const { error } = await supabase.storage
-      .from("portfolio")
-      .upload(uniqueFilename, fileBuffer, {
-        contentType: `image/${fileExtension}`,
-        upsert: true
-      });
-
-    if (error) {
-      console.error("Supabase storage error:", error);
-      throw error;
+    // Ensure uploads directory exists
+    const uploadsDir = path.join(process.cwd(), "uploads");
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
     }
 
-    const { data: publicUrlData } = supabase.storage
-      .from("portfolio")
-      .getPublicUrl(uniqueFilename);
+    // Save locally first (local storage fallback)
+    const localFilePath = path.join(uploadsDir, uniqueFilename);
+    fs.writeFileSync(localFilePath, fileBuffer);
 
-    if (!publicUrlData || !publicUrlData.publicUrl) {
-      throw new Error("Could not retrieve public URL for uploaded asset.");
+    // Resolve protocol and host from request headers
+    const protocol = req.headers["x-forwarded-proto"] || req.protocol;
+    const host = req.headers["x-forwarded-host"] || req.get("host");
+    const localUrl = `${protocol}://${host}/uploads/${uniqueFilename}`;
+
+    try {
+      // Attempt to upload to Supabase storage
+      const { error } = await supabase.storage
+        .from("portfolio")
+        .upload(uniqueFilename, fileBuffer, {
+          contentType: `image/${fileExtension}`,
+          upsert: true
+        });
+
+      if (error) {
+        console.warn("Supabase upload failed, falling back to local storage:", error.message);
+        return res.json({ imageUrl: localUrl });
+      }
+
+      const { data: publicUrlData } = supabase.storage
+        .from("portfolio")
+        .getPublicUrl(uniqueFilename);
+
+      if (!publicUrlData || !publicUrlData.publicUrl) {
+        console.warn("Could not retrieve Supabase public URL, falling back to local storage.");
+        return res.json({ imageUrl: localUrl });
+      }
+
+      return res.json({ imageUrl: publicUrlData.publicUrl });
+    } catch (supabaseError: any) {
+      console.warn("Supabase upload threw error, falling back to local storage:", supabaseError.message);
+      return res.json({ imageUrl: localUrl });
     }
-
-    res.json({ imageUrl: publicUrlData.publicUrl });
   } catch (error: any) {
     console.error("Upload error:", error);
     res.status(500).json({ message: "Error uploading image", error: error.message });
+  }
+};
+
+export const reorderProjects = async (req: Request, res: Response) => {
+  const { orders } = req.body;
+
+  if (!Array.isArray(orders)) {
+    return res.status(400).json({ message: "Orders must be an array of { id, sort_order }" });
+  }
+
+  try {
+    const promises = orders.map(item => 
+      supabase
+        .from("projects")
+        .update({ sort_order: item.sort_order })
+        .eq("id", item.id)
+    );
+
+    const results = await Promise.all(promises);
+    const errors = results.filter(r => r.error).map(r => r.error);
+
+    if (errors.length > 0) {
+      console.error("Bulk reorder errors:", errors);
+      return res.status(500).json({ message: "Failed to update some project orders", errors });
+    }
+
+    res.json({ message: "Projects reordered successfully" });
+  } catch (error: any) {
+    res.status(550).json({ message: "Error reordering projects", error: error.message });
   }
 };

@@ -6,7 +6,8 @@ import {
   updateProject, 
   deleteProject, 
   getRelatedProjects,
-  uploadProjectImage
+  uploadProjectImage,
+  reorderProjects
 } from "../controllers/projectController";
 import { protect } from "../middleware/authMiddleware";
 
@@ -20,5 +21,6 @@ router.post("/", protect as any, createProject as any);
 router.put("/:id", protect as any, updateProject as any);
 router.delete("/:id", protect as any, deleteProject as any);
 router.post("/upload", protect as any, uploadProjectImage as any);
+router.post("/reorder", protect as any, reorderProjects as any);
 
 export default router;

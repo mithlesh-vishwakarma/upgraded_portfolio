@@ -1,7 +1,49 @@
 import React, { useState, useEffect } from "react";
-import { Briefcase, GraduationCap, Code2, GitBranch, Loader2, Zap } from 'lucide-react';
+import { 
+  Briefcase, 
+  GraduationCap, 
+  Code2, 
+  GitBranch, 
+  Loader2, 
+  Zap,
+  Server,
+  Layout,
+  Database,
+  Cpu,
+  Wrench,
+  Award,
+  Terminal
+} from 'lucide-react';
 import api from "../api/api";
 import BackgroundPattern from "../components/BackgroundPattern";
+
+const getCategoryIcon = (name: string) => {
+  const normalizedName = name.toLowerCase();
+  
+  if (normalizedName.includes('front')) {
+    return Layout;
+  }
+  if (normalizedName.includes('back') || normalizedName.includes('api')) {
+    return Server;
+  }
+  if (normalizedName.includes('database') || normalizedName.includes('db')) {
+    return Database;
+  }
+  if (normalizedName.includes('language') || normalizedName.includes('programming') || normalizedName.includes('code')) {
+    return Terminal;
+  }
+  if (normalizedName.includes('ai') || normalizedName.includes('artificial') || normalizedName.includes('machine learning')) {
+    return Cpu;
+  }
+  if (normalizedName.includes('tool') || normalizedName.includes('devops') || normalizedName.includes('git') || normalizedName.includes('cloud')) {
+    return Wrench;
+  }
+  if (normalizedName.includes('soft') || normalizedName.includes('interpersonal') || normalizedName.includes('skill')) {
+    return Award;
+  }
+  
+  return Code2; // Default fallback icon
+};
 
 const AboutPage = () => {
   const [activeTab, setActiveTab] = useState('experience');
@@ -132,8 +174,8 @@ const AboutPage = () => {
                             {exp.company}
                           </div>
                         </div>
-                        <div className="text-blue-400 font-black text-xs uppercase tracking-widest mt-2 md:mt-0 flex items-center gap-2">
-                          <GitBranch className="w-4 h-4" />
+                        <div className="text-blue-400 font-black text-[10px] uppercase tracking-widest mt-2 md:mt-0 flex items-center gap-1.5 opacity-80 border border-blue-400/20 px-2.5 py-1 rounded-lg bg-blue-500/5">
+                          <GitBranch className="w-3.5 h-3.5" />
                           {exp.duration}
                         </div>
                       </div>
@@ -160,27 +202,30 @@ const AboutPage = () => {
               {activeTab === 'skills' && (
                 <div className="animate-in fade-in slide-in-from-bottom-5 duration-500">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                    {skillsData.categories.map((cat) => (
-                      <div key={cat.id} className="bg-white/5 rounded-[32px] p-10 border border-white/10 hover:border-yellow-400/20 transition-all duration-300 group shadow-xl">
-                        <div className="flex items-center gap-4 mb-8">
-                          <div className="p-3 bg-yellow-400/10 rounded-2xl border border-yellow-400/20 group-hover:scale-110 transition-transform">
-                            <Code2 className="w-6 h-6 text-yellow-400" />
-                          </div>
-                          <h3 className="text-xl font-black text-yellow-400 uppercase tracking-wider">{cat.name}</h3>
-                        </div>
-                        <div className="flex flex-wrap gap-3">
-                          {cat.skills.map((skill: any) => (
-                            <div
-                              key={skill.name}
-                              className="bg-white/5 text-gray-300 px-4 py-2.5 rounded-xl text-xs font-bold border border-white/5 hover:border-yellow-400/30 hover:text-yellow-400 transition-all duration-300 cursor-default flex items-center gap-2 hover:-translate-y-1 shadow-lg"
-                            >
-                              <div className="w-1.5 h-1.5 rounded-full bg-yellow-400 shadow-[0_0_8px_rgba(251,191,36,0.5)]"></div>
-                              <span className="uppercase tracking-widest text-[10px]">{skill.name}</span>
+                    {skillsData.categories.map((cat) => {
+                      const CategoryIcon = getCategoryIcon(cat.name);
+                      return (
+                        <div key={cat.id} className="bg-white/5 rounded-[32px] p-10 border border-white/10 hover:border-yellow-400/20 transition-all duration-300 group shadow-xl">
+                          <div className="flex items-center gap-4 mb-8">
+                            <div className="p-3 bg-yellow-400/10 rounded-2xl border border-yellow-400/20 group-hover:scale-110 transition-transform">
+                              <CategoryIcon className="w-6 h-6 text-yellow-400" />
                             </div>
-                          ))}
+                            <h3 className="text-xl font-black text-yellow-400 uppercase tracking-wider">{cat.name}</h3>
+                          </div>
+                          <div className="flex flex-wrap gap-3">
+                            {cat.skills.map((skill: any) => (
+                              <div
+                                key={skill.name}
+                                className="bg-white/5 text-gray-300 px-4 py-2.5 rounded-xl text-xs font-bold border border-white/5 hover:border-yellow-400/30 hover:text-yellow-400 transition-all duration-300 cursor-default flex items-center gap-2 hover:-translate-y-1 shadow-lg"
+                              >
+                                <div className="w-1.5 h-1.5 rounded-full bg-yellow-400 shadow-[0_0_8px_rgba(251,191,36,0.5)]"></div>
+                                <span className="uppercase tracking-widest text-[10px]">{skill.name}</span>
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
 
                   {/* Extra Skills Section */}
