@@ -1,11 +1,11 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { 
-  LayoutDashboard, 
-  Briefcase, 
-  GraduationCap, 
-  Code2, 
-  FolderGit2, 
-  LogOut 
+import {
+  LayoutDashboard,
+  Briefcase,
+  GraduationCap,
+  Code2,
+  FolderGit2,
+  LogOut
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -35,11 +35,10 @@ const Sidebar = () => {
           <NavLink
             key={item.path}
             to={item.path}
-            className={({ isActive }) => 
-              `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
-                isActive 
-                  ? "bg-slate-900 text-white shadow-md shadow-slate-200" 
-                  : "text-gray-500 hover:bg-gray-50 hover:text-slate-900"
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${isActive
+                ? "bg-slate-900 text-white shadow-md shadow-slate-200"
+                : "text-gray-500 hover:bg-gray-50 hover:text-slate-900"
               }`
             }
           >

@@ -7,7 +7,7 @@ const AboutPage = () => {
   const [activeTab, setActiveTab] = useState('experience');
   const [isLoaded, setIsLoaded] = useState(false);
   const [loading, setLoading] = useState(true);
-  
+
   const [educationData, setEducationData] = useState<any[]>([]);
   const [experienceData, setExperienceData] = useState<any[]>([]);
   const [skillsData, setSkillsData] = useState<{ categories: any[], extra_skills: any[] }>({ categories: [], extra_skills: [] });
@@ -38,7 +38,7 @@ const AboutPage = () => {
   return (
     <div className="min-h-screen text-white font-roboto relative">
       <BackgroundPattern />
-      
+
       <div className="max-w-6xl mx-auto px-6 pt-28 pb-16 relative z-10">
         {/* Header Section */}
         <div
@@ -58,7 +58,7 @@ const AboutPage = () => {
             <div className="flex space-x-1">
               {[
                 { id: 'experience', label: 'Experience', icon: Briefcase },
-                { id: 'education', label: 'Education', icon: GraduationCap },
+                { id: 'education', label: 'Education & Cirtification', icon: GraduationCap },
                 { id: 'skills', label: 'Skills', icon: Code2 }
               ].map(({ id, label, icon: Icon }) => (
                 <button
@@ -78,8 +78,8 @@ const AboutPage = () => {
         <div className="bg-white/5 backdrop-blur-xl rounded-[40px] p-8 md:p-12 border border-white/10 shadow-2xl min-h-[600px] relative overflow-hidden">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-40 gap-4">
-               <Loader2 className="w-12 h-12 text-yellow-500 animate-spin" />
-               <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Accessing Chronicles...</p>
+              <Loader2 className="w-12 h-12 text-yellow-500 animate-spin" />
+              <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Accessing Chronicles...</p>
             </div>
           ) : (
             <>
@@ -99,12 +99,12 @@ const AboutPage = () => {
                             {edu.title}
                           </h3>
                           <div className="text-blue-400 font-bold text-lg mb-3 flex items-center gap-2">
-                             <GraduationCap className="w-5 h-5" />
-                             {edu.institution}
+                            <GraduationCap className="w-5 h-5" />
+                            {edu.institution}
                           </div>
                         </div>
                         <div className="bg-green-500/10 text-green-400 px-4 py-2 rounded-2xl border border-green-500/20 font-black text-[10px] uppercase tracking-widest mt-4 md:mt-0 shadow-inner">
-                           {edu.grade}
+                          {edu.grade}
                         </div>
                       </div>
                       <p className="text-gray-400 leading-relaxed font-medium italic">"{edu.description}"</p>
@@ -128,13 +128,13 @@ const AboutPage = () => {
                         <div>
                           <h3 className="text-2xl font-black text-yellow-400 mb-1 group-hover:scale-105 transition-transform origin-left">{exp.role}</h3>
                           <div className="text-white font-bold text-lg flex items-center gap-2">
-                             <Briefcase className="w-5 h-5 text-gray-500" />
-                             {exp.company}
+                            <Briefcase className="w-5 h-5 text-gray-500" />
+                            {exp.company}
                           </div>
                         </div>
                         <div className="text-blue-400 font-black text-xs uppercase tracking-widest mt-2 md:mt-0 flex items-center gap-2">
-                           <GitBranch className="w-4 h-4" />
-                           {exp.duration}
+                          <GitBranch className="w-4 h-4" />
+                          {exp.duration}
                         </div>
                       </div>
 
@@ -186,12 +186,12 @@ const AboutPage = () => {
                   {/* Extra Skills Section */}
                   {skillsData.extra_skills.length > 0 && (
                     <div className="mt-16">
-                       <div className="flex items-center gap-4 mb-8 px-2">
-                          <Zap className="w-5 h-5 text-blue-400" />
-                          <h3 className="text-lg font-black uppercase tracking-widest text-gray-400">Ancillary Proficiencies</h3>
-                          <div className="h-px flex-1 bg-white/5"></div>
-                       </div>
-                       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                      <div className="flex items-center gap-4 mb-8 px-2">
+                        <Zap className="w-5 h-5 text-blue-400" />
+                        <h3 className="text-lg font-black uppercase tracking-widest text-gray-400">Ancillary Proficiencies</h3>
+                        <div className="h-px flex-1 bg-white/5"></div>
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         {skillsData.extra_skills.map((skill: any) => (
                           <div
                             key={skill.id}
@@ -210,7 +210,7 @@ const AboutPage = () => {
           )}
         </div>
       </div>
-      
+
       {/* Background Decorations */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-1/4 -right-40 w-96 h-96 bg-yellow-400/10 rounded-full blur-[120px] animate-pulse"></div>
