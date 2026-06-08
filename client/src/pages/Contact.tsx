@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import BackgroundPattern from "../components/BackgroundPattern";
 import Magnet from '../components/Magnet';
+import { useToast } from "../context/ToastContext";
+
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -11,6 +13,7 @@ export default function ContactPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const { showToast } = useToast();
 
   useEffect(() => {
     setIsLoaded(true);
@@ -51,7 +54,7 @@ export default function ContactPage() {
       const result = await response.json();
 
       if (result.success) {
-        alert("Thank you for your message ! I'll get back to you soon.");
+        showToast("Thank you for your message! I'll get back to you soon.", "success");
         setFormData({
           fullName: "",
           email: "",
@@ -59,11 +62,11 @@ export default function ContactPage() {
           message: "",
         });
       } else {
-        alert("Something went wrong. Please try again later.");
+        showToast("Something went wrong. Please try again later.", "error");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Error submitting the form. Please check your connection.");
+      showToast("Error submitting the form. Please check your connection.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -75,9 +78,8 @@ export default function ContactPage() {
       <div className="max-w-6xl mx-auto px-6 pt-28 pb-12">
         {/* Header Section */}
         <div
-          className={`text-center mb-16 transition-all duration-1000 transform ${
-            isLoaded ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-          }`}
+          className={`text-center mb-16 transition-all duration-1000 transform ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+            }`}
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent animate-pulse">
             Let's Connect !
@@ -91,18 +93,16 @@ export default function ContactPage() {
 
         {/* Main Content - Cards & Form */}
         <div
-          className={`grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12 transition-all duration-1000 transform ${
-            isLoaded ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"
-          }`}
+          className={`grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12 transition-all duration-1000 transform ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"
+            }`}
           style={{ transitionDelay: "0.3s" }}
         >
           {/* Contact Cards - Left Side */}
           <div className="space-y-6">
             {/* Email Card */}
             <div
-              className={`group bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 text-center backdrop-blur-sm hover:bg-yellow-500/20 hover:border-yellow-500/50 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-400/20 transition-all duration-500 transform ${
-                isLoaded ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0'
-              }`}
+              className={`group bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 text-center backdrop-blur-sm hover:bg-yellow-500/20 hover:border-yellow-500/50 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-400/20 transition-all duration-500 transform ${isLoaded ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0'
+                }`}
               style={{ transitionDelay: '0.1s' }}
             >
               <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 group-hover:scale-110 transition-all duration-100">
@@ -130,9 +130,8 @@ export default function ContactPage() {
 
             {/* Phone Card */}
             <div
-              className={`group bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 text-center backdrop-blur-sm hover:bg-yellow-500/20 hover:border-yellow-500/50 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-400/20 transition-all duration-500 transform ${
-                isLoaded ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0'
-              }`}
+              className={`group bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 text-center backdrop-blur-sm hover:bg-yellow-500/20 hover:border-yellow-500/50 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-400/20 transition-all duration-500 transform ${isLoaded ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0'
+                }`}
               style={{ transitionDelay: '0.1s' }}
             >
               <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 group-hover:scale-110 transition-all duration-100">
@@ -160,9 +159,8 @@ export default function ContactPage() {
 
             {/* Location Card */}
             <div
-              className={`group bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 text-center backdrop-blur-sm hover:bg-yellow-500/20 hover:border-yellow-500/50 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-400/20 transition-all duration-500 transform ${
-                isLoaded ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0'
-              }`}
+              className={`group bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 text-center backdrop-blur-sm hover:bg-yellow-500/20 hover:border-yellow-500/50 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-400/20 transition-all duration-500 transform ${isLoaded ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0'
+                }`}
               style={{ transitionDelay: '0.1s' }}
             >
               <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 group-hover:scale-110 transition-all duration-100">
@@ -190,7 +188,7 @@ export default function ContactPage() {
                 Location
               </h3>
               <p className="text-slate-300 text-sm group-hover:text-white transition-colors duration-100">
-                43-44, Mahadev Nagar Society, Behind Janta Medical, Dindoli, Gujarat, Surat-394210
+                Surat, Gujarat - 394210
               </p>
             </div>
           </div>
@@ -255,48 +253,48 @@ export default function ContactPage() {
                 </div>
 
                 <div className="text-center">
-                    <Magnet padding={100} disabled={false} magnetStrength={20}>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 font-semibold rounded-full hover:from-yellow-500 hover:to-yellow-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-yellow-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transition-all duration-100 whitespace-nowrap"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <svg
-                          className="animate-spin w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          />
-                        </svg>
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="1.50"
-                            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                          />
-                        </svg>
-                        Send Message
-                      </>
-                    )}
-                  </button>
+                  <Magnet padding={100} disabled={false} magnetStrength={20}>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 font-semibold rounded-full hover:from-yellow-500 hover:to-yellow-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-yellow-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transition-all duration-100 whitespace-nowrap"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <svg
+                            className="animate-spin w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            />
+                          </svg>
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="1.50"
+                              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                            />
+                          </svg>
+                          Send Message
+                        </>
+                      )}
+                    </button>
                   </Magnet>
                 </div>
               </form>
@@ -306,10 +304,9 @@ export default function ContactPage() {
 
 
         {/* Map Section */}
-        <div
-          className={`bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-white/8 hover:border-white/20 transition-all duration-500 transform shadow-[0_0_15px_#6b5815,0_0_30px_#6b5815] rounded-full${
-            isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
-          }`}
+        {/* <div
+          className={`bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-white/8 hover:border-white/20 transition-all duration-500 transform shadow-[0_0_15px_#6b5815,0_0_30px_#6b5815] rounded-full${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+            }`}
           style={{ transitionDelay: '1.1s' }}
         >
           <h3 className="text-2xl font-bold text-yellow-400 mb-4 text-center hover:text-yellow-300 transition-colors duration-100 ">
@@ -327,7 +324,7 @@ export default function ContactPage() {
               className="group-hover:scale-105 transition-transform duration-500"
             ></iframe>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
