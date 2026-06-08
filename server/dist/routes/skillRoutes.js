@@ -15,4 +15,7 @@ router.delete("/extra/:id", authMiddleware_1.protect, skillController_1.deleteEx
 router.post("/categories", authMiddleware_1.protect, skillController_1.createCategory);
 router.put("/categories/:id", authMiddleware_1.protect, skillController_1.updateCategory);
 router.delete("/categories/:id", authMiddleware_1.protect, skillController_1.deleteCategory);
+router.post("/categories/reorder", authMiddleware_1.protect, skillController_1.reorderCategories);
+// Skills reorder
+router.post("/reorder", authMiddleware_1.protect, skillController_1.reorderSkills);
 exports.default = router;
