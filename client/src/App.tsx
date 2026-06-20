@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import BackgroundPattern from "./components/BackgroundPattern";
 
 // Public Pages
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -11,7 +12,6 @@ const Contact = lazy(() => import("./pages/Contact"));
 const OrdinaryThings = lazy(() => import("./pages/OrdinaryThings"));
 const About = lazy(() => import("./pages/About"));
 const ComingSoon = lazy(() => import("./components/ComingSoon"));
-const BackgroundPattern = lazy(() => import("./components/BackgroundPattern"));
 const ResumeViewerPage = lazy(() => import("./pages/ResumeViewerPage"));
 const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
 
