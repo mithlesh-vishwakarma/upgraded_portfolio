@@ -22,9 +22,17 @@ app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 // API Routes
 app.use("/admin", authRoutes);
 app.use("/api/admin", authRoutes);
+
+app.use("/projects", projectRoutes);
 app.use("/api/projects", projectRoutes);
+
+app.use("/experience", experienceRoutes);
 app.use("/api/experience", experienceRoutes);
+
+app.use("/education", educationRoutes);
 app.use("/api/education", educationRoutes);
+
+app.use("/skills", skillRoutes);
 app.use("/api/skills", skillRoutes);
 
 app.get("/", (_req, res) => {

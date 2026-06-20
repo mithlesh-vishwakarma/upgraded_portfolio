@@ -22,9 +22,13 @@ app.use("/uploads", express_1.default.static(path_1.default.join(process.cwd(), 
 // API Routes
 app.use("/admin", authRoutes_1.default);
 app.use("/api/admin", authRoutes_1.default);
+app.use("/projects", projectRoutes_1.default);
 app.use("/api/projects", projectRoutes_1.default);
+app.use("/experience", experienceRoutes_1.default);
 app.use("/api/experience", experienceRoutes_1.default);
+app.use("/education", educationRoutes_1.default);
 app.use("/api/education", educationRoutes_1.default);
+app.use("/skills", skillRoutes_1.default);
 app.use("/api/skills", skillRoutes_1.default);
 app.get("/", (_req, res) => {
     res.send("Portfolio API running");
