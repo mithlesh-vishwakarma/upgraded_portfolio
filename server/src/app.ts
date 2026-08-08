@@ -9,14 +9,15 @@ import projectRoutes from "./routes/projectRoutes";
 import experienceRoutes from "./routes/experienceRoutes";
 import educationRoutes from "./routes/educationRoutes";
 import skillRoutes from "./routes/skillRoutes";
+import resumeRoutes from "./routes/resumeRoutes";
 
 dotenv.config();
 
 const app = express();
 
 app.use(cors());
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ limit: "10mb", extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // API Routes
@@ -34,6 +35,9 @@ app.use("/api/education", educationRoutes);
 
 app.use("/skills", skillRoutes);
 app.use("/api/skills", skillRoutes);
+
+app.use("/resume", resumeRoutes);
+app.use("/api/resume", resumeRoutes);
 
 app.get("/", (_req, res) => {
   res.send("Portfolio API running");

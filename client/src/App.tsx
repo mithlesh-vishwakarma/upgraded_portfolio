@@ -24,6 +24,7 @@ const ProjectManager = lazy(() => import("./admin/pages/ProjectManager"));
 const ExperienceManager = lazy(() => import("./admin/pages/ExperienceManager"));
 const EducationManager = lazy(() => import("./admin/pages/EducationManager"));
 const SkillManager = lazy(() => import("./admin/pages/SkillManager"));
+const ResumeManager = lazy(() => import("./admin/pages/ResumeManager"));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -70,6 +71,7 @@ const AppContent = () => {
               <Route path="experience" element={<ExperienceManager />} />
               <Route path="education" element={<EducationManager />} />
               <Route path="skills" element={<SkillManager />} />
+              <Route path="resume" element={<ResumeManager />} />
             </Route>
           </Routes>
         </Suspense>

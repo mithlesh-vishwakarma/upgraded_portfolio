@@ -7,65 +7,53 @@ const Toast: React.FC = () => {
   const { toasts, removeToast } = useToast();
 
   return (
-    <div className="fixed bottom-8 right-8 z-[9999] flex flex-col gap-4 max-w-md w-full pointer-events-none">
+    <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 max-w-sm w-full pointer-events-none px-4 sm:px-0">
       <AnimatePresence mode="popLayout">
-        {toasts.map((toast) => (
-          <motion.div
-            key={toast.id}
-            layout
-            initial={{ opacity: 0, x: 50, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, x: 0, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, x: 20, transition: { duration: 0.2 } }}
-            className="pointer-events-auto"
-          >
-            <div className={`
-              relative overflow-hidden rounded-3xl p-5 shadow-2xl backdrop-blur-xl border
-              ${toast.type === "success" ? "bg-green-500/10 border-green-500/20 text-green-600" : ""}
-              ${toast.type === "error" ? "bg-red-500/10 border-red-500/20 text-red-600" : ""}
-              ${toast.type === "info" ? "bg-blue-500/10 border-blue-500/20 text-blue-600" : ""}
-            `}>
-              {/* Progress bar background */}
-              <motion.div 
-                initial={{ width: "100%" }}
-                animate={{ width: "0%" }}
-                transition={{ duration: 5, ease: "linear" }}
-                className={`absolute bottom-0 left-0 h-1 
-                  ${toast.type === "success" ? "bg-green-500" : ""}
-                  ${toast.type === "error" ? "bg-red-500" : ""}
-                  ${toast.type === "info" ? "bg-blue-500" : ""}
-                `}
-              />
+        {toasts.map((toast) => {
+          const isError = toast.type === "error";
+          const isSuccess = toast.type === "success";
 
-              <div className="flex items-start gap-4">
-                <div className={`p-2 rounded-2xl 
-                  ${toast.type === "success" ? "bg-green-500 text-white shadow-lg shadow-green-500/20" : ""}
-                  ${toast.type === "error" ? "bg-red-500 text-white shadow-lg shadow-red-500/20" : ""}
-                  ${toast.type === "info" ? "bg-blue-500 text-white shadow-lg shadow-blue-500/20" : ""}
-                `}>
-                  {toast.type === "success" && <CheckCircle2 className="w-5 h-5" />}
-                  {toast.type === "error" && <AlertCircle className="w-5 h-5" />}
-                  {toast.type === "info" && <Info className="w-5 h-5" />}
+          return (
+            <motion.div
+              key={toast.id}
+              layout
+              initial={{ opacity: 0, x: 40, y: 15 }}
+              animate={{ opacity: 1, x: 0, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, x: 20, transition: { duration: 0.15 } }}
+              className="pointer-events-auto"
+            >
+              <div className="relative overflow-hidden bg-white border border-gray-200 p-4 rounded-2xl shadow-xl flex items-center gap-3">
+                {/* Icon */}
+                <div className="shrink-0">
+                  {isSuccess && <CheckCircle2 className="w-5 h-5 text-green-600" />}
+                  {isError && <AlertCircle className="w-5 h-5 text-red-600" />}
+                  {!isSuccess && !isError && <Info className="w-5 h-5 text-blue-600" />}
                 </div>
 
-                <div className="flex-1 pt-1">
-                  <h4 className="font-black text-xs uppercase tracking-widest opacity-50 mb-1">
-                    {toast.type === "error" ? "System Failure" : toast.type === "success" ? "Success Operation" : "Notification"}
-                  </h4>
-                  <p className="font-bold text-sm leading-relaxed">
-                    {toast.message}
-                  </p>
-                </div>
-
-                <button 
-                  onClick={() => removeToast(toast.id)}
-                  className="p-1 hover:bg-black/5 rounded-lg transition-colors"
+                {/* Simple Message */}
+                <p
+                  className={`flex-1 text-sm font-semibold leading-snug ${isSuccess
+                    ? "text-green-600"
+                    : isError
+                      ? "text-red-600"
+                      : "text-slate-700"
+                    }`}
                 >
-                  <X className="w-4 h-4 opacity-50" />
+                  {toast.message}
+                </p>
+
+                {/* Close Button */}
+                <button
+                  onClick={() => removeToast(toast.id)}
+                  className="shrink-0 p-1 text-gray-400 hover:text-gray-600 rounded-lg transition-colors cursor-pointer"
+                  aria-label="Close notification"
+                >
+                  <X className="w-4 h-4" />
                 </button>
               </div>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          );
+        })}
       </AnimatePresence>
     </div>
   );

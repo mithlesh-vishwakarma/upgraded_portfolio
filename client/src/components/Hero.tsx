@@ -1,12 +1,36 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import ChangingText from "./ChangingText";
 import ProfilePic1 from "../assets/profile-img-cutout.png";
-import Magnet from './Magnet'
+import Magnet from './Magnet';
+import api from "../api/api";
+import { useToast } from "../context/ToastContext";
 
 const MotionLink = motion.create(Link);
+const MotionButton = motion.button;
 
 const Hero = () => {
+  const { showToast } = useToast();
+  const [resumeUrl, setResumeUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    api.get("/resume")
+      .then((res: any) => {
+        if (res.data?.resumeUrl) {
+          setResumeUrl(res.data.resumeUrl);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleViewResume = () => {
+    if (resumeUrl) {
+      window.open(resumeUrl, "_blank", "noopener,noreferrer");
+    } else {
+      showToast("My resume will be updated and uploaded shortly. Please check back soon!", "info");
+    }
+  };
   return (
     <div className="relative flex items-center justify-center p-4 md:p-8 pt-32 pb-24 md:pt-40 md:pb-18">
 
@@ -198,8 +222,8 @@ const Hero = () => {
 
               {/* Button 2 */}
               <Magnet padding={100} disabled={false} magnetStrength={20}>
-                <MotionLink
-                  to="/resume-mithlesh"
+                <MotionButton
+                  onClick={handleViewResume}
                   className="relative inline-flex border border-yellow-500 items-center overflow-hidden px-6 md:px-8 py-3 rounded-full font-semibold group cursor-pointer"
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
@@ -235,7 +259,7 @@ const Hero = () => {
                       />
                     </motion.svg>
                   </motion.span>
-                </MotionLink>
+                </MotionButton>
               </Magnet>
             </div>
 

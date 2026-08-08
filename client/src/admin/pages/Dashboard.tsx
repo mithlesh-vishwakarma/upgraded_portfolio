@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../../api/api";
-import { FolderGit2, Briefcase, GraduationCap, Code2, ArrowUpRight, TrendingUp, Users, Clock } from "lucide-react";
+import { FolderGit2, Briefcase, GraduationCap, Code2, TrendingUp } from "lucide-react";
 
 const Dashboard = () => {
     const [stats, setStats] = useState({
@@ -67,52 +67,6 @@ const Dashboard = () => {
                         <p className="text-3xl font-black text-slate-900 tracking-tight">{card.value}</p>
                     </div>
                 ))}
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
-                    <div className="flex items-center justify-between mb-8">
-                        <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
-                             System Activity
-                        </h3>
-                        <button className="text-yellow-500 font-bold text-sm flex items-center gap-1 hover:gap-2 transition-all">
-                            View All <ArrowUpRight className="w-4 h-4" />
-                        </button>
-                    </div>
-                    
-                    <div className="space-y-6">
-                        {[
-                            { title: "Project 'Sarda Chemical' updated", time: "2 hours ago", icon: Clock },
-                            { title: "New Skill 'Supabase' added", time: "5 hours ago", icon: Code2 },
-                            { title: "Education details refreshed", time: "1 day ago", icon: GraduationCap },
-                        ].map((item, idx) => (
-                            <div key={idx} className="flex items-center justify-between p-4 bg-gray-50/50 rounded-2xl border border-transparent hover:border-gray-200 transition-all cursor-pointer">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-slate-400">
-                                        <item.icon className="w-5 h-5" />
-                                    </div>
-                                    <div>
-                                        <p className="font-bold text-slate-700 text-sm">{item.title}</p>
-                                        <p className="text-xs text-gray-400 font-medium">{item.time}</p>
-                                    </div>
-                                </div>
-                                <ArrowUpRight className="w-4 h-4 text-gray-300" />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="bg-slate-900 text-white rounded-3xl p-8 relative overflow-hidden shadow-2xl">
-                   <div className="relative z-10">
-                        <Users className="w-12 h-12 text-yellow-400 mb-6" />
-                        <h3 className="text-2xl font-black mb-4 tracking-tight leading-tight">Professional Portfolio Status</h3>
-                        <p className="text-slate-400 text-sm font-medium leading-relaxed mb-8">Your portfolio is currently live and synchronized with Supabase. All management tools are active.</p>
-                        <button className="w-full bg-white text-slate-900 font-black py-4 rounded-2xl hover:bg-yellow-400 transition-colors">
-                            Backup Database
-                        </button>
-                   </div>
-                   <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-yellow-400/10 rounded-full blur-3xl"></div>
-                </div>
             </div>
         </div>
     );
