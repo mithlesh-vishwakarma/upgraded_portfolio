@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config(); // MUST be first because it should be in before any other imports, so that process.env is populated
 
-import app from "./src/app.ts";
+import app from "./src/app.js";
 
 const PORT = process.env.PORT || 5000;
 
