@@ -43,7 +43,6 @@ const Hero = () => {
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
           >
-            {/* Animated Background Shape */}
             <motion.div
               className="absolute -left-1 -top-1 sm:-left-2 sm:-top-2 md:-left-5 md:-top-5 w-36 h-40 sm:w-40 sm:h-44 md:w-64 md:h-60 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-tr-3xl"
               initial={{ scale: 0, rotate: -10 }}
@@ -70,16 +69,15 @@ const Hero = () => {
               />
             </motion.div>
 
-            {/* Profile Image (LCP Prioritized) */}
+            {/* Profile Image */}
             <motion.div
               className="relative z-20 w-40 h-40 sm:w-44 sm:h-44 md:w-64 md:h-56 bg-gray-800 rounded-tr-3xl overflow-visible shadow-[0_0_15px_#6b5815,0_0_30px_#6b5815] mx-auto"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-gray-700 to-gray-900 rounded-tr-3xl"></div>
 
-              {/* LCP Image optimized with fetchpriority high and loading eager */}
               <img
                 src={ProfilePic1}
-                alt="Profile Picture of Mithlesh Vishwakarma - OrdinaryCoder"
+                alt="Mithlesh Vishwakarma - Full Stack Software Developer"
                 loading="eager"
                 // @ts-expect-error fetchpriority attribute is supported in modern browsers
                 fetchpriority="high"
@@ -106,19 +104,19 @@ const Hero = () => {
             >
               <div className="w-16 h-1 bg-yellow-500 mb-4 md:mb-6"></div>
 
-              {/* Single Clear Primary H1 Title */}
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-100 mb-4 text-center md:text-left font-merienda leading-tight">
-                Custom Web, SaaS, Shopify & AI Agent Developer in Surat
+              {/* Clean, Elegant H1 Header */}
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-100 mb-2 text-center md:text-left font-merienda leading-tight">
+                Mithlesh Vishwakarma
               </h1>
             </motion.div>
 
             <motion.p
-              className="text-yellow-400 font-semibold text-lg md:text-xl leading-relaxed mb-3 text-center md:text-left"
+              className="text-yellow-400 font-bold text-lg md:text-xl leading-relaxed mb-4 text-center md:text-left"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.6 }}
             >
-              Mithlesh Vishwakarma | OrdinaryCoder
+              Full Stack Engineer &amp; Software Developer
             </motion.p>
 
             <motion.p
@@ -127,27 +125,17 @@ const Hero = () => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.8 }}
             >
-              Helping startups, local businesses, and e-commerce brands in Surat, Gujarat, and worldwide build high-performance web applications, scalable SaaS products, custom Shopify stores, AI agents, and Android applications.
+              Building fast, scalable web applications, SaaS platforms, AI integrations, and modern digital products using React, Node.js, and TypeScript. Based in Surat, Gujarat, India.
             </motion.p>
 
             <ChangingText />
 
-            {/* Prominent CTAs */}
+            {/* Clean Corporate CTAs */}
             <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 mt-8">
               <Magnet padding={100} disabled={false} magnetStrength={20}>
                 <MotionLink
-                  to="/contact"
-                  className="inline-flex bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 font-bold px-7 py-3 rounded-full text-sm md:text-base hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-yellow-400/30"
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Start a Project
-                </MotionLink>
-              </Magnet>
-
-              <Magnet padding={100} disabled={false} magnetStrength={20}>
-                <MotionLink
                   to="/projects"
-                  className="inline-flex border border-yellow-500 text-yellow-400 font-semibold px-7 py-3 rounded-full text-sm md:text-base hover:bg-yellow-500/10 transition-all duration-300"
+                  className="inline-flex bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 font-bold px-7 py-3 rounded-full text-sm md:text-base hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-yellow-400/30"
                   whileTap={{ scale: 0.95 }}
                 >
                   View Projects
@@ -157,11 +145,21 @@ const Hero = () => {
               <Magnet padding={100} disabled={false} magnetStrength={20}>
                 <MotionButton
                   onClick={handleViewResume}
-                  className="inline-flex border border-gray-600 text-gray-300 font-medium px-6 py-3 rounded-full text-sm md:text-base hover:border-yellow-500 hover:text-yellow-400 transition-all duration-300"
+                  className="inline-flex border border-yellow-500 text-yellow-400 font-semibold px-7 py-3 rounded-full text-sm md:text-base hover:bg-yellow-500/10 transition-all duration-300"
                   whileTap={{ scale: 0.95 }}
                 >
                   View Resume
                 </MotionButton>
+              </Magnet>
+
+              <Magnet padding={100} disabled={false} magnetStrength={20}>
+                <MotionLink
+                  to="/contact"
+                  className="inline-flex border border-gray-600 text-gray-300 font-medium px-6 py-3 rounded-full text-sm md:text-base hover:border-yellow-500 hover:text-yellow-400 transition-all duration-300"
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Contact Me
+                </MotionLink>
               </Magnet>
             </div>
           </motion.div>
