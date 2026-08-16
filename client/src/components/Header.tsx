@@ -7,6 +7,7 @@ import GlitchText from './GlitchText';
 interface MenuItem {
   label: string;
   href: string;
+  target?: string;
 }
 
 const MotionLink = motion.create(Link);
@@ -17,7 +18,8 @@ const Header: React.FC = () => {
     { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
     { label: 'Projects', href: '/projects' },
-    { label: 'Arts of OrdinaryCoder', href: '/ordinary-things' },
+    { label: 'Notes', href: 'https://learn.ordinarycoder.com/', target: '_blank' },
+    // { label: 'Arts of OrdinaryCoder', href: '/ordinary-things' },
     { label: 'Articles', href: '/articles' },
   ];
 
@@ -89,6 +91,8 @@ const Header: React.FC = () => {
               <Link
                 key={index}
                 to={item.href}
+                target={item.target}
+                rel={item.target === '_blank' ? 'noopener noreferrer' : undefined}
                 className="px-4 py-2 rounded-full text-white hover:bg-yellow-500 hover:text-gray-900 transition-colors duration-300"
               >
                 {item.label}
@@ -112,6 +116,8 @@ const Header: React.FC = () => {
                   <MotionLink
                     key={index}
                     to={item.href}
+                    target={item.target}
+                    rel={item.target === '_blank' ? 'noopener noreferrer' : undefined}
                     className="flex items-center justify-center py-3 px-4 text-white hover:bg-yellow-500 hover:text-gray-900 rounded-full transition-colors"
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}

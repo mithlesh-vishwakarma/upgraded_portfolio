@@ -9,7 +9,8 @@ const HomePage = lazy(() => import("./pages/HomePage"));
 const Projects = lazy(() => import("./pages/Projects"));
 const Articles = lazy(() => import("./pages/Articles"));
 const Contact = lazy(() => import("./pages/Contact"));
-const OrdinaryThings = lazy(() => import("./pages/OrdinaryThings"));
+// const Notes = lazy(() => import("./pages/Notes"));
+// const OrdinaryThings = lazy(() => import("./pages/OrdinaryThings"));
 const About = lazy(() => import("./pages/About"));
 const ComingSoon = lazy(() => import("./components/ComingSoon"));
 const ResumeViewerPage = lazy(() => import("./pages/ResumeViewerPage"));
@@ -58,7 +59,8 @@ const AppContent = () => {
             <Route path="/projects/:id" element={<ProjectDetail />} />
             <Route path="/articles" element={<Articles />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/ordinary-things" element={<OrdinaryThings />} />
+            {/* <Route path="/notes" element={<Notes />} /> */}
+            {/* <Route path="/ordinary-things" element={<OrdinaryThings />} /> */}
             <Route path="/background" element={<BackgroundPattern />} />
             <Route path="/resume-mithlesh" element={<ResumeViewerPage />} />
 
