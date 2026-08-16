@@ -125,7 +125,7 @@ const Hero = () => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.8 }}
             >
-              Building fast, scalable web applications, SaaS platforms, AI integrations, and modern digital products using React, Node.js, and TypeScript. Based in Surat, Gujarat, India.
+              Building fast, scalable web applications, SaaS platforms, AI integrations, and modern digital products using React, TypeScript, Node.js, Express.js, MongoDB, Tailwind CSS, and Python. Based in Surat, Gujarat, India.
             </motion.p>
 
             <ChangingText />
