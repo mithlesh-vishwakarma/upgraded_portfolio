@@ -275,7 +275,7 @@ export const reorderProjects = async (req: Request, res: Response) => {
   }
 
   try {
-    const promises = orders.map(item => 
+    const promises = orders.map(item =>
       supabase
         .from("projects")
         .update({ sort_order: item.sort_order })

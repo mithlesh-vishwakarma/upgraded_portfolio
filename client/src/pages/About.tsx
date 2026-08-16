@@ -5,7 +5,6 @@ import {
   Code2, 
   GitBranch, 
   Loader2, 
-  Zap,
   Server,
   Layout,
   Database,
@@ -16,6 +15,7 @@ import {
 } from 'lucide-react';
 import api from "../api/api";
 import BackgroundPattern from "../components/BackgroundPattern";
+import SEO from "../components/SEO";
 
 const getCategoryIcon = (name: string) => {
   const normalizedName = name.toLowerCase();
@@ -42,7 +42,7 @@ const getCategoryIcon = (name: string) => {
     return Award;
   }
   
-  return Code2; // Default fallback icon
+  return Code2;
 };
 
 const parseDateStr = (str: string): { date: Date; hasMonth: boolean } | null => {
@@ -114,6 +114,10 @@ const AboutPage = () => {
   const [experienceData, setExperienceData] = useState<any[]>([]);
   const [skillsData, setSkillsData] = useState<{ categories: any[], extra_skills: any[] }>({ categories: [], extra_skills: [] });
 
+  const pageTitle = "About Mithlesh Vishwakarma | Full Stack Developer in Surat | OrdinaryCoder";
+  const pageDescription = "Learn more about Mithlesh Vishwakarma (OrdinaryCoder), a full-stack developer based in Surat, Gujarat, building custom web applications, SaaS products, Shopify stores, and AI agents.";
+  const canonicalUrl = "https://ordinarycoder.com/about";
+
   useEffect(() => {
     setIsLoaded(true);
     fetchAllData();
@@ -139,6 +143,11 @@ const AboutPage = () => {
 
   return (
     <div className="min-h-screen text-white font-roboto relative">
+      <SEO
+        title={pageTitle}
+        description={pageDescription}
+        canonicalUrl={canonicalUrl}
+      />
       <BackgroundPattern />
 
       <div className="max-w-6xl mx-auto px-6 pt-28 pb-16 relative z-10">
@@ -147,10 +156,10 @@ const AboutPage = () => {
           className={`text-center mb-16 transition-all duration-1000 transform ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
         >
           <h1 className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent animate-pulse">
-            The Journey
+            About Mithlesh Vishwakarma
           </h1>
           <p className="text-gray-300 text-sm lg:text-lg leading-relaxed mb-6 md:mb-8 max-w-full">
-            Enthusiastic and self-taught web developer with a strong foundation in front-end technologies and a passion for building responsive, user-friendly websites. Quick learner, dedicated to continuous improvement.
+            Full-stack web developer based in Surat, Gujarat, India. Passionate about building fast, responsive, and reliable digital solutions for startups, e-commerce brands, and growing businesses.
           </p>
         </div>
 
@@ -160,7 +169,7 @@ const AboutPage = () => {
             <div className="flex space-x-1">
               {[
                 { id: 'experience', label: 'Experience', icon: Briefcase },
-                { id: 'education', label: 'Education & Cirtification', icon: GraduationCap },
+                { id: 'education', label: 'Education & Certification', icon: GraduationCap },
                 { id: 'skills', label: 'Skills', icon: Code2 }
               ].map(({ id, label, icon: Icon }) => (
                 <button
@@ -294,39 +303,11 @@ const AboutPage = () => {
                       );
                     })}
                   </div>
-
-                  {/* Extra Skills Section */}
-                  {/* {skillsData.extra_skills.length > 0 && (
-                    <div className="mt-16">
-                      <div className="flex items-center gap-4 mb-8 px-2">
-                        <Zap className="w-5 h-5 text-blue-400" />
-                        <h3 className="text-lg font-black uppercase tracking-widest text-gray-400">Ancillary Proficiencies</h3>
-                        <div className="h-px flex-1 bg-white/5"></div>
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        {skillsData.extra_skills.map((skill: any) => (
-                          <div
-                            key={skill.id}
-                            className="bg-white/5 rounded-2xl p-5 text-center border border-white/5 hover:border-yellow-400/30 transition-all duration-500 hover:-translate-y-2 group shadow-lg"
-                          >
-                            <div className="text-2xl mb-3 group-hover:scale-125 transition-transform">⭐</div>
-                            <div className="font-black text-white text-[10px] uppercase tracking-widest">{skill.name}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )} */}
                 </div>
               )}
             </>
           )}
         </div>
-      </div>
-
-      {/* Background Decorations */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-1/4 -right-40 w-96 h-96 bg-yellow-400/10 rounded-full blur-[120px] animate-pulse"></div>
-        <div className="absolute bottom-1/4 -left-40 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] animate-pulse"></div>
       </div>
     </div>
   );

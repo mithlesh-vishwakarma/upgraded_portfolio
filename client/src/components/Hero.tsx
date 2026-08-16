@@ -31,19 +31,19 @@ const Hero = () => {
       showToast("My resume will be updated and uploaded shortly. Please check back soon!", "info");
     }
   };
-  return (
-    <div className="relative flex items-center justify-center p-4 md:p-8 pt-32 pb-24 md:pt-40 md:pb-18">
 
-      <div className="container mx-auto px-4 md:px-8 py-8 md:py-16 flex items-center justify-center max-w-6xl relative z-10">
+  return (
+    <div className="relative flex items-center justify-center p-4 md:p-8 pt-32 pb-16 md:pt-40 md:pb-18">
+      <div className="container mx-auto px-4 md:px-8 py-8 flex items-center justify-center max-w-6xl relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-center w-full gap-8 md:gap-12">
           {/* Image Section */}
           <motion.div
             className="relative order-1 md:order-1 flex-shrink-0"
-            initial={{ x: -200, opacity: 0 }}
+            initial={{ x: -100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
           >
-            {/* Animated Yellow Background Shape */}
+            {/* Animated Background Shape */}
             <motion.div
               className="absolute -left-1 -top-1 sm:-left-2 sm:-top-2 md:-left-5 md:-top-5 w-36 h-40 sm:w-40 sm:h-44 md:w-64 md:h-60 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-tr-3xl"
               initial={{ scale: 0, rotate: -10 }}
@@ -56,7 +56,6 @@ const Hero = () => {
                 damping: 15
               }}
             >
-              {/* Floating particles animation */}
               <motion.div
                 className="absolute top-4 right-4 w-2 h-2 bg-white/20 rounded-full"
                 animate={{
@@ -69,200 +68,102 @@ const Hero = () => {
                   ease: "easeInOut"
                 }}
               />
-              <motion.div
-                className="absolute bottom-8 left-6 w-1.5 h-1.5 bg-white/30 rounded-full"
-                animate={{
-                  y: [10, -10, 10],
-                  x: [5, -5, 5]
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 1
-                }}
-              />
-              <motion.div
-                className="absolute top-1/2 left-2 w-1 h-1 bg-white/25 rounded-full"
-                animate={{
-                  scale: [1, 1.5, 1],
-                  opacity: [0.3, 0.8, 0.3]
-                }}
-                transition={{
-                  duration: 2.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.5
-                }}
-              />
             </motion.div>
 
-            {/* Profile Image */}
+            {/* Profile Image (LCP Prioritized) */}
             <motion.div
               className="relative z-20 w-40 h-40 sm:w-44 sm:h-44 md:w-64 md:h-56 bg-gray-800 rounded-tr-3xl overflow-visible shadow-[0_0_15px_#6b5815,0_0_30px_#6b5815] mx-auto"
             >
-              {/* Background gradient box */}
               <div className="absolute inset-0 bg-gradient-to-br from-gray-700 to-gray-900 rounded-tr-3xl"></div>
 
-              {/* Optimized image with lazy loading and async decoding */}
+              {/* LCP Image optimized with fetchpriority high and loading eager */}
               <img
                 src={ProfilePic1}
-                alt="Profile Picture of Mithlesh Vishwakarma"
-                loading="lazy"
-                decoding="async"
+                alt="Profile Picture of Mithlesh Vishwakarma - OrdinaryCoder"
+                loading="eager"
+                // @ts-expect-error fetchpriority attribute is supported in modern browsers
+                fetchpriority="high"
+                decoding="sync"
                 className="absolute bottom-1 left-1/2 -translate-x-1/2 w-[105%] object-contain z-10"
               />
 
-              {/* Decorative glowing border */}
               <div className="absolute inset-0 border-2 border-yellow-400/30 rounded-tr-3xl"></div>
             </motion.div>
           </motion.div>
 
           {/* Content Section */}
           <motion.div
-            className="flex-1 order-2 md:order-2 text-center md:text-center md:ml-8 lg:ml-12 w-full"
-            initial={{ x: 200, opacity: 0 }}
+            className="flex-1 order-2 md:order-2 text-center md:text-left md:ml-8 lg:ml-12 w-full"
+            initial={{ x: 100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            {/* Heading */}
             <motion.div
-              initial={{ y: 50, opacity: 0 }}
+              initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.4 }}
               className="text-center md:text-left flex flex-col items-center md:items-start"
             >
-              <motion.div
-                className="w-16 h-1 bg-yellow-500 mb-4 md:mb-6"
-                initial={{ width: 0 }}
-                animate={{ width: 64 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-              ></motion.div>
+              <div className="w-16 h-1 bg-yellow-500 mb-4 md:mb-6"></div>
 
-              <motion.h2
-                className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-200 mb-2 text-center md:text-left font-merienda"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.8 }}
-              >
-                Mithlesh Vishwakarma
-              </motion.h2>
+              {/* Single Clear Primary H1 Title */}
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-100 mb-4 text-center md:text-left font-merienda leading-tight">
+                Custom Web, SaaS, Shopify & AI Agent Developer in Surat
+              </h1>
             </motion.div>
 
-            {/* Role/Title */}
             <motion.p
-              className="text-gray-400 text-base md:text-lg leading-relaxed mb-4 text-center md:text-left"
-              initial={{ y: 30, opacity: 0 }}
+              className="text-yellow-400 font-semibold text-lg md:text-xl leading-relaxed mb-3 text-center md:text-left"
+              initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.9 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
             >
-              Web Developer | Ordinary Artist | Fitness Enthusiast
+              Mithlesh Vishwakarma | OrdinaryCoder
             </motion.p>
 
-            {/* Description */}
             <motion.p
-              className="text-gray-300 text-sm md:text-base lg:text-lg leading-relaxed mb-6 md:mb-8 text-center md:text-left max-w-full md:max-w-2xl"
-              initial={{ y: 30, opacity: 0 }}
+              className="text-gray-300 text-sm md:text-base leading-relaxed mb-6 text-center md:text-left max-w-2xl"
+              initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 1 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
             >
-              FullStack Web Developer | An Ordinary Coder with a passion for coding,
-              especially frontend, while exploring & working on backend and
-              databases. I combine expertise in accounting, management, and
-              full-stack development. My business experience honed leadership,
-              problem-solving, and efficiency, which now fuel my coding
-              projects.
+              Helping startups, local businesses, and e-commerce brands in Surat, Gujarat, and worldwide build high-performance web applications, scalable SaaS products, custom Shopify stores, AI agents, and Android applications.
             </motion.p>
 
             <ChangingText />
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col md:flex-row justify-center md:justify-start items-center md:items-start gap-4 mt-6 md:mt-8">
-              {/* Button 1 */}
+            {/* Prominent CTAs */}
+            <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 mt-8">
               <Magnet padding={100} disabled={false} magnetStrength={20}>
                 <MotionLink
-                  to="/about"
-                  className="relative inline-flex border border-yellow-500 items-center overflow-hidden px-6 md:px-8 py-3 rounded-full font-semibold group cursor-pointer"
-                  initial={{ y: 30, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 1.1 }}
+                  to="/contact"
+                  className="inline-flex bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 font-bold px-7 py-3 rounded-full text-sm md:text-base hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-yellow-400/30"
                   whileTap={{ scale: 0.95 }}
                 >
-                  <span className="absolute inset-0 w-0 bg-yellow-500 left-0 top-0 transition-all duration-500 ease-out group-hover:w-full"></span>
-                  <span className="relative text-yellow-500 group-hover:text-gray-900 transition-colors duration-300 text-sm md:text-base">
-                    More About Me
-                  </span>
-                  <motion.span
-                    className="relative ml-2 flex items-center"
-                    animate={{ x: 0 }}
-                    whileHover={{ x: 5 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <motion.svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 md:h-6 md:w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      animate={{ x: 0 }}
-                      whileHover={{ x: 3 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                        className="text-yellow-500 group-hover:text-gray-900 transition-colors duration-300"
-                      />
-                    </motion.svg>
-                  </motion.span>
+                  Start a Project
                 </MotionLink>
               </Magnet>
 
-              {/* Button 2 */}
+              <Magnet padding={100} disabled={false} magnetStrength={20}>
+                <MotionLink
+                  to="/projects"
+                  className="inline-flex border border-yellow-500 text-yellow-400 font-semibold px-7 py-3 rounded-full text-sm md:text-base hover:bg-yellow-500/10 transition-all duration-300"
+                  whileTap={{ scale: 0.95 }}
+                >
+                  View Projects
+                </MotionLink>
+              </Magnet>
+
               <Magnet padding={100} disabled={false} magnetStrength={20}>
                 <MotionButton
                   onClick={handleViewResume}
-                  className="relative inline-flex border border-yellow-500 items-center overflow-hidden px-6 md:px-8 py-3 rounded-full font-semibold group cursor-pointer"
-                  initial={{ y: 30, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 1.3 }}
+                  className="inline-flex border border-gray-600 text-gray-300 font-medium px-6 py-3 rounded-full text-sm md:text-base hover:border-yellow-500 hover:text-yellow-400 transition-all duration-300"
                   whileTap={{ scale: 0.95 }}
                 >
-                  <span className="absolute inset-0 w-0 bg-yellow-500 left-0 top-0 transition-all duration-500 ease-out group-hover:w-full"></span>
-                  <span className="relative text-yellow-500 group-hover:text-gray-900 transition-colors duration-300 text-sm md:text-base">
-                    View Resume !
-                  </span>
-                  <motion.span
-                    className="relative ml-2 flex items-center"
-                    animate={{ x: 0 }}
-                    whileHover={{ x: 5 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <motion.svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 md:h-6 md:w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      animate={{ x: 0 }}
-                      whileHover={{ x: 3 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                        className="text-yellow-500 group-hover:text-gray-900 transition-colors duration-300"
-                      />
-                    </motion.svg>
-                  </motion.span>
+                  View Resume
                 </MotionButton>
               </Magnet>
             </div>
-
           </motion.div>
         </div>
       </div>
@@ -271,4 +172,3 @@ const Hero = () => {
 };
 
 export default Hero;
-

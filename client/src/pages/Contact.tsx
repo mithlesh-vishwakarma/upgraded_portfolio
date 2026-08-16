@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import BackgroundPattern from "../components/BackgroundPattern";
 import Magnet from '../components/Magnet';
 import { useToast } from "../context/ToastContext";
-
+import SEO from "../components/SEO";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -14,6 +14,10 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const { showToast } = useToast();
+
+  const pageTitle = "Contact Mithlesh Vishwakarma | OrdinaryCoder - Surat, Gujarat";
+  const pageDescription = "Get in touch with Mithlesh Vishwakarma (OrdinaryCoder) for custom web development, SaaS platforms, Shopify stores, AI agents, or Android app projects in Surat, Gujarat, India.";
+  const canonicalUrl = "https://ordinarycoder.com/contact";
 
   useEffect(() => {
     setIsLoaded(true);
@@ -33,8 +37,8 @@ export default function ContactPage() {
     setIsSubmitting(true);
 
     const formPayload = {
-      access_key: "4108bd75-dcae-46cf-9ae5-39c1e9ae2c65", // Web3Forms Key
-      subject: "New Contact Message from Portfolio",
+      access_key: "4108bd75-dcae-46cf-9ae5-39c1e9ae2c65",
+      subject: "New Contact Message from OrdinaryCoder Portfolio",
       from_name: formData.fullName,
       email: formData.email,
       mobile: formData.mobile,
@@ -73,10 +77,14 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen  text-white font-roboto">
+    <div className="min-h-screen text-white font-roboto">
+      <SEO
+        title={pageTitle}
+        description={pageDescription}
+        canonicalUrl={canonicalUrl}
+      />
       <BackgroundPattern />
       <div className="max-w-6xl mx-auto px-6 pt-28 pb-12">
-        {/* Header Section */}
         <div
           className={`text-center mb-16 transition-all duration-1000 transform ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
             }`}
@@ -85,13 +93,10 @@ export default function ContactPage() {
             Let's Connect !
           </h1>
           <p className="text-gray-300 text-sm lg:text-lg leading-relaxed mb-6 md:mb-8 text-center max-w-full">
-            Have an idea, a question, or a project in mind? I'd love to hear from you.
-            Whether you need a professional website, a custom web app, or just want to
-            explore possibilities, let's connect and make it happen.
+            Have a project concept, custom web application idea, or software requirement? Let's connect and build it together.
           </p>
         </div>
 
-        {/* Main Content - Cards & Form */}
         <div
           className={`grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12 transition-all duration-1000 transform ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"
             }`}
@@ -101,11 +106,10 @@ export default function ContactPage() {
           <div className="space-y-6">
             {/* Email Card */}
             <div
-              className={`group bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 text-center backdrop-blur-sm hover:bg-yellow-500/20 hover:border-yellow-500/50 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-400/20 transition-all duration-500 transform ${isLoaded ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0'
+              className={`group bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 text-center backdrop-blur-sm hover:bg-yellow-500/20 hover:border-yellow-500/50 hover:-translate-y-2 hover:scale-105 transition-all duration-500 transform ${isLoaded ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0'
                 }`}
-              style={{ transitionDelay: '0.1s' }}
             >
-              <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 group-hover:scale-110 transition-all duration-100">
+              <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
                   className="w-6 h-6 text-slate-900"
                   fill="none"
@@ -120,21 +124,20 @@ export default function ContactPage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-yellow-400 mb-2 group-hover:text-yellow-300 transition-colors duration-100">
+              <h3 className="text-xl font-semibold text-yellow-400 mb-2">
                 Email
               </h3>
-              <p className="text-slate-300 text-sm group-hover:text-white transition-colors duration-100">
+              <p className="text-slate-300 text-sm">
                 mithlesh.workplace@gmail.com
               </p>
             </div>
 
             {/* Phone Card */}
             <div
-              className={`group bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 text-center backdrop-blur-sm hover:bg-yellow-500/20 hover:border-yellow-500/50 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-400/20 transition-all duration-500 transform ${isLoaded ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0'
+              className={`group bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 text-center backdrop-blur-sm hover:bg-yellow-500/20 hover:border-yellow-500/50 hover:-translate-y-2 hover:scale-105 transition-all duration-500 transform ${isLoaded ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0'
                 }`}
-              style={{ transitionDelay: '0.1s' }}
             >
-              <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 group-hover:scale-110 transition-all duration-100">
+              <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
                   className="w-6 h-6 text-slate-900"
                   fill="none"
@@ -149,21 +152,20 @@ export default function ContactPage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-yellow-400 mb-2 group-hover:text-yellow-300 transition-colors duration-100">
+              <h3 className="text-xl font-semibold text-yellow-400 mb-2">
                 Phone
               </h3>
-              <p className="text-slate-300 text-sm group-hover:text-white transition-colors duration-100">
+              <p className="text-slate-300 text-sm">
                 +91 9327832747
               </p>
             </div>
 
             {/* Location Card */}
             <div
-              className={`group bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 text-center backdrop-blur-sm hover:bg-yellow-500/20 hover:border-yellow-500/50 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-400/20 transition-all duration-500 transform ${isLoaded ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0'
+              className={`group bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 text-center backdrop-blur-sm hover:bg-yellow-500/20 hover:border-yellow-500/50 hover:-translate-y-2 hover:scale-105 transition-all duration-500 transform ${isLoaded ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0'
                 }`}
-              style={{ transitionDelay: '0.1s' }}
             >
-              <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 group-hover:scale-110 transition-all duration-100">
+              <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
                   className="w-6 h-6 text-slate-900"
                   fill="none"
@@ -184,18 +186,19 @@ export default function ContactPage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-yellow-400 mb-2 group-hover:text-yellow-300 transition-colors duration-100">
+              <h3 className="text-xl font-semibold text-yellow-400 mb-2">
                 Location
               </h3>
-              <p className="text-slate-300 text-sm group-hover:text-white transition-colors duration-100">
-                Surat, Gujarat - 394210
+              <p className="text-slate-300 text-sm">
+                Surat, Gujarat, India - 394210
               </p>
+              {/* TODO: Google Business Profile link will be inserted here when verified */}
             </div>
           </div>
 
           {/* Contact Form */}
           <div className="lg:col-span-2">
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-16 shadow-[0_0_15px_#6b5815,0_0_30px_#6b5815]">
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-8 md:p-12 shadow-[0_0_15px_#6b5815,0_0_30px_#6b5815]">
               <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold text-yellow-400 mb-3">
                   Send a Message
@@ -212,7 +215,7 @@ export default function ContactPage() {
                       value={formData.fullName}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 bg-white/10 border-2 border-white/10 rounded-lg text-white placeholder-slate-400 focus:border-yellow-400 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-yellow-400/30 transition-all duration-100"
+                      className="w-full px-4 py-3 bg-white/10 border-2 border-white/10 rounded-lg text-white placeholder-slate-400 focus:border-yellow-400 focus:outline-none transition-all"
                     />
                   </div>
                   <div>
@@ -223,7 +226,7 @@ export default function ContactPage() {
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 bg-white/10 border-2 border-white/10 rounded-lg text-white placeholder-slate-400 focus:border-yellow-400 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-yellow-400/30 transition-all duration-100"
+                      className="w-full px-4 py-3 bg-white/10 border-2 border-white/10 rounded-lg text-white placeholder-slate-400 focus:border-yellow-400 focus:outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -236,19 +239,19 @@ export default function ContactPage() {
                     value={formData.mobile}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 bg-white/10 border-2 border-white/10 rounded-lg text-white placeholder-slate-400 focus:border-yellow-400 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-yellow-400/30 transition-all duration-100"
+                    className="w-full px-4 py-3 bg-white/10 border-2 border-white/10 rounded-lg text-white placeholder-slate-400 focus:border-yellow-400 focus:outline-none transition-all"
                   />
                 </div>
 
                 <div>
                   <textarea
                     name="message"
-                    placeholder="Your Message"
+                    placeholder="Your Message / Project Details"
                     rows={4}
                     value={formData.message}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 bg-white/10 border-2 border-white/10 rounded-lg text-white placeholder-slate-400 focus:border-yellow-400 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-yellow-400/30 transition-all duration-100 resize-none"
+                    className="w-full px-4 py-3 bg-white/10 border-2 border-white/10 rounded-lg text-white placeholder-slate-400 focus:border-yellow-400 focus:outline-none transition-all resize-none"
                   />
                 </div>
 
@@ -257,43 +260,9 @@ export default function ContactPage() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 font-semibold rounded-full hover:from-yellow-500 hover:to-yellow-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-yellow-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transition-all duration-100 whitespace-nowrap"
+                      className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 font-semibold rounded-full hover:from-yellow-500 hover:to-yellow-600 disabled:opacity-50 transition-all cursor-pointer"
                     >
-                      {isSubmitting ? (
-                        <>
-                          <svg
-                            className="animate-spin w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            />
-                          </svg>
-                          Sending...
-                        </>
-                      ) : (
-                        <>
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="1.50"
-                              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                            />
-                          </svg>
-                          Send Message
-                        </>
-                      )}
+                      {isSubmitting ? "Sending..." : "Send Message"}
                     </button>
                   </Magnet>
                 </div>
@@ -301,30 +270,6 @@ export default function ContactPage() {
             </div>
           </div>
         </div>
-
-
-        {/* Map Section */}
-        {/* <div
-          className={`bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-white/8 hover:border-white/20 transition-all duration-500 transform shadow-[0_0_15px_#6b5815,0_0_30px_#6b5815] rounded-full${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
-            }`}
-          style={{ transitionDelay: '1.1s' }}
-        >
-          <h3 className="text-2xl font-bold text-yellow-400 mb-4 text-center hover:text-yellow-300 transition-colors duration-100 ">
-            Find Me
-          </h3>
-          <div className="w-full h-64 rounded-lg overflow-hidden border border-yellow-500/30 hover:border-yellow-500/50 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-500 group">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3720.8290108661936!2d72.87040527597209!3d21.159201983284195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be04fe4fa05cc79%3A0x1bc4c368ef34094d!2sMahadev%20Nagar-4%20(Krishna)!5e0!3m2!1sen!2sin!4v1756330268060!5m2!1sen!2sin"
-              width="100%"
-              height="100%"
-              style={{ border: 0, filter: 'grayscale(0.8) contrast(1.2)' }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className="group-hover:scale-105 transition-transform duration-500"
-            ></iframe>
-          </div>
-        </div> */}
       </div>
     </div>
   );
