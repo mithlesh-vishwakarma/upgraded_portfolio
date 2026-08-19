@@ -1,17 +1,13 @@
-import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 
 const AdminLayout = () => {
-    const navigate = useNavigate();
+    const token = localStorage.getItem("adminToken");
 
-    useEffect(() => {
-        const token = localStorage.getItem("adminToken");
-        if (!token) {
-            navigate("/admin/login");
-        }
-    }, [navigate]);
+    if (!token) {
+        return <Navigate to="/admin/login" replace />;
+    }
 
     return (
         <div className="flex min-h-screen bg-gray-50/50 font-roboto">
@@ -29,3 +25,4 @@ const AdminLayout = () => {
 };
 
 export default AdminLayout;
+

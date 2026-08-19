@@ -1,9 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import api from "../../api/api";
 import { AlertCircle, ArrowRight, Eye, EyeOff, KeyRound, Loader2, Lock, Mail } from "lucide-react";
 
 const ForgotPassword = () => {
+  const token = localStorage.getItem("adminToken");
+  if (token) {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+
   const [email, setEmail] = useState("");
   const [resetKey, setResetKey] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -14,10 +19,6 @@ const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("adminToken");
-    if (token) navigate("/admin/dashboard");
-  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

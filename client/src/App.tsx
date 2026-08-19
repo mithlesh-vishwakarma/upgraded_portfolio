@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -92,6 +92,7 @@ const AppContent = () => {
             <Route path="/admin/login" element={<AdminWrapper><Login /></AdminWrapper>} />
             <Route path="/admin/forgot-password" element={<AdminWrapper><ForgotPassword /></AdminWrapper>} />
             <Route path="/admin" element={<AdminWrapper><AdminLayout /></AdminWrapper>}>
+              <Route index element={<Navigate to="/admin/dashboard" replace />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="projects" element={<ProjectManager />} />
               <Route path="experience" element={<ExperienceManager />} />
