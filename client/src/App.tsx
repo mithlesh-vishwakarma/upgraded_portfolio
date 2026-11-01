@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import BackgroundPattern from "./components/BackgroundPattern";
+import SplashCursor from "./components/SplashCursor";
 import SEO from "./components/SEO";
 
 // Public Pages
@@ -62,6 +63,16 @@ const AppContent = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {!isAdminPath && <Header />}
+      {!isAdminPath && (
+        <SplashCursor
+          rainbow
+          size={1}
+          force={1}
+          swirl={3}
+          trail={1}
+          clickSplash
+        />
+      )}
       <main className="flex-grow relative">
         {!isAdminPath && <BackgroundPattern />}
 
