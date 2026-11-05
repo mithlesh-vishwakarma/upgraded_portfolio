@@ -2,19 +2,21 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Hero from "../components/Hero";
 import SEO from "../components/SEO";
-import { 
-  Code2, 
-  Layers, 
-  Bot, 
-  ShoppingBag, 
-  ShoppingCart, 
-  Layout, 
-  Smartphone, 
-  ArrowRight, 
-  CheckCircle2, 
-  MapPin, 
+import {
+  Code2,
+  Layers,
+  Bot,
+  ShoppingBag,
+  ShoppingCart,
+  Layout,
+  Smartphone,
+  ArrowRight,
+  CheckCircle2,
+  MapPin,
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  Wrench,
+  BookOpen
 } from "lucide-react";
 import { projects } from "../data/projects";
 
@@ -128,7 +130,7 @@ const HomePage: React.FC = () => {
 
       {/* Main Content Sections */}
       <div className="max-w-6xl mx-auto px-6 py-12 relative z-10 space-y-16">
-        
+
         {/* Location & Brand Statement */}
         <section className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 text-center shadow-xl">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-xs font-semibold mb-4">
@@ -138,8 +140,8 @@ const HomePage: React.FC = () => {
             Engineering Tailored Software for Startups & Growing Businesses
           </h2>
           <p className="text-gray-300 max-w-3xl mx-auto leading-relaxed text-sm md:text-base">
-            I specialize in turning business requirements into production-ready software solutions. 
-            Whether you need a custom web application, a scalable SaaS platform, a Shopify store, an AI agent, or an Android app, 
+            I specialize in turning business requirements into production-ready software solutions.
+            Whether you need a custom web application, a scalable SaaS platform, a Shopify store, an AI agent, or an Android app,
             I build clean, maintainable code focused on performance and business outcomes.
           </p>
         </section>
@@ -182,6 +184,159 @@ const HomePage: React.FC = () => {
           </div>
         </section>
 
+        {/* Independent Products & Open Tools Section */}
+        <section className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 md:p-10 border border-white/10 shadow-xl">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
+            <div>
+              <span className="text-yellow-400 font-bold uppercase tracking-widest text-xs">Self-Built Ecosystem</span>
+              <h2 className="text-2xl md:text-3xl font-bold text-white mt-1">Independent Products & Open Tools</h2>
+            </div>
+            <p className="mt-2 md:mt-0 text-xs md:text-sm text-gray-400 max-w-md">
+              Live web applications and open-access resources built, shipped, and maintained under the OrdinaryCoder ecosystem.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Card 1: OrdinaryTools */}
+            <div className="bg-white/5 rounded-2xl border border-white/10 p-6 md:p-8 flex flex-col justify-between hover:border-yellow-400/40 hover:bg-white/[0.07] transition-all duration-300 group shadow-lg">
+              <div>
+                {/* Header row with icon and live status */}
+                <div className="flex items-center justify-between mb-5">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 bg-yellow-400/10 rounded-xl border border-yellow-400/20 text-yellow-400 group-hover:scale-110 transition-transform">
+                      <Wrench className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold uppercase tracking-wider text-yellow-400 bg-yellow-500/10 px-2.5 py-0.5 rounded-md border border-yellow-500/20">
+                        Web Utility Suite
+                      </span>
+                      <p className="text-[11px] text-gray-400 mt-1 font-mono">tools.ordinarycoder.com</p>
+                    </div>
+                  </div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    Live
+                  </div>
+                </div>
+
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
+                  OrdinaryTools
+                </h3>
+                <p className="text-sm font-medium text-yellow-400/90 mb-3">
+                  100% Client-Side, Privacy-First Browser Tools
+                </p>
+                <p className="text-gray-300 text-sm leading-relaxed mb-6">
+                  A high-speed, zero-friction suite of everyday utilities. All file processing, PDF editing, and conversions run entirely inside your browser's RAM—no files are ever uploaded to a server, guaranteeing complete privacy with zero registration.
+                </p>
+
+                {/* Key feature list */}
+                <div className="space-y-2 mb-6 text-xs text-gray-300">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
+                    <span>In-browser PDF Editor, page merger, splitter, and document annotation</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
+                    <span>Fast media converters, video downloaders, and file management tools</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
+                    <span>Secure password, hash & token generators with zero tracking</span>
+                  </div>
+                </div>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {["100% Client-Side", "Zero Server Uploads", "PDF Suite", "Privacy-First", "No Sign-up"].map((tag, i) => (
+                    <span key={i} className="text-[10px] uppercase font-bold text-gray-300 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <a
+                href="https://tools.ordinarycoder.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 w-full py-3 px-5 rounded-xl bg-yellow-500 text-gray-950 font-bold text-sm hover:bg-yellow-400 transition-colors shadow-lg shadow-yellow-500/10 group-hover:shadow-yellow-500/20"
+              >
+                <span>Launch tools.ordinarycoder.com</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
+
+            {/* Card 2: OrdinaryLearn */}
+            <div className="bg-white/5 rounded-2xl border border-white/10 p-6 md:p-8 flex flex-col justify-between hover:border-yellow-400/40 hover:bg-white/[0.07] transition-all duration-300 group shadow-lg">
+              <div>
+                {/* Header row with icon and live status */}
+                <div className="flex items-center justify-between mb-5">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 bg-yellow-400/10 rounded-xl border border-yellow-400/20 text-yellow-400 group-hover:scale-110 transition-transform">
+                      <BookOpen className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold uppercase tracking-wider text-yellow-400 bg-yellow-500/10 px-2.5 py-0.5 rounded-md border border-yellow-500/20">
+                        Developer Knowledge Hub
+                      </span>
+                      <p className="text-[11px] text-gray-400 mt-1 font-mono">learn.ordinarycoder.com</p>
+                    </div>
+                  </div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium">
+                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                    Live
+                  </div>
+                </div>
+
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
+                  OrdinaryCoder Notes & Learn
+                </h3>
+                <p className="text-sm font-medium text-yellow-400/90 mb-3">
+                  Engineering Notes, Architecture Guides & Tutorials
+                </p>
+                <p className="text-gray-300 text-sm leading-relaxed mb-6">
+                  An open learning portal and technical reference guide for software engineers. Packed with practical notes, architecture breakdowns, clean code patterns, and production cheat sheets across full-stack web and SaaS development.
+                </p>
+
+                {/* Key feature list */}
+                <div className="space-y-2 mb-6 text-xs text-gray-300">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
+                    <span>In-depth full-stack tutorials for React, Node.js, Express & MongoDB</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
+                    <span>Production system design, REST API architecture & auth patterns</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
+                    <span>Quick-reference syntax cheat sheets and battle-tested code snippets</span>
+                  </div>
+                </div>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {["Engineering Notes", "MERN Architecture", "Cheat Sheets", "Open Knowledge", "Free Tutorials"].map((tag, i) => (
+                    <span key={i} className="text-[10px] uppercase font-bold text-gray-300 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <a
+                href="https://learn.ordinarycoder.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 w-full py-3 px-5 rounded-xl bg-white/10 text-white font-bold text-sm hover:bg-yellow-500 hover:text-gray-950 border border-white/15 hover:border-yellow-400 transition-all shadow-lg"
+              >
+                <span>Explore learn.ordinarycoder.com</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+        </section>
+
         {/* Featured Case Studies Section */}
         <section className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 md:p-10 border border-white/10 shadow-xl">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
@@ -198,7 +353,7 @@ const HomePage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projects.filter(p => p.featured || p.projectType === "Freelanced").slice(0, 2).map((project) => (
+            {projects.filter(p => p.id === 1 || p.id === 5).map((project) => (
               <div key={project.id} className="bg-white/5 rounded-2xl border border-white/10 p-6 flex flex-col justify-between hover:border-yellow-400/30 transition-all">
                 <div>
                   <div className="flex items-center justify-between mb-3">
@@ -209,7 +364,7 @@ const HomePage: React.FC = () => {
                   </div>
                   <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
                   <p className="text-gray-300 text-sm leading-relaxed mb-4">{project.description}</p>
-                  
+
                   <div className="flex flex-wrap gap-2 mb-4">
                     {project.technologies.slice(0, 4).map((tech, i) => (
                       <span key={i} className="text-[10px] uppercase font-bold text-gray-300 bg-white/5 border border-white/10 px-2 py-0.5 rounded">

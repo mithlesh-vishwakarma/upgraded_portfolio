@@ -48,12 +48,13 @@ const LoadingFallback = () => (
 import { ToastProvider } from "./context/ToastContext";
 import Toast from "./components/Toast";
 import { ConfirmProvider } from "./context/ConfirmContext";
+import { AdminThemeProvider } from "./admin/context/AdminThemeContext";
 
 const AdminWrapper = ({ children }: { children: React.ReactNode }) => (
-  <>
+  <AdminThemeProvider>
     <SEO title="Admin | OrdinaryCoder" description="Admin portal" noindex={true} />
     {children}
-  </>
+  </AdminThemeProvider>
 );
 
 const AppContent = () => {

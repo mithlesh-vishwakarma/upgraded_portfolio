@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import api from "../../api/api";
-import { AlertCircle, ArrowRight, Eye, EyeOff, KeyRound, Loader2, Lock, Mail } from "lucide-react";
+import { AlertCircle, ArrowRight, Eye, EyeOff, KeyRound, Loader2, Lock, Mail, Sun, Moon } from "lucide-react";
+import { useAdminTheme } from "../context/AdminThemeContext";
 
 const ForgotPassword = () => {
+  const { isDark, toggleTheme } = useAdminTheme();
   const token = localStorage.getItem("adminToken");
   if (token) {
     return <Navigate to="/admin/dashboard" replace />;
@@ -53,7 +55,18 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-6 font-roboto">
+    <div className="min-h-screen bg-white flex items-center justify-center p-6 font-roboto relative">
+      <div className="absolute top-6 right-6">
+        <button
+          onClick={toggleTheme}
+          type="button"
+          title={isDark ? "Switch to Day Mode" : "Switch to Night Mode"}
+          className="flex items-center gap-2 py-2 px-3.5 rounded-2xl border border-gray-200 bg-gray-50 text-slate-700 hover:bg-gray-100 transition-all duration-200 shadow-sm cursor-pointer select-none"
+        >
+          {isDark ? <Moon className="w-4 h-4 text-yellow-400 fill-yellow-400/20" /> : <Sun className="w-4 h-4 text-amber-500 fill-amber-500/20" />}
+          <span className="text-xs font-bold">{isDark ? "Night Mode" : "Day Mode"}</span>
+        </button>
+      </div>
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-3xl shadow-xl shadow-yellow-200 mb-6 text-white rotate-12 hover:rotate-0 transition-transform duration-500">
