@@ -39,6 +39,15 @@ const EducationManager = lazy(() => import("./admin/pages/EducationManager"));
 const SkillManager = lazy(() => import("./admin/pages/SkillManager"));
 const ResumeManager = lazy(() => import("./admin/pages/ResumeManager"));
 
+// Accounting Module (admin only — self-contained under admin/accounts)
+const AccountsOverview = lazy(() => import("./admin/accounts/pages/AccountsOverview"));
+const InvoicesPage = lazy(() => import("./admin/accounts/pages/InvoicesPage"));
+const InvoiceEditorPage = lazy(() => import("./admin/accounts/pages/InvoiceEditorPage"));
+const ExpensesPage = lazy(() => import("./admin/accounts/pages/ExpensesPage"));
+const ClientsPage = lazy(() => import("./admin/accounts/pages/ClientsPage"));
+const ReportsPage = lazy(() => import("./admin/accounts/pages/ReportsPage"));
+const AccountsSettingsPage = lazy(() => import("./admin/accounts/pages/AccountsSettingsPage"));
+
 // Loading fallback component
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -113,6 +122,16 @@ const AppContent = () => {
               <Route path="education" element={<EducationManager />} />
               <Route path="skills" element={<SkillManager />} />
               <Route path="resume" element={<ResumeManager />} />
+
+              {/* Accounting Module — admin only */}
+              <Route path="accounts" element={<AccountsOverview />} />
+              <Route path="accounts/invoices" element={<InvoicesPage />} />
+              <Route path="accounts/invoices/new" element={<InvoiceEditorPage />} />
+              <Route path="accounts/invoices/:id" element={<InvoiceEditorPage />} />
+              <Route path="accounts/expenses" element={<ExpensesPage />} />
+              <Route path="accounts/clients" element={<ClientsPage />} />
+              <Route path="accounts/reports" element={<ReportsPage />} />
+              <Route path="accounts/settings" element={<AccountsSettingsPage />} />
             </Route>
 
             {/* Fallback 404 Route */}

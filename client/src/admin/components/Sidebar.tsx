@@ -6,6 +6,7 @@ import {
   Code2,
   FolderGit2,
   FileText,
+  Calculator,
   LogOut
 } from "lucide-react";
 
@@ -24,6 +25,7 @@ const Sidebar = () => {
     { name: "Education", path: "/admin/education", icon: GraduationCap },
     { name: "Skills", path: "/admin/skills", icon: Code2 },
     { name: "Resume Upload", path: "/admin/resume", icon: FileText },
+    { name: "Accounting", path: "/admin/accounts", icon: Calculator },
   ];
 
   return (
