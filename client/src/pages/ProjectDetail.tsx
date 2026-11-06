@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import api from "../api/api";
+import SEO from "../components/SEO";
 import {
   ArrowLeft,
   ExternalLink,
@@ -25,6 +26,8 @@ interface Project {
   live_url: string;
   github_url?: string;
   project_type?: string;
+  start_date?: string;
+  end_date?: string;
 }
 
 const ProjectDetail: React.FC = () => {
@@ -67,6 +70,24 @@ const ProjectDetail: React.FC = () => {
 
   if (!project) return null;
 
+  const projectTitle = `${toTitleCase(project.name)} Case Study | OrdinaryCoder`;
+  const projectDescription = project.short_description || `Technical case study for ${project.name} built by Mithlesh Vishwakarma (OrdinaryCoder).`;
+  const canonicalUrl = `https://ordinarycoder.com/projects/${project.id}`;
+
+  const projectSchema = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "name": project.name,
+    "description": project.short_description,
+    "url": canonicalUrl,
+    "image": project.image_url || "https://ordinarycoder.com/og-image.jpg",
+    "author": {
+      "@type": "Person",
+      "name": "Mithlesh Vishwakarma",
+      "url": "https://ordinarycoder.com/"
+    }
+  };
+
   const getTechColor = (tech: string) => {
     let hash = 0;
     for (let i = 0; i < tech.length; i++) {
@@ -89,6 +110,14 @@ const ProjectDetail: React.FC = () => {
 
   return (
     <div className="min-h-screen text-white font-roboto pb-20">
+      <SEO
+        title={projectTitle}
+        description={projectDescription}
+        canonicalUrl={canonicalUrl}
+        ogImage={project.image_url || "https://ordinarycoder.com/og-image.jpg"}
+        schema={projectSchema}
+      />
+
       {/* Navigation Header */}
       <div className="max-w-7xl mx-auto px-6 pt-24 md:pt-32 relative z-10">
         <div className="flex items-center justify-between mb-8">
@@ -124,7 +153,7 @@ const ProjectDetail: React.FC = () => {
           {project.image_url ? (
             <img
               src={project.image_url}
-              alt={toTitleCase(project.name)}
+              alt={`${toTitleCase(project.name)} Screenshot Preview`}
               className="w-full h-full object-cover"
             />
           ) : (
@@ -337,7 +366,7 @@ const ProjectDetail: React.FC = () => {
                 >
                   <div className="relative h-48 overflow-hidden">
                     {p.image_url ? (
-                      <img src={p.image_url} alt={toTitleCase(p.name)} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                      <img src={p.image_url} alt={`${toTitleCase(p.name)} Thumbnail`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                     ) : (
                       <div className="w-full h-full bg-slate-800 flex items-center justify-center text-slate-400 text-xs font-bold">No Image Preview</div>
                     )}

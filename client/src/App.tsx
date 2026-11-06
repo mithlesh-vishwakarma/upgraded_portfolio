@@ -1,20 +1,32 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import BackgroundPattern from "./components/BackgroundPattern";
+import SplashCursor from "./components/SplashCursor";
+import SEO from "./components/SEO";
 
 // Public Pages
 const HomePage = lazy(() => import("./pages/HomePage"));
 const Projects = lazy(() => import("./pages/Projects"));
 const Articles = lazy(() => import("./pages/Articles"));
+const ArticleDetail = lazy(() => import("./pages/ArticleDetail"));
 const Contact = lazy(() => import("./pages/Contact"));
-// const Notes = lazy(() => import("./pages/Notes"));
-// const OrdinaryThings = lazy(() => import("./pages/OrdinaryThings"));
 const About = lazy(() => import("./pages/About"));
 const ComingSoon = lazy(() => import("./components/ComingSoon"));
 const ResumeViewerPage = lazy(() => import("./pages/ResumeViewerPage"));
 const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+
+// Service Pages
+const WebDevelopment = lazy(() => import("./pages/services/WebDevelopment"));
+const WordPressDevelopment = lazy(() => import("./pages/services/WordPressDevelopment"));
+const SaaSDevelopment = lazy(() => import("./pages/services/SaaSDevelopment"));
+const AIAgentDevelopment = lazy(() => import("./pages/services/AIAgentDevelopment"));
+const ShopifyDevelopment = lazy(() => import("./pages/services/ShopifyDevelopment"));
+const EcommerceDevelopment = lazy(() => import("./pages/services/EcommerceDevelopment"));
+const WebAppDevelopment = lazy(() => import("./pages/services/WebAppDevelopment"));
+const AndroidAppDevelopment = lazy(() => import("./pages/services/AndroidAppDevelopment"));
 
 // Admin Pages
 const AdminLayout = lazy(() => import("./admin/components/AdminLayout"));
@@ -27,17 +39,33 @@ const EducationManager = lazy(() => import("./admin/pages/EducationManager"));
 const SkillManager = lazy(() => import("./admin/pages/SkillManager"));
 const ResumeManager = lazy(() => import("./admin/pages/ResumeManager"));
 
+// Accounting Module (admin only — self-contained under admin/accounts)
+const AccountsOverview = lazy(() => import("./admin/accounts/pages/AccountsOverview"));
+const InvoicesPage = lazy(() => import("./admin/accounts/pages/InvoicesPage"));
+const InvoiceEditorPage = lazy(() => import("./admin/accounts/pages/InvoiceEditorPage"));
+const ExpensesPage = lazy(() => import("./admin/accounts/pages/ExpensesPage"));
+const ClientsPage = lazy(() => import("./admin/accounts/pages/ClientsPage"));
+const ReportsPage = lazy(() => import("./admin/accounts/pages/ReportsPage"));
+const AccountsSettingsPage = lazy(() => import("./admin/accounts/pages/AccountsSettingsPage"));
+
 // Loading fallback component
 const LoadingFallback = () => (
-  <div className="flex items-center justify-center min-h-screen ">
-    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-yellow-500"></div>
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-yellow-500"></div>
   </div>
 );
 
 import { ToastProvider } from "./context/ToastContext";
 import Toast from "./components/Toast";
 import { ConfirmProvider } from "./context/ConfirmContext";
+import { AdminThemeProvider } from "./admin/context/AdminThemeContext";
 
+const AdminWrapper = ({ children }: { children: React.ReactNode }) => (
+  <AdminThemeProvider>
+    <SEO title="Admin | OrdinaryCoder" description="Admin portal" noindex={true} />
+    {children}
+  </AdminThemeProvider>
+);
 
 const AppContent = () => {
   const location = useLocation();
@@ -46,6 +74,16 @@ const AppContent = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {!isAdminPath && <Header />}
+      {!isAdminPath && (
+        <SplashCursor
+          rainbow
+          size={1}
+          force={1}
+          swirl={3}
+          trail={1}
+          clickSplash
+        />
+      )}
       <main className="flex-grow relative">
         {!isAdminPath && <BackgroundPattern />}
 
@@ -54,27 +92,50 @@ const AppContent = () => {
             {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<About />} />
-            <Route path="/coming-soon" element={<ComingSoon />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:id" element={<ProjectDetail />} />
             <Route path="/articles" element={<Articles />} />
+            <Route path="/articles/:slug" element={<ArticleDetail />} />
             <Route path="/contact" element={<Contact />} />
-            {/* <Route path="/notes" element={<Notes />} /> */}
-            {/* <Route path="/ordinary-things" element={<OrdinaryThings />} /> */}
+            <Route path="/coming-soon" element={<ComingSoon />} />
             <Route path="/background" element={<BackgroundPattern />} />
             <Route path="/resume-mithlesh" element={<ResumeViewerPage />} />
 
-            {/* Admin Routes */}
-            <Route path="/admin/login" element={<Login />} />
-            <Route path="/admin/forgot-password" element={<ForgotPassword />} />
-            <Route path="/admin" element={<AdminLayout />}>
+            {/* Service Pages */}
+            <Route path="/web-development" element={<WebDevelopment />} />
+            <Route path="/wordpress-development" element={<WordPressDevelopment />} />
+            <Route path="/saas-development" element={<SaaSDevelopment />} />
+            <Route path="/ai-agent-development" element={<AIAgentDevelopment />} />
+            <Route path="/shopify-development" element={<ShopifyDevelopment />} />
+            <Route path="/ecommerce-development" element={<EcommerceDevelopment />} />
+            <Route path="/web-app-development" element={<WebAppDevelopment />} />
+            <Route path="/android-app-development" element={<AndroidAppDevelopment />} />
+
+            {/* Admin Routes with Noindex */}
+            <Route path="/admin/login" element={<AdminWrapper><Login /></AdminWrapper>} />
+            <Route path="/admin/forgot-password" element={<AdminWrapper><ForgotPassword /></AdminWrapper>} />
+            <Route path="/admin" element={<AdminWrapper><AdminLayout /></AdminWrapper>}>
+              <Route index element={<Navigate to="/admin/dashboard" replace />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="projects" element={<ProjectManager />} />
               <Route path="experience" element={<ExperienceManager />} />
               <Route path="education" element={<EducationManager />} />
               <Route path="skills" element={<SkillManager />} />
               <Route path="resume" element={<ResumeManager />} />
+
+              {/* Accounting Module — admin only */}
+              <Route path="accounts" element={<AccountsOverview />} />
+              <Route path="accounts/invoices" element={<InvoicesPage />} />
+              <Route path="accounts/invoices/new" element={<InvoiceEditorPage />} />
+              <Route path="accounts/invoices/:id" element={<InvoiceEditorPage />} />
+              <Route path="accounts/expenses" element={<ExpensesPage />} />
+              <Route path="accounts/clients" element={<ClientsPage />} />
+              <Route path="accounts/reports" element={<ReportsPage />} />
+              <Route path="accounts/settings" element={<AccountsSettingsPage />} />
             </Route>
+
+            {/* Fallback 404 Route */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </main>

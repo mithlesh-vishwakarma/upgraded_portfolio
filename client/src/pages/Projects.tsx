@@ -3,6 +3,7 @@ import { ExternalLink, Code, Github, Loader2 } from 'lucide-react';
 import api from '../api/api';
 import { Link } from 'react-router-dom';
 import { toTitleCase } from '../lib/utils';
+import SEO from '../components/SEO';
 
 interface Project {
   id: string;
@@ -23,6 +24,10 @@ const ProjectPage: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const pageTitle = "Web, SaaS & Shopify Projects Gallery | OrdinaryCoder";
+  const pageDescription = "Explore client and personal software development projects by Mithlesh Vishwakarma (OrdinaryCoder), featuring SaaS platforms, web applications, and custom Shopify setups.";
+  const canonicalUrl = "https://ordinarycoder.com/projects";
 
   useEffect(() => {
     setIsLoaded(true);
@@ -68,7 +73,7 @@ const ProjectPage: React.FC = () => {
         {project.image_url ? (
           <img
             src={project.image_url}
-            alt={toTitleCase(project.name)}
+            alt={`${toTitleCase(project.name)} Showcase Screenshot`}
             className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
           />
         ) : (
@@ -169,6 +174,11 @@ const ProjectPage: React.FC = () => {
 
   return (
     <div className="min-h-screen text-white font-roboto">
+      <SEO
+        title={pageTitle}
+        description={pageDescription}
+        canonicalUrl={canonicalUrl}
+      />
       <div className="max-w-6xl mx-auto px-6 pt-28 pb-16">
         <div
           className={`text-center mb-16 transition-all duration-1000 transform ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
@@ -178,9 +188,7 @@ const ProjectPage: React.FC = () => {
             Project Gallery
           </h1>
           <p className="text-gray-300 text-sm lg:text-lg leading-relaxed mb-6 md:mb-8 max-w-full">
-            A comprehensive showcase of my web development journey, featuring full-stack applications and 
-            technical prototypes. Each project highlights my dedication to crafting responsive, 
-            user-centric, and visually engaging web solutions.
+            A showcase of my software engineering work, featuring full-stack applications, SaaS portals, and custom client solutions.
           </p>
         </div>
 
@@ -188,7 +196,7 @@ const ProjectPage: React.FC = () => {
           {loading ? (
             <div className="flex flex-col items-center justify-center py-40 gap-4">
               <Loader2 className="w-12 h-12 text-yellow-500 animate-spin" />
-              <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Architecting Portfolios...</p>
+              <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Loading Projects...</p>
             </div>
           ) : projects.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-40 gap-2">

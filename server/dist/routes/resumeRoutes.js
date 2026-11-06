@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const resumeController_1 = require("../controllers/resumeController");
+const authMiddleware_1 = require("../middleware/authMiddleware");
+const router = (0, express_1.Router)();
+router.get("/", resumeController_1.getResume);
+router.post("/upload", authMiddleware_1.protect, resumeController_1.uploadResume);
+router.delete("/", authMiddleware_1.protect, resumeController_1.deleteResume);
+exports.default = router;

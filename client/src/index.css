@@ -9,6 +9,7 @@
   html {
     font-family: 'Roboto', sans-serif;
   }
+
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
@@ -36,6 +37,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -68,102 +70,113 @@
   .font-merienda {
     font-family: 'Merienda', cursive;
   }
-  
+
   .font-roboto {
     font-family: 'Roboto', sans-serif;
   }
-  
+
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
 }
+
 @media (min-width: 923px) {
   .custom-971\:flex-row {
     flex-direction: row;
   }
+
   .custom-971\:items-center {
     align-items: center;
   }
+
   .custom-971\:justify-between {
     justify-content: space-between;
   }
+
   .custom-971\:text-left {
     text-align: left;
   }
+
   .custom-971\:mt-0 {
     margin-top: 0;
     padding-right: 30px;
   }
 }
+
 @keyframes fade-in-up {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
 
-  @keyframes bounce-in {
-    0% {
-      opacity: 0;
-      transform: scale(0.3) translateY(30px);
-    }
-    50% {
-      opacity: 1;
-      transform: scale(1.1) translateY(-10px);
-    }
-    70% {
-      transform: scale(0.9) translateY(0);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(30px);
   }
 
-  @keyframes shimmer {
-    0% {
-      transform: translateX(-100%) skewX(-12deg);
-    }
-    100% {
-      transform: translateX(200%) skewX(-12deg);
-    }
+  50% {
+    opacity: 1;
+    transform: scale(1.1) translateY(-10px);
   }
 
-  @keyframes skill-fill {
-    from {
-      width: 0;
-    }
+  70% {
+    transform: scale(0.9) translateY(0);
   }
 
-  .animate-fade-in-up {
-    animation: fade-in-up 0.8s ease-out forwards;
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
   }
 
-  .animate-bounce-in {
-    animation: bounce-in 1.2s ease-out forwards;
+  100% {
+    transform: translateX(200%) skewX(-12deg);
   }
+}
 
-  .animate-shimmer {
-    animation: shimmer 2s infinite;
+@keyframes skill-fill {
+  from {
+    width: 0;
   }
+}
 
-  .animate-skill-fill {
-    animation: skill-fill 1.5s ease-out forwards;
-  }
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+.animate-bounce-in {
+  animation: bounce-in 1.2s ease-out forwards;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+.animate-skill-fill {
+  animation: skill-fill 1.5s ease-out forwards;
+}
 
 
-  /* glitch text animation css */
+/* glitch text animation css */
 
-  .glitch {
+.glitch {
   color: #fff;
   font-size: clamp(2rem, 10vw, 8rem);
   white-space: nowrap;
@@ -178,7 +191,8 @@
   .glitch {
     font-size: clamp(1rem, 4vw, 3rem);
   }
-   .logo-subtitle {
+
+  .logo-subtitle {
     font-size: 8px;
   }
 }
@@ -200,6 +214,7 @@
   text-shadow: var(--after-shadow, -10px 0 red);
   animation: animate-glitch var(--after-duration, 3s) infinite linear alternate-reverse;
 }
+
 .glitch:not(.enable-on-hover)::before {
   left: -10px;
   text-shadow: var(--before-shadow, 10px 0 cyan);
@@ -220,6 +235,7 @@
   text-shadow: var(--after-shadow, -10px 0 red);
   animation: animate-glitch var(--after-duration, 3s) infinite linear alternate-reverse;
 }
+
 .glitch.enable-on-hover:hover::before {
   content: attr(data-text);
   opacity: 1;
@@ -232,65 +248,279 @@
   0% {
     clip-path: inset(20% 0 50% 0);
   }
+
   5% {
     clip-path: inset(10% 0 60% 0);
   }
+
   10% {
     clip-path: inset(15% 0 55% 0);
   }
+
   15% {
     clip-path: inset(25% 0 35% 0);
   }
+
   20% {
     clip-path: inset(30% 0 40% 0);
   }
+
   25% {
     clip-path: inset(40% 0 20% 0);
   }
+
   30% {
     clip-path: inset(10% 0 60% 0);
   }
+
   35% {
     clip-path: inset(15% 0 55% 0);
   }
+
   40% {
     clip-path: inset(25% 0 35% 0);
   }
+
   45% {
     clip-path: inset(30% 0 40% 0);
   }
+
   50% {
     clip-path: inset(20% 0 50% 0);
   }
+
   55% {
     clip-path: inset(10% 0 60% 0);
   }
+
   60% {
     clip-path: inset(15% 0 55% 0);
   }
+
   65% {
     clip-path: inset(25% 0 35% 0);
   }
+
   70% {
     clip-path: inset(30% 0 40% 0);
   }
+
   75% {
     clip-path: inset(40% 0 20% 0);
   }
+
   80% {
     clip-path: inset(20% 0 50% 0);
   }
+
   85% {
     clip-path: inset(10% 0 60% 0);
   }
+
   90% {
     clip-path: inset(15% 0 55% 0);
   }
+
   95% {
     clip-path: inset(25% 0 35% 0);
   }
+
   100% {
     clip-path: inset(30% 0 40% 0);
   }
 }
 
+
+
+/* ==========================================================================
+   Admin Dark / Night Mode Styles (Scoped strictly to .admin-root.dark)
+   ========================================================================== */
+.admin-root.dark {
+  background-color: #030712 !important;
+  color: #f8fafc !important;
+  color-scheme: dark;
+}
+
+/* Background surfaces */
+.admin-root.dark .bg-white {
+  background-color: #0f172a !important;
+}
+
+.admin-root.dark .bg-white\/95 {
+  background-color: rgba(15, 23, 42, 0.95) !important;
+}
+
+.admin-root.dark .bg-white\/90 {
+  background-color: rgba(15, 23, 42, 0.9) !important;
+}
+
+.admin-root.dark .bg-white\/80 {
+  background-color: rgba(15, 23, 42, 0.8) !important;
+}
+
+.admin-root.dark .bg-gray-50,
+.admin-root.dark .bg-gray-50\/50,
+.admin-root.dark .bg-slate-50,
+.admin-root.dark .bg-gray-55 {
+  background-color: #020617 !important;
+}
+
+.admin-root.dark .bg-gray-100,
+.admin-root.dark .bg-slate-100 {
+  background-color: #1e293b !important;
+}
+
+.admin-root.dark .bg-gray-200,
+.admin-root.dark .bg-slate-200 {
+  background-color: #334155 !important;
+}
+
+/* Text colors */
+.admin-root.dark .text-slate-900,
+.admin-root.dark .text-slate-800,
+.admin-root.dark .text-slate-700 {
+  color: #f8fafc !important;
+}
+
+.admin-root.dark .text-slate-600,
+.admin-root.dark .text-gray-600 {
+  color: #cbd5e1 !important;
+}
+
+.admin-root.dark .text-gray-500,
+.admin-root.dark .text-gray-400 {
+  color: #94a3b8 !important;
+}
+
+.admin-root.dark .text-gray-300 {
+  color: #cbd5e1 !important;
+}
+
+/* Borders */
+.admin-root.dark .border-gray-100,
+.admin-root.dark .border-gray-200,
+.admin-root.dark .border-slate-100,
+.admin-root.dark .border-slate-200 {
+  border-color: #1e293b !important;
+}
+
+.admin-root.dark .divide-gray-100> :not([hidden])~ :not([hidden]),
+.admin-root.dark .divide-gray-200> :not([hidden])~ :not([hidden]),
+.admin-root.dark .divide-slate-100> :not([hidden])~ :not([hidden]),
+.admin-root.dark .divide-slate-200> :not([hidden])~ :not([hidden]) {
+  border-color: #1e293b !important;
+}
+
+/* Hover states */
+.admin-root.dark .hover\:bg-gray-50:hover,
+.admin-root.dark .hover\:bg-slate-50:hover {
+  background-color: #1e293b !important;
+}
+
+.admin-root.dark .hover\:bg-gray-100:hover,
+.admin-root.dark .hover\:bg-slate-100:hover {
+  background-color: #243042 !important;
+}
+
+.admin-root.dark .hover\:text-slate-900:hover {
+  color: #ffffff !important;
+}
+
+/* Form inputs, textareas, selects */
+.admin-root.dark input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+.admin-root.dark textarea,
+.admin-root.dark select {
+  background-color: #020617 !important;
+  color: #f8fafc !important;
+  border-color: #1e293b !important;
+}
+
+.admin-root.dark input:focus,
+.admin-root.dark textarea:focus,
+.admin-root.dark select:focus {
+  background-color: #0f172a !important;
+  border-color: #eab308 !important;
+}
+
+.admin-root.dark input::placeholder,
+.admin-root.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+.admin-root.dark select option {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+/* Light badge tints in dark mode */
+.admin-root.dark .bg-blue-50 {
+  background-color: rgba(59, 130, 246, 0.15) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+.admin-root.dark .bg-green-50 {
+  background-color: rgba(34, 197, 94, 0.15) !important;
+  border-color: rgba(34, 197, 94, 0.3) !important;
+}
+
+.admin-root.dark .bg-yellow-50 {
+  background-color: rgba(234, 179, 8, 0.15) !important;
+  border-color: rgba(234, 179, 8, 0.3) !important;
+}
+
+.admin-root.dark .bg-red-50 {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+.admin-root.dark .bg-purple-50 {
+  background-color: rgba(168, 85, 247, 0.15) !important;
+  border-color: rgba(168, 85, 247, 0.3) !important;
+}
+
+/* Primary Action Buttons */
+.admin-root.dark button.bg-slate-900,
+.admin-root.dark a.bg-slate-900 {
+  background-color: #eab308 !important;
+  color: #020617 !important;
+  box-shadow: 0 4px 14px 0 rgba(234, 179, 8, 0.3) !important;
+}
+
+.admin-root.dark button.bg-slate-900:hover,
+.admin-root.dark a.bg-slate-900:hover {
+  background-color: #facc15 !important;
+  color: #000000 !important;
+}
+
+.admin-root.dark button.bg-slate-900 svg,
+.admin-root.dark a.bg-slate-900 svg {
+  color: #020617 !important;
+}
+
+/* Non-button slate-900 tags (like year pills) */
+.admin-root.dark span.bg-slate-900 {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: none !important;
+}
+
+/* Rings & Shadows */
+.admin-root.dark .ring-white {
+  --tw-ring-color: #0f172a !important;
+}
+
+.admin-root.dark .shadow-sm,
+.admin-root.dark .shadow-md,
+.admin-root.dark .shadow-xl,
+.admin-root.dark .shadow-2xl,
+.admin-root.dark .shadow-gray-100,
+.admin-root.dark .shadow-slate-200 {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Modal overlays in Admin */
+.admin-root.dark .bg-slate-900\/60,
+.admin-root.dark .bg-slate-900\/40,
+.admin-root.dark .bg-slate-950\/40 {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}

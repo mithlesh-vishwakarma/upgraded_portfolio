@@ -11,6 +11,9 @@ import educationRoutes from "./routes/educationRoutes";
 import skillRoutes from "./routes/skillRoutes";
 import resumeRoutes from "./routes/resumeRoutes";
 
+// Admin-only Accounting module (self-contained under src/accounts)
+import accountsRoutes from "./accounts/accountsRoutes";
+
 dotenv.config();
 
 const app = express();
@@ -38,6 +41,10 @@ app.use("/api/skills", skillRoutes);
 
 app.use("/resume", resumeRoutes);
 app.use("/api/resume", resumeRoutes);
+
+// Accounting module — admin only. Guarded by `protect` on every route.
+app.use("/accounts", accountsRoutes);
+app.use("/api/accounts", accountsRoutes);
 
 app.get("/", (_req, res) => {
   res.send("Portfolio API running");
