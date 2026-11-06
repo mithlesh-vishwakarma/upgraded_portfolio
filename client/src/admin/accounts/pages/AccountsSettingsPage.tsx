@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { Save, Settings } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { FileImage, PenTool, Save, Settings, Upload, X } from "lucide-react";
 import AccountsNav from "../components/AccountsNav";
 import { Button, Card, Field, Loading, SectionTitle, SelectInput, TextArea, TextInput } from "../components/FormControls";
 import { PageHeader } from "../components/StatCard";
@@ -11,6 +11,8 @@ import { getFinancialYear } from "../utils/dates";
 
 const AccountsSettingsPage = () => {
   const { showToast } = useToast();
+  const logoInputRef = useRef<HTMLInputElement>(null);
+  const signatureInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState<AccountSettingsInput | null>(null);
   const [loading, setLoading] = useState(true);
@@ -33,6 +35,9 @@ const AccountsSettingsPage = () => {
         payment_terms: settings.payment_terms || "",
         bank_details: settings.bank_details || "",
         logo_url: settings.logo_url || "",
+        signature_url: settings.signature_url || "",
+        signatory_name: settings.signatory_name || "Mithlesh Vishwakarma (OC)",
+        signatory_title: settings.signatory_title || "Authorised Signature",
       });
     } catch {
       showToast("Failed to load settings", "error");
@@ -47,6 +52,36 @@ const AccountsSettingsPage = () => {
 
   const update = (key: keyof AccountSettingsInput, value: string | number) => {
     setForm((current) => (current ? { ...current, [key]: value } : current));
+  };
+
+  const handleFileUpload = (
+    key: "logo_url" | "signature_url",
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      showToast("File size should be under 2MB", "error");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        update(key, reader.result);
+        showToast(
+          `${key === "logo_url" ? "Logo" : "Signature"} image loaded! Click Save to apply.`,
+          "success"
+        );
+      }
+    };
+    reader.onerror = () => {
+      showToast("Failed to read image file", "error");
+    };
+    reader.readAsDataURL(file);
+    // Reset input so same file can be re-selected if needed
+    event.target.value = "";
   };
 
   const handleSave = async () => {
@@ -126,19 +161,11 @@ const AccountsSettingsPage = () => {
               />
             </Field>
 
-            <Field label="Tax ID / GSTIN">
+            <Field label="Tax ID / GSTIN" className="sm:col-span-2">
               <TextInput
                 value={form.tax_id || ""}
                 onChange={(event) => update("tax_id", event.target.value)}
                 placeholder="Optional"
-              />
-            </Field>
-
-            <Field label="Logo URL" hint="PNG or JPG — printed on the invoice header">
-              <TextInput
-                value={form.logo_url || ""}
-                onChange={(event) => update("logo_url", event.target.value)}
-                placeholder="https://..."
               />
             </Field>
 
@@ -152,8 +179,188 @@ const AccountsSettingsPage = () => {
           </div>
         </Card>
 
-        {/* --- Invoice defaults --------------------------------------------- */}
+        {/* --- Branding & Signature ---------------------------------------- */}
         <Card className="p-7">
+          <SectionTitle>
+            <span className="flex items-center gap-2">
+              <PenTool className="w-4 h-4 text-[#FF7A00]" /> Branding & Authorised Signature
+            </span>
+          </SectionTitle>
+
+          <div className="space-y-6">
+            {/* 1. Dynamic Logo */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                  Business Logo
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    ref={logoInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => handleFileUpload("logo_url", e)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => logoInputRef.current?.click()}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
+                  >
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>Upload Image</span>
+                  </button>
+                  {form.logo_url && (
+                    <button
+                      type="button"
+                      onClick={() => update("logo_url", "")}
+                      className="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors cursor-pointer"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                      <span>Remove</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <TextInput
+                value={form.logo_url || ""}
+                onChange={(event) => update("logo_url", event.target.value)}
+                placeholder="https://... or upload local PNG/JPG"
+              />
+              <p className="text-[11px] text-gray-400 mt-1">
+                Printed on the invoice header. Leave empty to use default vector OC monogram logo.
+              </p>
+
+              {/* Logo Preview */}
+              <div className="mt-3 p-3 bg-[#0B192C] rounded-xl flex items-center justify-between border border-slate-700/50">
+                <div className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+                  Header Preview
+                </div>
+                <div className="h-10 flex items-center justify-center">
+                  {form.logo_url ? (
+                    <img
+                      src={form.logo_url}
+                      alt="Logo Preview"
+                      className="max-h-9 max-w-[140px] object-contain"
+                    />
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <span className="text-white font-black text-sm tracking-wider">
+                        [OC MONOGRAM]
+                      </span>
+                      <span className="text-xs text-[#FF7A00] font-bold">Default</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-100 dark:border-slate-800 pt-5">
+              <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-4">
+                Authorised Signatory
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <Field label="Signatory Name">
+                  <TextInput
+                    value={form.signatory_name || ""}
+                    onChange={(event) => update("signatory_name", event.target.value)}
+                    placeholder="Mithlesh Vishwakarma (OC)"
+                  />
+                </Field>
+
+                <Field label="Signatory Title">
+                  <TextInput
+                    value={form.signatory_title || ""}
+                    onChange={(event) => update("signatory_title", event.target.value)}
+                    placeholder="Authorised Signature"
+                  />
+                </Field>
+              </div>
+
+              {/* Signature Image or Cursive */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                    Signature Image (Optional)
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      ref={signatureInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleFileUpload("signature_url", e)}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => signatureInputRef.current?.click()}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
+                    >
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>Upload Signature</span>
+                    </button>
+                    {form.signature_url && (
+                      <button
+                        type="button"
+                        onClick={() => update("signature_url", "")}
+                        className="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors cursor-pointer"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                        <span>Remove</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <TextInput
+                  value={form.signature_url || ""}
+                  onChange={(event) => update("signature_url", event.target.value)}
+                  placeholder="https://... or upload transparent PNG/JPG"
+                />
+                <p className="text-[11px] text-gray-400 mt-1">
+                  Upload a scanned signature with transparent background, or leave empty for cursive script font.
+                </p>
+
+                {/* Signature Preview */}
+                <div className="mt-3 p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
+                  <div className="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-2">
+                    Signature Preview
+                  </div>
+                  <div className="h-10 flex items-center justify-center">
+                    {form.signature_url ? (
+                      <img
+                        src={form.signature_url}
+                        alt="Signature Preview"
+                        className="max-h-9 max-w-[180px] object-contain"
+                      />
+                    ) : (
+                      <span
+                        className="text-lg text-slate-900 dark:text-white select-none tracking-tight leading-none italic whitespace-nowrap"
+                        style={{
+                          fontFamily: "'Brush Script MT', 'Great Vibes', 'Caveat', cursive, sans-serif",
+                        }}
+                      >
+                        {form.signatory_name || "M. Vishwakarma"}
+                      </span>
+                    )}
+                  </div>
+                  <div className="border-b-2 border-slate-900 dark:border-white w-48 mx-auto my-1.5" />
+                  <p className="text-xs font-black text-slate-900 dark:text-white tracking-wider uppercase">
+                    {form.signatory_title || "Authorised Signature"}
+                  </p>
+                  <p className="text-xs font-bold text-slate-700 dark:text-slate-300 mt-0.5">
+                    {form.signatory_name || "Mithlesh Vishwakarma (OC)"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* --- Invoice defaults --------------------------------------------- */}
+        <Card className="p-7 lg:col-span-2">
           <SectionTitle>Invoice Defaults</SectionTitle>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">

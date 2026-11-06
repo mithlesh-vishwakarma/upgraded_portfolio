@@ -12,12 +12,16 @@ const AdminLayout = () => {
     }
 
     return (
-        <div className={`flex min-h-screen font-roboto transition-colors duration-200 ${isDark ? "bg-slate-950 text-slate-100" : "bg-gray-50/50 text-slate-800"}`}>
-            <Sidebar />
-            <div className="flex-1 flex flex-col min-w-0">
-                <Topbar />
-                <main className="p-8 flex-1">
-                    <div className="max-w-7xl mx-auto">
+        <div className={`flex min-h-screen font-roboto transition-colors duration-200 ${isDark ? "bg-slate-950 text-slate-100" : "bg-gray-50/50 text-slate-800"} print:bg-white print:min-h-0 print:block`}>
+            <div className="print:hidden">
+                <Sidebar />
+            </div>
+            <div className="flex-1 flex flex-col min-w-0 print:block">
+                <div className="print:hidden">
+                    <Topbar />
+                </div>
+                <main className="p-8 flex-1 print:p-0 print:m-0">
+                    <div className="max-w-7xl mx-auto print:max-w-none print:m-0 print:p-0">
                         <Outlet />
                     </div>
                 </main>

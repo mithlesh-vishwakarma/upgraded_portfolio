@@ -25,7 +25,7 @@ const AccountsNav = () => {
   ];
 
   return (
-    <div className="flex gap-1.5 overflow-x-auto pb-1">
+    <div className="flex gap-1.5 overflow-x-auto pb-1 print:hidden">
       {items.map((item) => (
         <NavLink
           key={item.path}

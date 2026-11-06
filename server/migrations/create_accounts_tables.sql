@@ -145,11 +145,18 @@ CREATE TABLE IF NOT EXISTS acc_settings (
     payment_terms        TEXT,
     bank_details         TEXT,
     logo_url             TEXT,
+    signature_url        TEXT,
+    signatory_name       TEXT DEFAULT 'Mithlesh Vishwakarma (OC)',
+    signatory_title      TEXT DEFAULT 'Authorised Signature',
     created_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at           TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 ALTER TABLE acc_settings ADD COLUMN IF NOT EXISTS financial_year TEXT DEFAULT '26-27';
+ALTER TABLE acc_settings ADD COLUMN IF NOT EXISTS logo_url TEXT;
+ALTER TABLE acc_settings ADD COLUMN IF NOT EXISTS signature_url TEXT;
+ALTER TABLE acc_settings ADD COLUMN IF NOT EXISTS signatory_name TEXT DEFAULT 'Mithlesh Vishwakarma (OC)';
+ALTER TABLE acc_settings ADD COLUMN IF NOT EXISTS signatory_title TEXT DEFAULT 'Authorised Signature';
 
 DROP TRIGGER IF EXISTS trg_acc_settings_updated_at ON acc_settings;
 CREATE TRIGGER trg_acc_settings_updated_at
@@ -187,13 +194,39 @@ DROP POLICY IF EXISTS "acc_settings_admin_access" ON acc_settings;
 CREATE POLICY "acc_settings_admin_access" ON acc_settings
     FOR ALL TO service_role USING (true) WITH CHECK (true);
 
-INSERT INTO acc_settings (id, business_name, currency, invoice_prefix, next_invoice_number, financial_year)
+INSERT INTO acc_settings (
+    id,
+    business_name,
+    business_email,
+    business_phone,
+    business_address,
+    currency,
+    invoice_prefix,
+    next_invoice_number,
+    financial_year,
+    payment_terms,
+    bank_details
+)
 VALUES (
     '00000000-0000-0000-0000-000000000001',
-    'OrdinaryCoder',
+    'Mithlesh Vishwakarma (OC)',
+    'mithlesh.workplace@gmail.com',
+    '+91 9327832747',
+    'Surat, Gujarat',
     'INR',
     'INV',
     1,
-    '26-27'
+    '26-27',
+    'Ponytail is an open-source AI coding skill and plugin created by Dietrich Gebert that forces AI agents (such as Claude Code, Codex, and Cursor) to behave like a pragmatic, minimalist "lazy senior developer"',
+    'A/C HOLDER NAME: VISHWAKARMA MITHLESH SHRI VIJAY
+BANK NAME: KOTAK MAHINDRA BANK
+IFSC CODE: KKBK0002852
+A/C NUMBER: 7512318326'
 )
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE SET
+    business_name = EXCLUDED.business_name,
+    business_email = EXCLUDED.business_email,
+    business_phone = EXCLUDED.business_phone,
+    business_address = EXCLUDED.business_address,
+    payment_terms = EXCLUDED.payment_terms,
+    bank_details = EXCLUDED.bank_details;

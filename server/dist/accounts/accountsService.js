@@ -57,19 +57,22 @@ exports.deriveInvoiceStatus = deriveInvoiceStatus;
 /* Settings                                                                   */
 /* -------------------------------------------------------------------------- */
 const DEFAULT_SETTINGS = {
-    business_name: "OrdinaryCoder",
-    business_email: "",
-    business_phone: "",
-    business_address: "",
+    business_name: "Mithlesh Vishwakarma (OC)",
+    business_email: "mithlesh.workplace@gmail.com",
+    business_phone: "+91 9327832747",
+    business_address: "Surat, Gujarat",
     tax_id: "",
     currency: "INR",
     default_tax_rate: 0,
     invoice_prefix: "INV",
     next_invoice_number: 1,
     financial_year: "26-27",
-    payment_terms: "",
-    bank_details: "",
+    payment_terms: "Ponytail is an open-source AI coding skill and plugin created by Dietrich Gebert that forces AI agents (such as Claude Code, Codex, and Cursor) to behave like a pragmatic, minimalist \"lazy senior developer\"",
+    bank_details: "A/C HOLDER NAME: VISHWAKARMA MITHLESH SHRI VIJAY\nBANK NAME: KOTAK MAHINDRA BANK\nIFSC CODE: KKBK0002852\nA/C NUMBER: 7512318326",
     logo_url: "",
+    signature_url: "",
+    signatory_name: "Mithlesh Vishwakarma (OC)",
+    signatory_title: "Authorised Signature",
 };
 const getSettings = async () => {
     const { data, error } = await supabase_1.supabase
@@ -120,6 +123,12 @@ const updateSettings = async (payload) => {
         clean.bank_details = payload.bank_details;
     if (payload.logo_url !== undefined)
         clean.logo_url = payload.logo_url;
+    if (payload.signature_url !== undefined)
+        clean.signature_url = payload.signature_url;
+    if (payload.signatory_name !== undefined)
+        clean.signatory_name = payload.signatory_name;
+    if (payload.signatory_title !== undefined)
+        clean.signatory_title = payload.signatory_title;
     const { data, error } = await supabase_1.supabase
         .from("acc_settings")
         .upsert({ id: SETTINGS_ID, ...clean }, { onConflict: "id" })

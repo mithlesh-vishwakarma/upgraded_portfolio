@@ -72,7 +72,7 @@ interface PageHeaderProps {
 }
 
 export const PageHeader = ({ title, subtitle, actions }: PageHeaderProps) => (
-  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 print:hidden">
     <div>
       <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{title}</h2>
       <p className="text-gray-400 dark:text-slate-500 font-medium tracking-wide">{subtitle}</p>

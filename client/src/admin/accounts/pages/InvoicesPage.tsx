@@ -12,6 +12,7 @@ import {
 import AccountsNav from "../components/AccountsNav";
 import RangePicker from "../components/RangePicker";
 import Modal from "../components/Modal";
+import InvoiceDocument from "../components/InvoiceDocument";
 import { Button, Card, EmptyState, Loading, SelectInput } from "../components/FormControls";
 import { PageHeader, StatusBadge } from "../components/StatCard";
 import { accountsApi } from "../services/accountsApi";
@@ -362,125 +363,28 @@ const InvoicesPage = () => {
       <Modal
         isOpen={Boolean(preview)}
         title={`Invoice ${preview?.invoice.invoice_number ?? ""}`}
-        subtitle={preview ? `Issued ${formatDate(preview.invoice.issue_date)}` : undefined}
+        subtitle={preview ? `Issued ${formatDate(preview.invoice.issue_date)} • ${preview.invoice.status.toUpperCase()}` : undefined}
         onClose={() => setPreview(null)}
-        footer={
-          <>
-            <Button variant="secondary" onClick={() => setPreview(null)} type="button">
-              Close
-            </Button>
-            {preview && settings && (
-              <Button
-                onClick={() =>
-                  downloadInvoicePdf(
-                    {
-                      invoice: preview.invoice,
-                      items: preview.items,
-                      client: preview.client,
-                      settings,
-                    },
-                    `Invoice-${preview.invoice.invoice_number}`
-                  )
-                }
-                icon={<Download className="w-4 h-4" />}
-                type="button"
-              >
-                Download PDF
-              </Button>
-            )}
-          </>
-        }
+        size="xl"
       >
-        {preview && (
-          <div className="space-y-5">
-            <div className="grid grid-cols-2 gap-5">
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1.5">
-                  Bill To
-                </p>
-                <p className="text-sm font-black text-slate-800 dark:text-slate-100">
-                  {preview.client?.name || "Walk-in / No client"}
-                </p>
-                {preview.client?.email && (
-                  <p className="text-xs text-gray-500">{preview.client.email}</p>
-                )}
-                {preview.client?.address && (
-                  <p className="text-xs text-gray-500 whitespace-pre-line">
-                    {preview.client.address}
-                  </p>
-                )}
-              </div>
-              <div className="text-right">
-                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1.5">
-                  Status
-                </p>
-                <div className="flex justify-end">
-                  <StatusBadge status={preview.invoice.status} />
-                </div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mt-3 mb-1">
-                  Due
-                </p>
-                <p className="text-xs font-bold text-slate-700 dark:text-slate-200">
-                  {formatDate(preview.invoice.due_date)}
-                </p>
-              </div>
-            </div>
-
-            <div className="border-t border-gray-100 dark:border-slate-800" />
-
-            <div className="space-y-2">
-              {preview.items.map((item, index) => (
-                <div
-                  key={item.id || index}
-                  className="flex items-center justify-between gap-4 text-sm"
-                >
-                  <span className="font-bold text-slate-700 dark:text-slate-200">
-                    {item.description}
-                    <span className="text-gray-400 font-medium">
-                      {" "}
-                      × {item.quantity} @ {formatMoney(item.rate, preview.invoice.currency)}
-                    </span>
-                  </span>
-                  <span className="font-black text-slate-800 dark:text-slate-100 whitespace-nowrap">
-                    {formatMoney(item.amount, preview.invoice.currency)}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <div className="bg-gray-50 dark:bg-slate-800/50 rounded-2xl p-4 space-y-2">
-              <div className="flex justify-between text-xs">
-                <span className="text-gray-500 font-medium">Subtotal</span>
-                <span className="font-bold">
-                  {formatMoney(preview.invoice.subtotal, preview.invoice.currency)}
-                </span>
-              </div>
-              {preview.invoice.discount > 0 && (
-                <div className="flex justify-between text-xs">
-                  <span className="text-gray-500 font-medium">Discount</span>
-                  <span className="font-bold text-yellow-600">
-                    - {formatMoney(preview.invoice.discount, preview.invoice.currency)}
-                  </span>
-                </div>
-              )}
-              {preview.invoice.tax_rate > 0 && (
-                <div className="flex justify-between text-xs">
-                  <span className="text-gray-500 font-medium">Tax ({preview.invoice.tax_rate}%)</span>
-                  <span className="font-bold">
-                    {formatMoney(preview.invoice.tax_amount, preview.invoice.currency)}
-                  </span>
-                </div>
-              )}
-              <div className="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-slate-700">
-                <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">
-                  Total
-                </span>
-                <span className="text-xl font-black text-slate-900 dark:text-white">
-                  {formatMoney(preview.invoice.total, preview.invoice.currency)}
-                </span>
-              </div>
-            </div>
-          </div>
+        {preview && settings && (
+          <InvoiceDocument
+            invoice={preview.invoice}
+            items={preview.items}
+            client={preview.client}
+            settings={settings}
+            onDownloadPdf={() =>
+              downloadInvoicePdf(
+                {
+                  invoice: preview.invoice,
+                  items: preview.items,
+                  client: preview.client,
+                  settings,
+                },
+                `Invoice-${preview.invoice.invoice_number}`
+              )
+            }
+          />
         )}
       </Modal>
     </div>

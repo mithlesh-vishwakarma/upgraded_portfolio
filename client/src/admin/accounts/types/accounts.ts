@@ -147,6 +147,9 @@ export interface AccountSettings {
   payment_terms: string | null;
   bank_details: string | null;
   logo_url: string | null;
+  signature_url?: string | null;
+  signatory_name?: string | null;
+  signatory_title?: string | null;
   created_at: string;
   updated_at: string;
 }

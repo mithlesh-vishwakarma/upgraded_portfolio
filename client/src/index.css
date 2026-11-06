@@ -524,3 +524,227 @@
 .admin-root.dark .bg-slate-950\/40 {
   background-color: rgba(0, 0, 0, 0.8) !important;
 }
+
+/* ========================================================================= */
+/* INVOICE ISOLATION: Immune to dark mode and global overrides               */
+/* ========================================================================= */
+.invoice-isolated,
+.invoice-isolated *,
+#invoice-printable,
+#invoice-printable * {
+  color-scheme: light !important;
+}
+
+/* Force natural paper colors even when inside .admin-root.dark or .dark */
+.admin-root.dark #invoice-printable,
+.dark #invoice-printable,
+#invoice-printable {
+  background-color: #ffffff !important;
+  color: #0b192c !important;
+  color-scheme: light !important;
+}
+
+.admin-root.dark #invoice-printable .bg-white,
+.dark #invoice-printable .bg-white {
+  background-color: #ffffff !important;
+}
+
+.admin-root.dark #invoice-printable .bg-\[\#F1F5F9\],
+.dark #invoice-printable .bg-\[\#F1F5F9\] {
+  background-color: #f1f5f9 !important;
+}
+
+.admin-root.dark #invoice-printable .bg-\[\#FED7AA\],
+.dark #invoice-printable .bg-\[\#FED7AA\] {
+  background-color: #fed7aa !important;
+}
+
+.admin-root.dark #invoice-printable .bg-\[\#FF7A00\],
+.dark #invoice-printable .bg-\[\#FF7A00\] {
+  background-color: #ff7a00 !important;
+}
+
+.admin-root.dark #invoice-printable .bg-\[\#0B192C\],
+.dark #invoice-printable .bg-\[\#0B192C\] {
+  background-color: #0b192c !important;
+}
+
+.admin-root.dark #invoice-printable .text-slate-900,
+.dark #invoice-printable .text-slate-900 {
+  color: #0f172a !important;
+}
+
+.admin-root.dark #invoice-printable .text-slate-800,
+.dark #invoice-printable .text-slate-800 {
+  color: #1e293b !important;
+}
+
+.admin-root.dark #invoice-printable .text-slate-700,
+.dark #invoice-printable .text-slate-700 {
+  color: #334155 !important;
+}
+
+.admin-root.dark #invoice-printable .text-slate-600,
+.dark #invoice-printable .text-slate-600,
+.admin-root.dark #invoice-printable .text-gray-600,
+.dark #invoice-printable .text-gray-600 {
+  color: #475569 !important;
+}
+
+.admin-root.dark #invoice-printable .text-gray-500,
+.dark #invoice-printable .text-gray-500,
+.admin-root.dark #invoice-printable .text-gray-400,
+.dark #invoice-printable .text-gray-400 {
+  color: #64748b !important;
+}
+
+.admin-root.dark #invoice-printable .text-white,
+.dark #invoice-printable .text-white {
+  color: #ffffff !important;
+}
+
+.admin-root.dark #invoice-printable .text-\[\#0B192C\],
+.dark #invoice-printable .text-\[\#0B192C\] {
+  color: #0b192c !important;
+}
+
+.admin-root.dark #invoice-printable .text-\[\#FF7A00\],
+.dark #invoice-printable .text-\[\#FF7A00\] {
+  color: #ff7a00 !important;
+}
+
+.admin-root.dark #invoice-printable .text-\[\#9A3412\],
+.dark #invoice-printable .text-\[\#9A3412\] {
+  color: #9a3412 !important;
+}
+
+.admin-root.dark #invoice-printable .border-gray-100,
+.admin-root.dark #invoice-printable .border-gray-200,
+.admin-root.dark #invoice-printable .border-gray-200\/80,
+.admin-root.dark #invoice-printable .border-slate-100,
+.admin-root.dark #invoice-printable .border-slate-200,
+.admin-root.dark #invoice-printable .border-slate-200\/50,
+.dark #invoice-printable .border-gray-100,
+.dark #invoice-printable .border-gray-200,
+.dark #invoice-printable .border-gray-200\/80,
+.dark #invoice-printable .border-slate-100,
+.dark #invoice-printable .border-slate-200,
+.dark #invoice-printable .border-slate-200\/50,
+.admin-root.dark #invoice-printable .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
+.admin-root.dark #invoice-printable .divide-gray-200 > :not([hidden]) ~ :not([hidden]),
+.admin-root.dark #invoice-printable .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+.admin-root.dark #invoice-printable .divide-slate-200 > :not([hidden]) ~ :not([hidden]),
+.dark #invoice-printable .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
+.dark #invoice-printable .divide-gray-200 > :not([hidden]) ~ :not([hidden]),
+.dark #invoice-printable .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+.dark #invoice-printable .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #e2e8f0 !important;
+}
+
+.admin-root.dark #invoice-printable .border-gray-900,
+.admin-root.dark #invoice-printable .border-slate-900,
+.dark #invoice-printable .border-gray-900,
+.dark #invoice-printable .border-slate-900 {
+  border-color: #0f172a !important;
+}
+
+/* ========================================================================= */
+/* PRINT MODE: Catch ONLY the invoice layout (#invoice-printable)            */
+/* ========================================================================= */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html,
+  body {
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    color: #0b192c !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-scheme: light !important;
+  }
+
+  /* Reset all potential ancestor containers to prevent clipping */
+  #root,
+  .admin-root,
+  main,
+  div:has(#invoice-printable),
+  [role="dialog"] {
+    position: static !important;
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    transform: none !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* When #invoice-printable exists on the page, hide all other page contents */
+  body:has(#invoice-printable) * {
+    visibility: hidden !important;
+  }
+
+  /* Exclusively display #invoice-printable and its children */
+  #invoice-printable,
+  #invoice-printable * {
+    visibility: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-scheme: light !important;
+  }
+
+  /* Make #invoice-printable take full A4 sheet */
+  #invoice-printable {
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 210mm !important;
+    min-width: 210mm !important;
+    max-width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    color: #0b192c !important;
+    z-index: 9999999 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Force display none for non-printable navigation, modals, and toolbars */
+  .print\:hidden,
+  .no-print,
+  button,
+  header,
+  nav,
+  aside,
+  dialog,
+  [aria-label="Close dialog"],
+  .backdrop-blur-sm {
+    display: none !important;
+  }
+}
