@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Hero from "../components/Hero";
 import SEO from "../components/SEO";
+import EcosystemSection from "../components/EcosystemSection";
 import {
   Code2,
   Layers,
   Bot,
-  ShoppingBag,
   ShoppingCart,
   Layout,
   Smartphone,
@@ -14,10 +14,9 @@ import {
   CheckCircle2,
   MapPin,
   Sparkles,
-  ExternalLink,
-  Wrench,
-  BookOpen
+  ExternalLink
 } from "lucide-react";
+import { SiWordpress, SiShopify } from "react-icons/si";
 import { projects } from "../data/projects";
 
 const HomePage: React.FC = () => {
@@ -71,50 +70,135 @@ const HomePage: React.FC = () => {
     }
   ];
 
-  const servicesList = [
+  const [activeCategory, setActiveCategory] = useState<"web" | "advanced">("web");
+
+  const webOfferings = [
     {
-      title: "Custom Web Applications",
-      description: "Performant MERN stack web applications engineered for speed, search optimization, and seamless user interaction.",
-      icon: Layout,
-      link: "/web-app-development"
+      title: "WordPress Development",
+      description: "Custom WordPress websites that are fast, SEO-friendly, and easy to manage.",
+      features: [
+        "Custom Theme Development",
+        "Plugin Integration",
+        "SEO Optimized",
+        "Performance Focused"
+      ],
+      icon: SiWordpress,
+      badgeBg: "bg-blue-950/70 border border-blue-500/40 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.25)]",
+      glowColor: "rgba(37, 99, 235, 0.45)",
+      accentColor: "#3b82f6",
+      link: "/wordpress-development"
     },
     {
+      title: "Shopify Development",
+      description: "High-converting Shopify stores built for sales, scalability, and a seamless shopping experience.",
+      features: [
+        "Custom Store Design",
+        "App Integration",
+        "Payment Gateway Setup",
+        "Conversion Optimization"
+      ],
+      icon: SiShopify,
+      badgeBg: "bg-emerald-950/70 border border-emerald-500/40 text-[#95BF47] shadow-[0_0_15px_rgba(16,185,129,0.25)]",
+      glowColor: "rgba(16, 185, 129, 0.45)",
+      accentColor: "#10b981",
+      link: "/shopify-development"
+    },
+    {
+      title: "E-commerce Development",
+      description: "Powerful e-commerce solutions that drive sales and improve customer satisfaction.",
+      features: [
+        "Custom E-commerce Solutions",
+        "Product Management",
+        "Secure Checkout",
+        "Analytics & Reporting"
+      ],
+      icon: ShoppingCart,
+      badgeBg: "bg-sky-950/70 border border-sky-500/40 text-sky-400 shadow-[0_0_15px_rgba(56,189,248,0.25)]",
+      glowColor: "rgba(2, 132, 199, 0.45)",
+      accentColor: "#38bdf8",
+      link: "/ecommerce-development"
+    },
+    {
+      title: "Custom Website Development",
+      description: "Tailored websites that reflect your brand, engage your audience, and grow your business.",
+      features: [
+        "Custom Design & Development",
+        "Responsive & Mobile-First",
+        "Speed Optimization",
+        "Ongoing Support"
+      ],
+      icon: Code2,
+      badgeBg: "bg-emerald-950/70 border border-emerald-500/40 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.25)]",
+      glowColor: "rgba(16, 185, 129, 0.45)",
+      accentColor: "#10b981",
+      link: "/web-development"
+    }
+  ];
+
+  const advancedOfferings = [
+    {
       title: "SaaS Product Development",
-      description: "Full-stack multi-tenant SaaS products with user authentication, administrative control panels, and cloud scalability.",
+      description: "Scalable multi-tenant SaaS products with user authentication, administrative control panels, and cloud scalability.",
+      features: [
+        "Multi-Tenant Architecture",
+        "Subscription & Stripe Billing",
+        "Role-Based Access Control",
+        "Scalable Cloud Backends"
+      ],
       icon: Layers,
+      badgeBg: "bg-purple-950/70 border border-purple-500/40 text-purple-400 shadow-[0_0_15px_rgba(147,51,234,0.25)]",
+      glowColor: "rgba(147, 51, 234, 0.45)",
+      accentColor: "#a855f7",
       link: "/saas-development"
     },
     {
       title: "AI Agent Development",
-      description: "Intelligent AI agents and automated workflows integrated into web software using OpenAI, Gemini, and Claude APIs.",
+      description: "Intelligent AI agents and automated workflows integrated into web software using modern LLM APIs.",
+      features: [
+        "Custom LLM & Tool Integration",
+        "Automated Business Workflows",
+        "Knowledge Retrieval & RAG",
+        "Conversational User Interfaces"
+      ],
       icon: Bot,
+      badgeBg: "bg-pink-950/70 border border-pink-500/40 text-pink-400 shadow-[0_0_15px_rgba(236,72,153,0.25)]",
+      glowColor: "rgba(236, 72, 153, 0.45)",
+      accentColor: "#f472b6",
       link: "/ai-agent-development"
     },
     {
-      title: "Shopify Store Development",
-      description: "Custom Shopify Liquid themes, page speed optimizations, payment integrations, and D2C e-commerce setup.",
-      icon: ShoppingBag,
-      link: "/shopify-development"
-    },
-    {
-      title: "E-Commerce Platforms",
-      description: "Custom online shopping platforms built tailored to your business model with complete database control.",
-      icon: ShoppingCart,
-      link: "/ecommerce-development"
-    },
-    {
-      title: "Custom Web Development",
-      description: "Responsive, accessible, and fast websites designed to deliver strong conversion rates for businesses.",
-      icon: Code2,
-      link: "/web-development"
+      title: "Custom Web Applications",
+      description: "Performant MERN stack web applications engineered for speed, search optimization, and seamless user interaction.",
+      features: [
+        "Full-Stack MERN Architecture",
+        "High-Performance REST APIs",
+        "Secure Database Schemas",
+        "Interactive Real-Time Dashboards"
+      ],
+      icon: Layout,
+      badgeBg: "bg-cyan-950/70 border border-cyan-500/40 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.25)]",
+      glowColor: "rgba(6, 182, 212, 0.45)",
+      accentColor: "#22d3ee",
+      link: "/web-app-development"
     },
     {
       title: "Android Applications",
       description: "Cross-platform Android applications and Progressive Web Apps (PWAs) synchronized with cloud backends.",
+      features: [
+        "Cross-Platform Development",
+        "Offline Cache & Sync",
+        "Push Notification Systems",
+        "Cloud Backend Integration"
+      ],
       icon: Smartphone,
+      badgeBg: "bg-teal-950/70 border border-teal-500/40 text-teal-400 shadow-[0_0_15px_rgba(20,184,166,0.25)]",
+      glowColor: "rgba(20, 184, 166, 0.45)",
+      accentColor: "#2dd4bf",
       link: "/android-app-development"
     }
   ];
+
+  const currentOfferings = activeCategory === "web" ? webOfferings : advancedOfferings;
 
   return (
     <div className="min-h-screen text-white font-roboto relative overflow-x-hidden">
@@ -148,194 +232,121 @@ const HomePage: React.FC = () => {
 
         {/* Services Showcase Grid */}
         <section>
-          <div className="text-center mb-10">
+          <div className="text-center mb-8">
             <span className="text-yellow-400 font-bold uppercase tracking-widest text-xs">Core Offerings</span>
             <h2 className="text-3xl md:text-4xl font-bold text-white mt-2">What I Build For Clients</h2>
+            <p className="text-gray-300 max-w-2xl mx-auto mt-3 text-sm md:text-base leading-relaxed">
+              {activeCategory === "web"
+                ? "We build fast, secure, and scalable websites that attract, engage, and convert your audience into loyal customers."
+                : "We build scalable SaaS products, intelligent AI agents, and mobile applications that power modern operations."}
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {servicesList.map((service, idx) => {
-              const IconComp = service.icon;
+          {/* Category Tabs */}
+          <div className="flex justify-center mb-10">
+            <div className="inline-flex p-1.5 rounded-full bg-slate-900/80 border border-white/10 backdrop-blur-xl">
+              <button
+                type="button"
+                onClick={() => setActiveCategory("web")}
+                className={`px-5 py-2 rounded-full text-xs md:text-sm font-semibold transition-all duration-300 ${
+                  activeCategory === "web"
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                Web & E-Commerce
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveCategory("advanced")}
+                className={`px-5 py-2 rounded-full text-xs md:text-sm font-semibold transition-all duration-300 ${
+                  activeCategory === "advanced"
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                SaaS, AI & Mobile Apps
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {currentOfferings.map((card, idx) => {
+              const IconComp = card.icon;
               return (
                 <div
                   key={idx}
-                  className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-yellow-400/40 hover:bg-white/10 transition-all duration-300 flex flex-col justify-between group shadow-lg"
+                  className="relative group rounded-2xl bg-[#080d1a]/85 hover:bg-[#0c1428]/95 backdrop-blur-xl border border-white/10 hover:border-white/20 p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 overflow-hidden shadow-2xl"
+                  style={{
+                    boxShadow: `0 0 28px -10px ${card.glowColor}`,
+                  }}
                 >
-                  <div>
-                    <div className="p-3 bg-yellow-400/10 rounded-xl border border-yellow-400/20 w-fit mb-4 group-hover:scale-110 transition-transform">
-                      <IconComp className="w-6 h-6 text-yellow-400" />
+                  {/* Top ambient diffuse glow */}
+                  <div
+                    className="absolute -top-16 left-1/2 -translate-x-1/2 w-48 h-32 rounded-full blur-2xl pointer-events-none opacity-45 group-hover:opacity-80 transition-opacity duration-500"
+                    style={{ background: card.glowColor }}
+                  />
+
+                  {/* Top illuminated border highlight */}
+                  <div
+                    className="absolute top-0 inset-x-8 h-[2px] pointer-events-none blur-[0.5px]"
+                    style={{
+                      background: `linear-gradient(90deg, transparent 0%, ${card.accentColor} 50%, transparent 100%)`,
+                      boxShadow: `0 0 16px 2px ${card.accentColor}`,
+                    }}
+                  />
+
+                  {/* Card Content Top */}
+                  <div className="relative z-10">
+                    {/* Icon Squircle Badge */}
+                    <div
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-105 ${card.badgeBg}`}
+                    >
+                      <IconComp className="w-6 h-6" />
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
-                      {service.title}
+
+                    {/* Title */}
+                    <h3 className="text-xl font-bold text-white mb-2.5 tracking-tight group-hover:text-white transition-colors">
+                      {card.title}
                     </h3>
-                    <p className="text-gray-300 text-sm leading-relaxed mb-6">
-                      {service.description}
+
+                    {/* Description */}
+                    <p className="text-gray-400 text-sm leading-relaxed mb-6 font-normal min-h-[54px]">
+                      {card.description}
                     </p>
+
+                    {/* Checklist */}
+                    <div className="space-y-3 mb-8">
+                      {card.features.map((feature, fIdx) => (
+                        <div key={fIdx} className="flex items-center gap-2.5 text-xs sm:text-sm text-gray-300 font-medium">
+                          <CheckCircle2
+                            className="w-4 h-4 text-emerald-400 shrink-0"
+                            strokeWidth={2.2}
+                          />
+                          <span>{feature}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <Link
-                    to={service.link}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold uppercase text-yellow-400 hover:text-yellow-300 tracking-wider group-hover:translate-x-1 transition-all"
-                  >
-                    Learn More <ArrowRight className="w-4 h-4" />
-                  </Link>
+
+                  {/* Bottom Link: "Learn More ->" */}
+                  <div className="relative z-10 pt-4 border-t border-white/5">
+                    <Link
+                      to={card.link}
+                      className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-400 hover:text-blue-300 transition-all group-hover:gap-2.5"
+                    >
+                      <span>Learn More</span>
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </div>
                 </div>
               );
             })}
           </div>
         </section>
 
-        {/* Independent Products & Open Tools Section */}
-        <section className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 md:p-10 border border-white/10 shadow-xl">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
-            <div>
-              <span className="text-yellow-400 font-bold uppercase tracking-widest text-xs">Self-Built Ecosystem</span>
-              <h2 className="text-2xl md:text-3xl font-bold text-white mt-1">Independent Products & Open Tools</h2>
-            </div>
-            <p className="mt-2 md:mt-0 text-xs md:text-sm text-gray-400 max-w-md">
-              Live web applications and open-access resources built, shipped, and maintained under the OrdinaryCoder ecosystem.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Card 1: OrdinaryTools */}
-            <div className="bg-white/5 rounded-2xl border border-white/10 p-6 md:p-8 flex flex-col justify-between hover:border-yellow-400/40 hover:bg-white/[0.07] transition-all duration-300 group shadow-lg">
-              <div>
-                {/* Header row with icon and live status */}
-                <div className="flex items-center justify-between mb-5">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 bg-yellow-400/10 rounded-xl border border-yellow-400/20 text-yellow-400 group-hover:scale-110 transition-transform">
-                      <Wrench className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <span className="text-xs font-bold uppercase tracking-wider text-yellow-400 bg-yellow-500/10 px-2.5 py-0.5 rounded-md border border-yellow-500/20">
-                        Web Utility Suite
-                      </span>
-                      <p className="text-[11px] text-gray-400 mt-1 font-mono">tools.ordinarycoder.com</p>
-                    </div>
-                  </div>
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    Live
-                  </div>
-                </div>
-
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
-                  OrdinaryTools
-                </h3>
-                <p className="text-sm font-medium text-yellow-400/90 mb-3">
-                  100% Client-Side, Privacy-First Browser Tools
-                </p>
-                <p className="text-gray-300 text-sm leading-relaxed mb-6">
-                  A high-speed, zero-friction suite of everyday utilities. All file processing, PDF editing, and conversions run entirely inside your browser's RAM—no files are ever uploaded to a server, guaranteeing complete privacy with zero registration.
-                </p>
-
-                {/* Key feature list */}
-                <div className="space-y-2 mb-6 text-xs text-gray-300">
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
-                    <span>In-browser PDF Editor, page merger, splitter, and document annotation</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
-                    <span>Fast media converters, video downloaders, and file management tools</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
-                    <span>Secure password, hash & token generators with zero tracking</span>
-                  </div>
-                </div>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {["100% Client-Side", "Zero Server Uploads", "PDF Suite", "Privacy-First", "No Sign-up"].map((tag, i) => (
-                    <span key={i} className="text-[10px] uppercase font-bold text-gray-300 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <a
-                href="https://tools.ordinarycoder.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 w-full py-3 px-5 rounded-xl bg-yellow-500 text-gray-950 font-bold text-sm hover:bg-yellow-400 transition-colors shadow-lg shadow-yellow-500/10 group-hover:shadow-yellow-500/20"
-              >
-                <span>Launch tools.ordinarycoder.com</span>
-                <ExternalLink className="w-4 h-4" />
-              </a>
-            </div>
-
-            {/* Card 2: OrdinaryLearn */}
-            <div className="bg-white/5 rounded-2xl border border-white/10 p-6 md:p-8 flex flex-col justify-between hover:border-yellow-400/40 hover:bg-white/[0.07] transition-all duration-300 group shadow-lg">
-              <div>
-                {/* Header row with icon and live status */}
-                <div className="flex items-center justify-between mb-5">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 bg-yellow-400/10 rounded-xl border border-yellow-400/20 text-yellow-400 group-hover:scale-110 transition-transform">
-                      <BookOpen className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <span className="text-xs font-bold uppercase tracking-wider text-yellow-400 bg-yellow-500/10 px-2.5 py-0.5 rounded-md border border-yellow-500/20">
-                        Developer Knowledge Hub
-                      </span>
-                      <p className="text-[11px] text-gray-400 mt-1 font-mono">learn.ordinarycoder.com</p>
-                    </div>
-                  </div>
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium">
-                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                    Live
-                  </div>
-                </div>
-
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
-                  OrdinaryCoder Notes & Learn
-                </h3>
-                <p className="text-sm font-medium text-yellow-400/90 mb-3">
-                  Engineering Notes, Architecture Guides & Tutorials
-                </p>
-                <p className="text-gray-300 text-sm leading-relaxed mb-6">
-                  An open learning portal and technical reference guide for software engineers. Packed with practical notes, architecture breakdowns, clean code patterns, and production cheat sheets across full-stack web and SaaS development.
-                </p>
-
-                {/* Key feature list */}
-                <div className="space-y-2 mb-6 text-xs text-gray-300">
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
-                    <span>In-depth full-stack tutorials for React, Node.js, Express & MongoDB</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
-                    <span>Production system design, REST API architecture & auth patterns</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
-                    <span>Quick-reference syntax cheat sheets and battle-tested code snippets</span>
-                  </div>
-                </div>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {["Engineering Notes", "MERN Architecture", "Cheat Sheets", "Open Knowledge", "Free Tutorials"].map((tag, i) => (
-                    <span key={i} className="text-[10px] uppercase font-bold text-gray-300 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <a
-                href="https://learn.ordinarycoder.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 w-full py-3 px-5 rounded-xl bg-white/10 text-white font-bold text-sm hover:bg-yellow-500 hover:text-gray-950 border border-white/15 hover:border-yellow-400 transition-all shadow-lg"
-              >
-                <span>Explore learn.ordinarycoder.com</span>
-                <ExternalLink className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
-        </section>
+        {/* Independent Products & Open Tools Section (Futuristic 3D Ecosystem) */}
+        <EcosystemSection />
 
         {/* Featured Case Studies Section */}
         <section className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 md:p-10 border border-white/10 shadow-xl">

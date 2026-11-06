@@ -15,11 +15,12 @@ const MotionLink = motion.create(Link);
 
 const Header: React.FC = () => {
   const serviceItems = [
+    { label: 'WordPress Development', href: '/wordpress-development' },
+    { label: 'Shopify Store Development', href: '/shopify-development' },
+    { label: 'E-Commerce Development', href: '/ecommerce-development' },
     { label: 'Custom Web Development', href: '/web-development' },
     { label: 'SaaS Product Development', href: '/saas-development' },
     { label: 'AI Agent Development', href: '/ai-agent-development' },
-    { label: 'Shopify Store Development', href: '/shopify-development' },
-    { label: 'E-Commerce Development', href: '/ecommerce-development' },
     { label: 'Custom Web Applications', href: '/web-app-development' },
     { label: 'Android App Development', href: '/android-app-development' },
   ];

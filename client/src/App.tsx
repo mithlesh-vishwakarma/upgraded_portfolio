@@ -20,6 +20,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Service Pages
 const WebDevelopment = lazy(() => import("./pages/services/WebDevelopment"));
+const WordPressDevelopment = lazy(() => import("./pages/services/WordPressDevelopment"));
 const SaaSDevelopment = lazy(() => import("./pages/services/SaaSDevelopment"));
 const AIAgentDevelopment = lazy(() => import("./pages/services/AIAgentDevelopment"));
 const ShopifyDevelopment = lazy(() => import("./pages/services/ShopifyDevelopment"));
@@ -93,6 +94,7 @@ const AppContent = () => {
 
             {/* Service Pages */}
             <Route path="/web-development" element={<WebDevelopment />} />
+            <Route path="/wordpress-development" element={<WordPressDevelopment />} />
             <Route path="/saas-development" element={<SaaSDevelopment />} />
             <Route path="/ai-agent-development" element={<AIAgentDevelopment />} />
             <Route path="/shopify-development" element={<ShopifyDevelopment />} />

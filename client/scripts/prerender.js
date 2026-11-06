@@ -22,6 +22,13 @@ const routes = [
     canonical: 'https://ordinarycoder.com/web-development'
   },
   {
+    path: '/wordpress-development',
+    title: 'Custom WordPress Development Services in Surat, India | OrdinaryCoder',
+    description: 'Professional custom WordPress development services in Surat, Gujarat. Mithlesh Vishwakarma crafts fast, secure, SEO-friendly custom WordPress websites, theme development, plugin integrations, and WooCommerce stores.',
+    h1: 'Custom WordPress Development in Surat, India',
+    canonical: 'https://ordinarycoder.com/wordpress-development'
+  },
+  {
     path: '/saas-development',
     title: 'Custom SaaS Product Development in Surat, India | OrdinaryCoder',
     description: 'End-to-end SaaS product development services by Mithlesh Vishwakarma in Surat, Gujarat. Architecting scalable multi-tenant SaaS products, user auth, and dashboards with MERN stack.',
